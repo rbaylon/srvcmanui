@@ -2,7 +2,9 @@ package subrouter
 
 import (
 	"html/template"
+	"log"
 	"net/http"
+	"os"
 	"strconv"
 
 	submodel "github.com/rbaylon/srvcman/modules/subs/model"
@@ -12,9 +14,17 @@ func New(db submodel.Crud) *http.ServeMux {
 	Router := http.NewServeMux() // 3
 
 	Router.HandleFunc("GET /", func(w http.ResponseWriter, r *http.Request) {
-		tmpl := template.Must(template.ParseFiles("index.html"))
 		users, _ := db.GetAll()
-		tmpl.Execute(w, users)
+		pwd, err := os.Getwd()
+		if err != nil {
+			log.Println(err)
+		}
+		files := []string{
+			pwd + "/layouts/darknav.html",
+			pwd + "/modules/subs/templates/subs.html",
+		}
+		tmpl := template.Must(template.ParseFiles(files...))
+		tmpl.ExecuteTemplate(w, "darktheme", users)
 	})
 
 	Router.HandleFunc("GET /{id}", func(w http.ResponseWriter, r *http.Request) {
