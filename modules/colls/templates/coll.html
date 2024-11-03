@@ -1,0 +1,71 @@
+{{define "title"}}Subscriber Form{{end}}
+{{define "content"}}
+ <form method="POST" action="/ui/collections/addorupdate">
+   <div class="mb-3">
+     <label class="form-label" for="basic-form-created">Date Created</label>
+     <input class="form-control" id="basic-form-created" disabled="" placeholder="Leave Blank to use current date and time" name="CreatedAt" value="{{.CreatedAt}}"/>
+     <input type="hidden" name="id" value="{{.ID}}" />
+   </div>
+   <div class="mb-3">
+     <label class="form-label" for="basic-form-updated">Date updated</label>
+     <input class="form-control" id="basic-form-updated" disabled=""  placeholder="Leave Blank to use current date and time" name="UpdatedAt" value="{{.UpdatedAt}}"/>
+   </div>
+   <div class="mb-3">
+     <label class="form-label" for="basic-form-year">Year</label>
+     <input class="form-control" id="basic-form-year" type="text" placeholder="Year" name="year" value="{{.Year}}"/>
+   </div>
+   <div class="mb-3">
+     <label class="form-label" for="basic-form-jan">Jan</label>
+     <input class="form-control" id="basic-form-jan" type="text" placeholder="0" name="jan" value="{{.Jan}}"/>
+   </div>
+   <div class="mb-3">
+     <label class="form-label" for="basic-form-feb">Feb</label>
+     <input class="form-control" id="basic-form-feb" type="text" placeholder="0" name="feb" value="{{.Feb}}"/>
+   </div>
+      <div class="mb-3">
+     <label class="form-label" for="basic-form-mar">Mar</label>
+     <input class="form-control" id="basic-form-mar" type="text" placeholder="0" name="mar" value="{{.Mar}}"/>
+   </div>
+      <div class="mb-3">
+     <label class="form-label" for="basic-form-apr">Apr</label>
+     <input class="form-control" id="basic-form-apr" type="text" placeholder="0" name="apr" value="{{.Apr}}"/>
+   </div>
+      <div class="mb-3">
+     <label class="form-label" for="basic-form-may">May</label>
+     <input class="form-control" id="basic-form-may" type="text" placeholder="0" name="may" value="{{.May}}"/>
+   </div>
+      <div class="mb-3">
+     <label class="form-label" for="basic-form-jun">Jun</label>
+     <input class="form-control" id="basic-form-jun" type="text" placeholder="0" name="jun" value="{{.Jun}}"/>
+   </div>
+      <div class="mb-3">
+     <label class="form-label" for="basic-form-jul">Jul</label>
+     <input class="form-control" id="basic-form-jul" type="text" placeholder="0" name="jul" value="{{.Jul}}"/>
+   </div>
+      <div class="mb-3">
+     <label class="form-label" for="basic-form-aug">Aug</label>
+     <input class="form-control" id="basic-form-aug" type="text" placeholder="0" name="aug" value="{{.Aug}}"/>
+   </div>
+      <div class="mb-3">
+     <label class="form-label" for="basic-form-sep">Sep</label>
+     <input class="form-control" id="basic-form-sep" type="text" placeholder="0" name="sep" value="{{.Sep}}"/>
+   </div>
+      <div class="mb-3">
+     <label class="form-label" for="basic-form-oct">Oct</label>
+     <input class="form-control" id="basic-form-oct" type="text" placeholder="0" name="oct" value="{{.Oct}}"/>
+   </div>
+      <div class="mb-3">
+     <label class="form-label" for="basic-form-nov">Nov</label>
+     <input class="form-control" id="basic-form-nov" type="text" placeholder="0" name="nov" value="{{.Nov}}"/>
+   </div>
+      <div class="mb-3">
+     <label class="form-label" for="basic-form-dec">Dec</label>
+     <input class="form-control" id="basic-form-dec" type="text" placeholder="0" name="dec" value="{{.Dec}}"/>
+   </div>
+   <div class="mb-3">
+     <label class="form-label" for="basic-form-subid">SubID</label>
+     <input class="form-control" id="basic-form-subid" type="text" placeholder="0" name="sub_id" value="{{.SubID}}"/>
+   </div>
+   <button class="btn btn-primary" type="submit">Submit</button>
+ </form>
+{{end}}
