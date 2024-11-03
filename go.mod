@@ -6,7 +6,7 @@ toolchain go1.23.2
 
 require (
 	github.com/gorilla/sessions v1.4.0
-	github.com/rbaylon/srvcman v1.0.2
+	github.com/rbaylon/srvcman v1.1.5
 )
 
 require (
