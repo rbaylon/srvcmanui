@@ -6,42 +6,11 @@ import (
 	"net/http"
 	"os"
 	"strconv"
-	"time"
 
+	"github.com/go-chi/render"
+	runtimemodel "github.com/rbaylon/srvcman/modules/runtimes/model"
 	submodel "github.com/rbaylon/srvcman/modules/subs/model"
 )
-
-// temporary until I use reflection
-func SetData(s *submodel.Sub, r *http.Request) {
-	t, _ := time.Parse(time.RFC3339, r.FormValue("CreatedAt"))
-	s.CreatedAt = t
-	s.FirstName = r.FormValue("first_name")
-	s.LastName = r.FormValue("last_name")
-	s.FramedIp = r.FormValue("framed_ip")
-	s.Type = r.FormValue("type")
-	s.Status = r.FormValue("status")
-	s.Mac = r.FormValue("mac")
-	s.Loc = r.FormValue("loc")
-	ds, _ := strconv.Atoi(r.FormValue("downspeed"))
-	s.Downspeed = ds
-	us, _ := strconv.Atoi(r.FormValue("upspeed"))
-	s.Upspeed = us
-	bs, _ := strconv.Atoi(r.FormValue("burstspeed"))
-	s.Burstspeed = bs
-	d, _ := strconv.Atoi(r.FormValue("duration"))
-	s.Duration = d
-	s.Gateway = r.FormValue("gateway")
-	pr, _ := strconv.Atoi(r.FormValue("priority"))
-	s.Priority = pr
-	pfc, _ := strconv.Atoi(r.FormValue("pfconfig_id"))
-	s.PfconfigID = uint(pfc)
-	du, _ := strconv.Atoi(r.FormValue("due_day"))
-	s.DueDay = du
-	od, _ := strconv.ParseBool(r.FormValue("over_due"))
-	s.OverDue = od
-	lt, _ := strconv.Atoi(r.FormValue("later_count"))
-	s.LaterCount = lt
-}
 
 func New(db submodel.Crud) *http.ServeMux {
 	Router := http.NewServeMux() // 3
@@ -93,13 +62,30 @@ func New(db submodel.Crud) *http.ServeMux {
 
 	Router.HandleFunc("POST /addorupdate", func(w http.ResponseWriter, r *http.Request) {
 		s := &submodel.Sub{}
-		SetData(s, r)
-		id, _ := strconv.Atoi(r.FormValue("id"))
+		if err := render.Bind(r, s); err != nil {
+			log.Println(err)
+			http.Redirect(w, r, "/ui/subs", http.StatusSeeOther)
+			return
+		}
+		id := s.ID
+		dbconn := db.GetDB()
+		rtdb := runtimemodel.New(dbconn)
+		rt := &runtimemodel.Runtime{}
+		rt.Action = "updatepf"
+		rt.Status = "active"
 		if id > 0 {
 			s.ID = uint(id)
 			err := db.Update(s)
 			if err != nil {
 				log.Println(err)
+				http.Redirect(w, r, "/ui/subs", http.StatusSeeOther)
+				return
+			}
+			err = rtdb.Add(rt)
+			if err != nil {
+				log.Println("update pf failed")
+				http.Redirect(w, r, "/ui/subs", http.StatusSeeOther)
+				return
 			}
 			http.Redirect(w, r, "/ui/subs", http.StatusSeeOther)
 			return
@@ -107,6 +93,10 @@ func New(db submodel.Crud) *http.ServeMux {
 		err := db.Add(s)
 		if err != nil {
 			log.Println(err)
+		}
+		err = rtdb.Add(rt)
+		if err != nil {
+			log.Println("update pf failed")
 		}
 		http.Redirect(w, r, "/ui/subs", http.StatusSeeOther)
 	})
