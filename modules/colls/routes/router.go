@@ -7,39 +7,9 @@ import (
 	"os"
 	"strconv"
 
+	"github.com/go-chi/render"
 	collectionmodel "github.com/rbaylon/srvcman/modules/collections/model"
 )
-
-// temporary until I use reflection
-func SetData(c *collectionmodel.Collection, r *http.Request) {
-	c.Year = r.FormValue("year")
-	jan, _ := strconv.Atoi(r.FormValue("jan"))
-	c.Jan = jan
-	feb, _ := strconv.Atoi(r.FormValue("feb"))
-	c.Feb = feb
-	mar, _ := strconv.Atoi(r.FormValue("mar"))
-	c.Mar = mar
-	apr, _ := strconv.Atoi(r.FormValue("apr"))
-	c.Apr = apr
-	may, _ := strconv.Atoi(r.FormValue("may"))
-	c.May = may
-	jun, _ := strconv.Atoi(r.FormValue("jun"))
-	c.Jun = jun
-	jul, _ := strconv.Atoi(r.FormValue("jul"))
-	c.Jul = jul
-	aug, _ := strconv.Atoi(r.FormValue("aug"))
-	c.Aug = aug
-	sep, _ := strconv.Atoi(r.FormValue("sep"))
-	c.Sep = sep
-	oct, _ := strconv.Atoi(r.FormValue("oct"))
-	c.Oct = oct
-	nov, _ := strconv.Atoi(r.FormValue("nov"))
-	c.Nov = nov
-	dec, _ := strconv.Atoi(r.FormValue("dec"))
-	c.Dec = dec
-	sid, _ := strconv.Atoi(r.FormValue("sub_id"))
-	c.SubID = uint(sid)
-}
 
 func New(db collectionmodel.Crud) *http.ServeMux {
 	Router := http.NewServeMux() // 3
@@ -95,8 +65,12 @@ func New(db collectionmodel.Crud) *http.ServeMux {
 
 	Router.HandleFunc("POST /addorupdate", func(w http.ResponseWriter, r *http.Request) {
 		s := &collectionmodel.Collection{}
-		SetData(s, r)
-		id, _ := strconv.Atoi(r.FormValue("id"))
+		if err := render.Bind(r, s); err != nil {
+			log.Println(err)
+			http.Redirect(w, r, "/ui/collection/"+s.Year, http.StatusSeeOther)
+			return
+		}
+		id := s.ID
 		if id > 0 {
 			s.ID = uint(id)
 			err := db.Update(s)
