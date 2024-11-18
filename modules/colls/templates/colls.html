@@ -26,6 +26,8 @@
             </div>
           </th>
           <th class="sort align-middle ps-3" data-sort="name">SubID</th>
+          <th class="sort align-middle" data-sort="fullname">Name</th>
+          <th class="sort align-middle" data-sort="dueday">Due</th>
           <th class="sort align-middle" data-sort="address">Year</th>
           <th class="sort align-middle" data-sort="overdue">January</th>
           <th class="sort align-middle" data-sort="overdue">February</th>
@@ -51,6 +53,8 @@
             </div>
           </td>
           <td class="align-middle ps-3 name">{{.SubID}}</td>
+          <td class="align-middle email">{{.SubName}}</td>
+          <td class="align-middle email">{{.SubDue}}</td>
           <td class="align-middle email">{{.Year}}</td>
           <td class="align-middle email">{{.Jan}}</td>
           <td class="align-middle email">{{.Feb}}</td>
@@ -67,7 +71,7 @@
           <td class="align-middle white-space-nowrap text-end pe-0">
             <div class="btn-reveal-trigger position-static">
               <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs-10" type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent"><span class="fas fa-ellipsis-h fs-10"></span></button>
-              <div class="dropdown-menu dropdown-menu-end py-2"><a class="dropdown-item" href="{{.Year}}/{{.ID}}">View</a><a class="dropdown-item" href="#!">Export</a>
+              <div class="dropdown-menu dropdown-menu-end py-2"><a class="dropdown-item" href="{{.Year}}/{{.ID}}">View Coll</a><a class="dropdown-item" href="/ui/subs/{{.SubID}}">View Sub</a>
                 <div class="dropdown-divider"></div><a class="dropdown-item text-danger" href="#!">Remove</a>
               </div>
             </div>

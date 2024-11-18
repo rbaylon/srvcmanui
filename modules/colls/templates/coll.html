@@ -5,6 +5,8 @@
      <label class="form-label" for="basic-form-created">Date Created</label>
      <input class="form-control" id="basic-form-created" type="datetime-local" name="CreatedAt" value="{{.CreatedAt.Format "2006-01-02T15:04:05"}}"/>
      <input type="hidden" name="ID" value="{{.ID}}" />
+     <input type="hidden" name="SubName" value="{{.SubName}}" />
+     <input type="hidden" name="SubDue" value="{{.SubDue}}" />
    </div>
    <div class="mb-3">
      <label class="form-label" for="basic-form-updated">Date updated</label>
