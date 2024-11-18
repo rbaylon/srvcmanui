@@ -9,6 +9,7 @@ import (
 
 	"github.com/go-chi/render"
 	collectionmodel "github.com/rbaylon/srvcman/modules/collections/model"
+	submodel "github.com/rbaylon/srvcman/modules/subs/model"
 )
 
 func New(db collectionmodel.Crud) *http.ServeMux {
@@ -70,9 +71,16 @@ func New(db collectionmodel.Crud) *http.ServeMux {
 			http.Redirect(w, r, "/ui/collection/"+s.Year, http.StatusSeeOther)
 			return
 		}
+		dbconn := db.GetDB()
+		subdb := submodel.New(dbconn)
+		sub, _ := subdb.GetById(uint(s.SubID))
 		id := s.ID
 		if id > 0 {
 			s.ID = uint(id)
+			if s.SubDue == 0 {
+				s.SubName = sub.FirstName + " " + sub.LastName
+				s.SubDue = sub.DueDay
+			}
 			err := db.Update(s)
 			if err != nil {
 				log.Println(err)
@@ -80,6 +88,8 @@ func New(db collectionmodel.Crud) *http.ServeMux {
 			http.Redirect(w, r, "/ui/collections/"+s.Year, http.StatusSeeOther)
 			return
 		}
+		s.SubName = sub.FirstName + " " + sub.LastName
+		s.SubDue = sub.DueDay
 		err := db.Add(s)
 		if err != nil {
 			log.Println(err)
