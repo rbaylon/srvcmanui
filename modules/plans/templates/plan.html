@@ -1,0 +1,39 @@
+{{define "title"}}Plan Form{{end}}
+{{define "content"}}
+ <form method="POST" action="/ui/plans/addorupdate">
+   <div class="mb-3">
+     <label class="form-label" for="basic-form-created">Date Created</label>
+     <input class="form-control" id="basic-form-created" type="datetime-local" name="CreatedAt" value="{{.CreatedAt.Format "2006-01-02T15:04:05"}}"/>
+     <input type="hidden" name="ID" value="{{.ID}}" />
+   </div>
+   <div class="mb-3">
+     <label class="form-label" for="basic-form-updated">Date updated</label>
+     <input class="form-control" id="basic-form-updated" type="datetime-local"  name="UpdatedAt" value="{{.UpdatedAt.Format "2006-01-02T15:04:05"}}"/>
+   </div>
+   <div class="mb-3">
+     <label class="form-label" for="basic-form-downspeed">Downspeed</label>
+     <input class="form-control" id="basic-form-downspeed" type="text" placeholder="20" name="Downspeed" value="{{.Downspeed}}"/>
+   </div>
+   <div class="mb-3">
+     <label class="form-label" for="basic-form-upspeed">Upload Speed</label>
+     <input class="form-control" id="basic-form-upspeed" type="text" placeholder="15" name="Upspeed" value="{{.Upspeed}}">
+   </div>
+   <div class="mb-3">
+     <label class="form-label" for="basic-form-stdown">SpeedTestDownload</label>
+     <input class="form-control" id="basic-form-stdown" type="text" placeholder="55" name="SpeedTestDown" value="{{.SpeedTestDown}}"/>
+   </div>
+   <div class="mb-3">
+     <label class="form-label" for="basic-form-stup">SpeedTestUpload</label>
+     <input class="form-control" id="basic-form-stup" type="text" placeholder="30" name="SpeedTestUp" value="{{.SpeedTestUp}}"/>
+   </div>
+   <div class="mb-3">
+     <label class="form-label" for="basic-form-plan">Plan</label>
+     <input class="form-control" id="basic-form-plan" type="text" placeholder="Plan799" name="Plan" value="{{.Plan}}"/>
+   </div>
+   <div class="mb-3">
+     <label class="form-label" for="basic-form-pfconfig_id">Router ID</label>
+     <input class="form-control" id="basic-form-pfconfig_id" type="text" placeholder="1" name="PfconfigID" value="{{.PfconfigID}}"/>
+   </div>
+   <button class="btn btn-primary" type="submit">Submit</button>
+ </form>
+{{end}}

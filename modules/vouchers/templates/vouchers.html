@@ -1,0 +1,97 @@
+{{define "title"}}Voucher List{{end}}
+{{define "content"}}
+<div class="d-flex align-items-center justify-content-end my-3">
+  <div id="bulk-select-replace-element">
+    <a href="/ui/vouchers/create" ><button class="btn btn-phoenix-success btn-sm" type="button"><span class="fas fa-plus" data-fa-transform="shrink-3 down-2"></span><span class="ms-1">New</span></button></a>
+  </div>
+  <div class="d-none ms-3" id="bulk-select-actions">
+    <div class="d-flex">
+      <select class="form-select form-select-sm" aria-label="Bulk actions">
+        <option selected="selected">Bulk actions</option>
+        <option value="Delete">Delete</option>
+        <option value="Archive">Archive</option>
+      </select>
+      <button class="btn btn-phoenix-danger btn-sm ms-2" type="button">Apply</button>
+    </div>
+  </div>
+</div>
+<div id="tableExample" data-list='{"valueNames":["id","value","iface","hours","status", "downspeed", "upspeed","burstspeed","burstduration","router","datestart","dateend","dateexpire"],"page":200,"pagination":true}'>
+  <div class="table-responsive mx-n1 px-1">
+    <table class="table table-sm border-top border-translucent fs-9 mb-0">
+      <thead>
+        <tr>
+          <th class="white-space-nowrap fs-9 align-middle ps-0" style="max-width:20px; width:18px;">
+            <div class="form-check mb-0 fs-8">
+              <input class="form-check-input" id="bulk-select-example" type="checkbox" data-bulk-select='{"body":"bulk-select-body","actions":"bulk-select-actions","replacedElement":"bulk-select-replace-element"}' />
+            </div>
+          </th>
+          <th class="sort align-middle" data-sort="id">ID</th>
+          <th class="sort align-middle" data-sort="value">Code</th>
+          <th class="sort align-middle" data-sort="iface">Iface</th>
+          <th class="sort align-middle" data-sort="hours">Hours</th>
+          <th class="sort align-middle" data-sort="status">Status</th>
+          <th class="sort align-middle" data-sort="downspeed">DownSpeed</th>
+          <th class="sort align-middle" data-sort="upspeed">Upspeed</th>
+          <th class="sort align-middle" data-sort="burstspeed">BurstSpeed</th>
+          <th class="sort align-middle" data-sort="burstduration">BurstDuration</th>
+          <th class="sort align-middle" data-sort="router">RouterID</th>
+          <th class="sort align-middle" data-sort="datestart">DateStart</th>
+          <th class="sort align-middle" data-sort="dateend">DateEnd</th>
+          <th class="sort align-middle" data-sort="dateexpire">DateExpire</th>
+          <th class="sort text-end align-middle pe-0" scope="col">ACTION</th>
+        </tr>
+      </thead>
+      <tbody class="list" id="bulk-select-body">
+        {{ range .}}
+        <tr>
+          <td class="fs-9 align-middle">
+            <div class="form-check mb-0 fs-8">
+              <input class="form-check-input" type="checkbox" data-bulk-select-row="{&quot;value&quot;:&quot;{{.Value}}&quot;,&quot;iface&quot;:&quot;{{.Type}}&quot;,&quot;status&quot;:{{.Status}} }" />
+            </div>
+          </td>
+          <td class="align-middle id">{{.ID}}</td>
+          <td class="align-middle value">{{.Value}}</td>
+          <td class="align-middle iface">{{.Type}}</td>
+          <td class="align-middle hours">{{.Hours}}</td>
+          <td class="align-middle status">{{.Status}}</td>
+          <td class="align-middle downspeed">{{.Downspeed}}</td>
+          <td class="align-middle upspeed">{{.Upspeed}}</td>
+          <td class="align-middle burstspeed">{{.Burstspeed}}</td>
+          <td class="align-middle duration">{{.Duration}}</td>
+          <td class="align-middle router">{{.PfconfigID}}</td>
+          <td class="align-middle datestart">{{.DateStarted}}</td>
+          <td class="align-middle dateend">{{.DateEnd}}</td>
+          <td class="align-middle dateexpire">{{.DateExpires}}</td>
+          <td class="align-middle white-space-nowrap text-end pe-0">
+            <div class="btn-reveal-trigger position-static">
+              <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs-10" type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent"><span class="fas fa-ellipsis-h fs-10"></span></button>
+              <div class="dropdown-menu dropdown-menu-end py-2"><a class="dropdown-item" href="{{.ID}}">View</a><a class="dropdown-item" href="#!">Export</a>
+                <div class="dropdown-divider"></div><a class="dropdown-item text-danger" href="#!">Remove</a>
+              </div>
+            </div>
+          </td>
+        </tr>
+        {{end}}
+      </tbody>
+    </table>
+  </div>
+  <div class="d-flex flex-between-center pt-3 mb-3">
+    <div class="pagination d-none"></div>
+    <p class="mb-0 fs-9">
+      <span class="d-none d-sm-inline-block" data-list-info="data-list-info"></span>
+      <span class="d-none d-sm-inline-block"> &mdash; </span>
+      <a class="fw-semibold" href="#!" data-list-view="*">
+        View all
+        <span class="fas fa-angle-right ms-1" data-fa-transform="down-1"></span>
+      </a><a class="fw-semibold d-none" href="#!" data-list-view="less">
+        View Less
+        <span class="fas fa-angle-right ms-1" data-fa-transform="down-1"></span>
+      </a>
+    </p>
+    <div class="d-flex">
+      <button class="btn btn-sm btn-primary" type="button" data-list-pagination="prev"><span>Previous</span></button>
+      <button class="btn btn-sm btn-primary px-4 ms-2" type="button" data-list-pagination="next"><span>Next</span></button>
+    </div>
+  </div>
+</div>
+{{end}} 

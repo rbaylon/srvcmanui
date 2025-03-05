@@ -33,6 +33,7 @@ func login(db usermodel.Crud) http.HandlerFunc {
 			if security.CheckPasswordHash(password, user.Password) {
 				session, _ := store.Get(r, database.GetEnvVariable("APP_NAME"))
 				session.Values["authenticated"] = true
+				session.Values["whoami"] = username
 				session.Save(r, w)
 				prevurl := r.PostFormValue("prevurl")
 				if prevurl == "" {

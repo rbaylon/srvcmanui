@@ -15,7 +15,7 @@
     </div>
   </div>
 </div>
-<div id="tableExample" data-list='{"valueNames":["name","address","overdue"],"page":20,"pagination":true}'>
+<div id="tableExample" data-list='{"valueNames":["id","fullname","dueday","year","jan","feb","mar","apr","may","jun","jul","aug","sep","oct","nov","dec"],"page":200,"pagination":false}'>
   <div class="table-responsive mx-n1 px-1">
     <table class="table table-sm border-top border-translucent fs-9 mb-0">
       <thead>
@@ -25,22 +25,22 @@
               <input class="form-check-input" id="bulk-select-example" type="checkbox" data-bulk-select='{"body":"bulk-select-body","actions":"bulk-select-actions","replacedElement":"bulk-select-replace-element"}' />
             </div>
           </th>
-          <th class="sort align-middle ps-3" data-sort="name">SubID</th>
+          <th class="sort align-middle" data-sort="id">SubID</th>
           <th class="sort align-middle" data-sort="fullname">Name</th>
           <th class="sort align-middle" data-sort="dueday">Due</th>
-          <th class="sort align-middle" data-sort="address">Year</th>
-          <th class="sort align-middle" data-sort="overdue">January</th>
-          <th class="sort align-middle" data-sort="overdue">February</th>
-          <th class="sort align-middle" data-sort="overdue">March</th>
-          <th class="sort align-middle" data-sort="overdue">April</th>
-          <th class="sort align-middle" data-sort="overdue">May</th>
-          <th class="sort align-middle" data-sort="overdue">June</th>
-          <th class="sort align-middle" data-sort="overdue">July</th>
-          <th class="sort align-middle" data-sort="overdue">August</th>
-          <th class="sort align-middle" data-sort="overdue">September</th>
-          <th class="sort align-middle" data-sort="overdue">October</th>
-          <th class="sort align-middle" data-sort="overdue">November</th>
-          <th class="sort align-middle" data-sort="overdue">December</th>
+          <th class="sort align-middle" data-sort="year">Year</th>
+          <th class="sort align-middle" data-sort="jan">January</th>
+          <th class="sort align-middle" data-sort="feb">February</th>
+          <th class="sort align-middle" data-sort="mar">March</th>
+          <th class="sort align-middle" data-sort="apr">April</th>
+          <th class="sort align-middle" data-sort="may">May</th>
+          <th class="sort align-middle" data-sort="jun">June</th>
+          <th class="sort align-middle" data-sort="jul">July</th>
+          <th class="sort align-middle" data-sort="aug">August</th>
+          <th class="sort align-middle" data-sort="sep">September</th>
+          <th class="sort align-middle" data-sort="oct">October</th>
+          <th class="sort align-middle" data-sort="nov">November</th>
+          <th class="sort align-middle" data-sort="dec">December</th>
           <th class="sort text-end align-middle pe-0" scope="col">ACTION</th>
         </tr>
       </thead>
@@ -52,22 +52,22 @@
               <input class="form-check-input" type="checkbox" data-bulk-select-row="{&quot;year&quot;:&quot;{{.Year}}&quot;,&quot;sub_id&quot;:&quot;{{.SubID}}&quot;,&quot }" />
             </div>
           </td>
-          <td class="align-middle ps-3 name">{{.SubID}}</td>
-          <td class="align-middle email">{{.SubName}}</td>
-          <td class="align-middle email">{{.SubDue}}</td>
-          <td class="align-middle email">{{.Year}}</td>
-          <td class="align-middle email">{{.Jan}}</td>
-          <td class="align-middle email">{{.Feb}}</td>
-          <td class="align-middle email">{{.Mar}}</td>
-          <td class="align-middle email">{{.Apr}}</td>
-          <td class="align-middle email">{{.May}}</td>
-          <td class="align-middle email">{{.Jun}}</td>
-          <td class="align-middle email">{{.Jul}}</td>
-          <td class="align-middle email">{{.Aug}}</td>
-          <td class="align-middle email">{{.Sep}}</td>
-          <td class="align-middle email">{{.Oct}}</td>
-          <td class="align-middle email">{{.Nov}}</td>
-          <td class="align-middle email">{{.Dec}}</td>
+          <td class="align-middle id">{{.SubID}}</td>
+          <td class="align-middle fullname">{{.SubName}}</td>
+          <td class="align-middle dueday">{{.SubDue}}</td>
+          <td class="align-middle year">{{.Year}}</td>
+          <td class="align-middle jan">{{.Jan}}</td>
+          <td class="align-middle feb">{{.Feb}}</td>
+          <td class="align-middle mar">{{.Mar}}</td>
+          <td class="align-middle apr">{{.Apr}}</td>
+          <td class="align-middle may">{{.May}}</td>
+          <td class="align-middle jun">{{.Jun}}</td>
+          <td class="align-middle jul">{{.Jul}}</td>
+          <td class="align-middle aug">{{.Aug}}</td>
+          <td class="align-middle sep">{{.Sep}}</td>
+          <td class="align-middle oct">{{.Oct}}</td>
+          <td class="align-middle nov">{{.Nov}}</td>
+          <td class="align-middle dec">{{.Dec}}</td>
           <td class="align-middle white-space-nowrap text-end pe-0">
             <div class="btn-reveal-trigger position-static">
               <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs-10" type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent"><span class="fas fa-ellipsis-h fs-10"></span></button>

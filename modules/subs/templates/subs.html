@@ -15,7 +15,7 @@
     </div>
   </div>
 </div>
-<div id="tableExample" data-list='{"valueNames":["id","name","address","overdue"],"page":20,"pagination":true}'>
+<div id="tableExample" data-list='{"valueNames":["id","fname","address","ip","dueday","status","plan"],"page":200,"pagination":false}'>
   <div class="table-responsive mx-n1 px-1">
     <table class="table table-sm border-top border-translucent fs-9 mb-0">
       <thead>
@@ -25,11 +25,13 @@
               <input class="form-check-input" id="bulk-select-example" type="checkbox" data-bulk-select='{"body":"bulk-select-body","actions":"bulk-select-actions","replacedElement":"bulk-select-replace-element"}' />
             </div>
           </th>
-          <th class="sort align-middle" data-sort="name">ID</th>
-          <th class="sort align-middle ps-3" data-sort="fname">Name</th>
-          <th class="sort align-middle" data-sort="email">Address</th>
+          <th class="sort align-middle" data-sort="id">ID</th>
+          <th class="sort align-middle" data-sort="fname">Name</th>
+          <th class="sort align-middle" data-sort="address">Address</th>
           <th class="sort align-middle" data-sort="ip">IP</th>
           <th class="sort align-middle" data-sort="dueday">Due Day</th>
+          <th class="sort align-middle" data-sort="status">Status</th>
+          <th class="sort align-middle" data-sort="plan">Plan</th>
           <th class="sort text-end align-middle pe-0" scope="col">ACTION</th>
         </tr>
       </thead>
@@ -41,11 +43,13 @@
               <input class="form-check-input" type="checkbox" data-bulk-select-row="{&quot;name&quot;:&quot;{{.FirstName}} {{.LastName}}&quot;,&quot;address&quot;:&quot;{{.Loc}}&quot;,&quot;overdue&quot;:{{.OverDue}} }" />
             </div>
           </td>
-          <td class="align-middle name">{{.ID}}</td>
-          <td class="align-middle ps-3 fname">{{.FirstName}} {{.LastName}}</td>
-          <td class="align-middle email">{{.Loc}}</td>
+          <td class="align-middle id">{{.ID}}</td>
+          <td class="align-middle fname">{{.FirstName}} {{.LastName}}</td>
+          <td class="align-middle address">{{.Loc}}</td>
           <td class="align-middle ip">{{.FramedIp}}</td>
           <td class="align-middle dueday">{{.DueDay}}</td>
+          <td class="align-middle status">{{.Status}}</td>
+          <td class="align-middle plan">{{.Plan}}</td>
           <td class="align-middle white-space-nowrap text-end pe-0">
             <div class="btn-reveal-trigger position-static">
               <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs-10" type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent"><span class="fas fa-ellipsis-h fs-10"></span></button>
