@@ -31,22 +31,6 @@
      <input class="form-control" id="basic-form-mac" type="text" placeholder="FF:FF:DE:AD:BE:EF" name="Mac" value="{{.Mac}}"/>
    </div>
    <div class="mb-3">
-     <label class="form-label" for="basic-form-downspeed">Download Speed</label>
-     <input class="form-control" id="basic-form-downspeed" type="text" placeholder="25" name="Downspeed" value="{{.Downspeed}}"/>
-   </div>
-   <div class="mb-3">
-     <label class="form-label" for="basic-form-upspeed">Upload Speed</label>
-     <input class="form-control" id="basic-form-upspeed" type="text" placeholder="20" name="Upspeed" value="{{.Upspeed}}"/>
-   </div>
-   <div class="mb-3">
-     <label class="form-label" for="basic-form-burstspeed">Burst Speed</label>
-     <input class="form-control" id="basic-form-burstspeed" type="text" placeholder="55" name="Burstspeed" value="{{.Burstspeed}}"/>
-   </div>
-   <div class="mb-3">
-     <label class="form-label" for="basic-form-duration">Burst duration in ms</label>
-     <input class="form-control" id="basic-form-duration" type="text" placeholder="999999" name="Duration" value="{{.Duration}}"/>
-   </div>
-   <div class="mb-3">
      <label class="form-label" for="basic-form-gw">Gateway Address</label>
      <input class="form-control" id="basic-form-gw" type="text" placeholder="192.0.2.1" name="Gateway" value="{{.Gateway}}"/>
    </div>
@@ -60,6 +44,17 @@
        <option selected="selected" value="{{.Status}}">{{.Status}}</option>
        <option value="active">active</option>
        <option value="inactive">inactive</option>
+     </select>
+   </div>
+   <div class="mb-3">
+     <label class="form-label" for="basic-form-plan">Plan</label>
+     <select class="form-select" id="basic-form-plan" aria-label="Select Type" name="Plan"/>
+       <option selected="selected" value="{{.Plan}}">{{.Plan}}</option>
+       <option value="Plan799">Plan799</option>
+       <option value="Plan999">Plan999</option>
+       <option value="Plan1299">Plan1299</option>
+       <option value="Plan1499">Plan1499</option>
+       <option value="Plan1999">Plan1999</option>
      </select>
    </div>
    <div class="mb-3">

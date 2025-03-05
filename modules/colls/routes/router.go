@@ -77,10 +77,8 @@ func New(db collectionmodel.Crud) *http.ServeMux {
 		id := s.ID
 		if id > 0 {
 			s.ID = uint(id)
-			if s.SubDue == 0 {
-				s.SubName = sub.FirstName + " " + sub.LastName
-				s.SubDue = sub.DueDay
-			}
+			s.SubName = sub.FirstName + " " + sub.LastName
+			s.SubDue = sub.DueDay
 			err := db.Update(s)
 			if err != nil {
 				log.Println(err)
