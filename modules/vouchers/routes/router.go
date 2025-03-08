@@ -11,7 +11,7 @@ import (
 	vouchermodel "github.com/rbaylon/srvcman/modules/vouchers/model"
 )
 
-var letters = []byte("abcdefghijkmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ@*$%!+/123456789")
+var letters = []byte("abcdefghijkmnopqrstuvwxyzABCDEFGHIJKLMNPQRSTUVWXYZ23456789<>%^")
 
 func New(db vouchermodel.Crud) *http.ServeMux {
 	Router := http.NewServeMux() // 3
