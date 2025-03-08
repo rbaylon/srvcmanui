@@ -90,6 +90,10 @@ func New(db submodel.Crud) *http.ServeMux {
 			http.Redirect(w, r, "/ui/subs", http.StatusSeeOther)
 			return
 		}
+		s.Burstspeed = 60
+		s.Downspeed = 15
+		s.Upspeed = 10
+		s.Duration = 3000
 		err := db.Add(s)
 		if err != nil {
 			log.Println(err)
