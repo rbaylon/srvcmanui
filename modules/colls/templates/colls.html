@@ -15,7 +15,7 @@
     </div>
   </div>
 </div>
-<div id="tableExample" data-list='{"valueNames":["id","fullname","dueday","year","jan","feb","mar","apr","may","jun","jul","aug","sep","oct","nov","dec"],"page":200,"pagination":false}'>
+<div id="tableExample" data-list='{"valueNames":["id","fullname","plan","dueday","year","jan","feb","mar","apr","may","jun","jul","aug","sep","oct","nov","dec"],"page":200,"pagination":false}'>
   <div class="table-responsive mx-n1 px-1">
     <table class="table table-sm border-top border-translucent fs-9 mb-0">
       <thead>
@@ -27,6 +27,7 @@
           </th>
           <th class="sort align-middle" data-sort="id">SubID</th>
           <th class="sort align-middle" data-sort="fullname">Name</th>
+          <th class="sort align-middle" data-sort="plan">Plan</th>
           <th class="sort align-middle" data-sort="dueday">Due</th>
           <th class="sort align-middle" data-sort="year">Year</th>
           <th class="sort align-middle" data-sort="jan">January</th>
@@ -54,6 +55,7 @@
           </td>
           <td class="align-middle id">{{.SubID}}</td>
           <td class="align-middle fullname">{{.SubName}}</td>
+          <td class="align-middle plan">{{.SubPlan}}</td>
           <td class="align-middle dueday">{{.SubDue}}</td>
           <td class="align-middle year">{{.Year}}</td>
           <td class="align-middle jan">{{.Jan}}</td>

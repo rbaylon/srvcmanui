@@ -11,7 +11,7 @@ import (
 	vouchermodel "github.com/rbaylon/srvcman/modules/vouchers/model"
 )
 
-var letters = []byte("abcdefghijkmnopqrstuvwxyzABCDEFGHIJKLMNPQRSTUVWXYZ23456789<>%^")
+var letters = []byte("abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789<^@!*")
 
 func New(db vouchermodel.Crud) *http.ServeMux {
 	Router := http.NewServeMux() // 3
@@ -74,11 +74,8 @@ func New(db vouchermodel.Crud) *http.ServeMux {
 		if err1 != nil {
 			log.Println("return html error atoi issue", hours)
 		}
-		routerid, err2 := strconv.Atoi(r.FormValue("routerid"))
-		if err2 != nil {
-			log.Println("return html error atoi issue", routerid)
-		}
-		ifacetype := r.FormValue("ifacetype")
+		storetype := r.FormValue("storetype")
+
 		code := []byte("00000000")
 		maxlen := len(letters) - 1
 		v := &vouchermodel.Voucher{}
@@ -90,14 +87,13 @@ func New(db vouchermodel.Crud) *http.ServeMux {
 			}
 			newcode := string(code)
 			v.Value = newcode
-			v.Type = ifacetype
 			v.Hours = hours
 			v.Status = "available"
 			v.Downspeed = 3
 			v.Upspeed = 2
-			v.Burstspeed = 20
-			v.Duration = 180000
-			v.PfconfigID = uint(routerid)
+			v.Burstspeed = 5
+			v.Duration = 60000
+			v.Type = storetype
 			vcs = append(vcs, *v)
 		}
 
