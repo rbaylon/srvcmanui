@@ -10,14 +10,16 @@ import (
 	"github.com/go-chi/render"
 	collectionmodel "github.com/rbaylon/srvcman/modules/collections/model"
 	submodel "github.com/rbaylon/srvcman/modules/subs/model"
+	"github.com/rbaylon/srvcmanui/client"
 )
 
-func New(db collectionmodel.Crud) *http.ServeMux {
+func New() *http.ServeMux {
 	Router := http.NewServeMux() // 3
 
 	Router.HandleFunc("GET /{year}", func(w http.ResponseWriter, r *http.Request) {
 		y := r.PathValue("year")
-		records, err := db.GetByYear(y)
+		records := []collectionmodel.Collection{}
+		err := client.Rester("collections/year/"+y, "GET", &records, r)
 		if err != nil {
 			log.Println(err)
 		}
@@ -34,8 +36,9 @@ func New(db collectionmodel.Crud) *http.ServeMux {
 	})
 
 	Router.HandleFunc("GET /{year}/{id}", func(w http.ResponseWriter, r *http.Request) {
-		collectionid, _ := strconv.Atoi(r.PathValue("id"))
-		record, err := db.GetById(uint(collectionid))
+		collectionid := r.PathValue("id")
+		record := collectionmodel.Collection{}
+		err := client.Rester("collections/"+collectionid, "GET", &record, r)
 		if err != nil {
 			log.Println(err)
 		}
@@ -71,16 +74,18 @@ func New(db collectionmodel.Crud) *http.ServeMux {
 			http.Redirect(w, r, "/ui/collection/"+s.Year, http.StatusSeeOther)
 			return
 		}
-		dbconn := db.GetDB()
-		subdb := submodel.New(dbconn)
-		sub, _ := subdb.GetById(uint(s.SubID))
+		sub := submodel.Sub{}
+		err := client.Rester("subs/"+strconv.FormatUint(uint64(s.SubID), 10), "GET", &sub, r)
+		if err != nil {
+			log.Println(err)
+		}
 		id := s.ID
 		if id > 0 {
 			s.ID = uint(id)
 			s.SubName = sub.FirstName + " " + sub.LastName
 			s.SubDue = sub.DueDay
 			s.SubPlan = sub.Plan
-			err := db.Update(s)
+			err = client.Rester("collections/"+strconv.FormatUint(uint64(s.ID), 10), "PUT", s, r)
 			if err != nil {
 				log.Println(err)
 			}
@@ -89,7 +94,7 @@ func New(db collectionmodel.Crud) *http.ServeMux {
 		}
 		s.SubName = sub.FirstName + " " + sub.LastName
 		s.SubDue = sub.DueDay
-		err := db.Add(s)
+		err = client.Rester("collections/create", "POST", s, r)
 		if err != nil {
 			log.Println(err)
 		}

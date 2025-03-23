@@ -9,15 +9,17 @@ import (
 	"strconv"
 
 	vouchermodel "github.com/rbaylon/srvcman/modules/vouchers/model"
+	"github.com/rbaylon/srvcmanui/client"
 )
 
 var letters = []byte("abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789<^@!*")
 
-func New(db vouchermodel.Crud) *http.ServeMux {
+func New() *http.ServeMux {
 	Router := http.NewServeMux() // 3
 
 	Router.HandleFunc("GET /", func(w http.ResponseWriter, r *http.Request) {
-		records, err := db.GetAll()
+		var records []vouchermodel.Voucher
+		err := client.Rester("vouchers", "GET", &records, r)
 		if err != nil {
 			log.Println(err)
 		}
@@ -34,8 +36,8 @@ func New(db vouchermodel.Crud) *http.ServeMux {
 	})
 
 	Router.HandleFunc("GET /{id}", func(w http.ResponseWriter, r *http.Request) {
-		voucherid, _ := strconv.Atoi(r.PathValue("id"))
-		record, err := db.GetById(uint(voucherid))
+		var record vouchermodel.Voucher
+		err := client.Rester("vouchers/"+r.PathValue("id"), "GET", &record, r)
 		if err != nil {
 			log.Println(err)
 		}
@@ -79,7 +81,7 @@ func New(db vouchermodel.Crud) *http.ServeMux {
 		code := []byte("00000000")
 		maxlen := len(letters) - 1
 		v := &vouchermodel.Voucher{}
-		vcs := []vouchermodel.Voucher{}
+		vcs := vouchermodel.Vouchers{}
 		for i := 0; i < count; i++ {
 			for j := 0; j < 8; j++ {
 				c := letters[rand.IntN(maxlen)]
@@ -94,10 +96,10 @@ func New(db vouchermodel.Crud) *http.ServeMux {
 			v.Burstspeed = 5
 			v.Duration = 60000
 			v.Type = storetype
-			vcs = append(vcs, *v)
+			vcs.Vouchers = append(vcs.Vouchers, *v)
 		}
 
-		err = db.AddBulk(vcs)
+		err = client.Rester("vouchers/createBulk", "POST", &vcs, r)
 		if err != nil {
 			log.Println(err)
 		}

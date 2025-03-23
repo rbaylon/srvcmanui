@@ -8,15 +8,16 @@ import (
 	"strconv"
 
 	"github.com/go-chi/render"
-	runtimemodel "github.com/rbaylon/srvcman/modules/runtimes/model"
 	submodel "github.com/rbaylon/srvcman/modules/subs/model"
+	"github.com/rbaylon/srvcmanui/client"
 )
 
-func New(db submodel.Crud) *http.ServeMux {
+func New() *http.ServeMux {
 	Router := http.NewServeMux() // 3
 
 	Router.HandleFunc("GET /", func(w http.ResponseWriter, r *http.Request) {
-		records, err := db.GetAll()
+		var records []submodel.Sub
+		err := client.Rester("subs", "GET", &records, r)
 		if err != nil {
 			log.Println(err)
 		}
@@ -30,8 +31,8 @@ func New(db submodel.Crud) *http.ServeMux {
 	})
 
 	Router.HandleFunc("GET /{id}", func(w http.ResponseWriter, r *http.Request) {
-		subid, _ := strconv.Atoi(r.PathValue("id"))
-		record, err := db.GetById(uint(subid))
+		var record submodel.Sub
+		err := client.Rester("subs/"+r.PathValue("id"), "GET", &record, r)
 		if err != nil {
 			log.Println(err)
 		}
@@ -68,22 +69,11 @@ func New(db submodel.Crud) *http.ServeMux {
 			return
 		}
 		id := s.ID
-		dbconn := db.GetDB()
-		rtdb := runtimemodel.New(dbconn)
-		rt := &runtimemodel.Runtime{}
-		rt.Action = "updatepf"
-		rt.Status = "active"
 		if id > 0 {
 			s.ID = uint(id)
-			err := db.Update(s)
+			err := client.Rester("subs/"+strconv.FormatUint(uint64(id), 10), "PUT", s, r)
 			if err != nil {
 				log.Println(err)
-				http.Redirect(w, r, "/ui/subs", http.StatusSeeOther)
-				return
-			}
-			err = rtdb.Add(rt)
-			if err != nil {
-				log.Println("update pf failed")
 				http.Redirect(w, r, "/ui/subs", http.StatusSeeOther)
 				return
 			}
@@ -94,13 +84,9 @@ func New(db submodel.Crud) *http.ServeMux {
 		s.Downspeed = 15
 		s.Upspeed = 10
 		s.Duration = 3000
-		err := db.Add(s)
+		err := client.Rester("subs/create", "POST", s, r)
 		if err != nil {
 			log.Println(err)
-		}
-		err = rtdb.Add(rt)
-		if err != nil {
-			log.Println("update pf failed")
 		}
 		http.Redirect(w, r, "/ui/subs", http.StatusSeeOther)
 	})

@@ -5,11 +5,6 @@ import (
 	"net/http"
 
 	"github.com/rbaylon/srvcman/database"
-	collectionmodel "github.com/rbaylon/srvcman/modules/collections/model"
-	planmodel "github.com/rbaylon/srvcman/modules/plans/model"
-	submodel "github.com/rbaylon/srvcman/modules/subs/model"
-	usermodel "github.com/rbaylon/srvcman/modules/users/model"
-	vouchermodel "github.com/rbaylon/srvcman/modules/vouchers/model"
 	accesslogger "github.com/rbaylon/srvcmanui/middlewares/access/logger"
 	accessvalidator "github.com/rbaylon/srvcmanui/middlewares/access/validator"
 	collectionrouter "github.com/rbaylon/srvcmanui/modules/colls/routes"
@@ -21,16 +16,11 @@ import (
 
 func main() {
 	port := database.GetEnvVariable("APP_PORT")
-	db, err := database.ConnectToDB()
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	subsrouter := subrouter.New(submodel.New(db))
-	usersrouter := userrouter.New(usermodel.New(db))
-	collsrouter := collectionrouter.New(collectionmodel.New(db))
-	vouchersrouter := voucherrouter.New(vouchermodel.New(db))
-	plansrouter := planrouter.New(planmodel.New(db))
+	subsrouter := subrouter.New()
+	usersrouter := userrouter.New()
+	collsrouter := collectionrouter.New()
+	vouchersrouter := voucherrouter.New()
+	plansrouter := planrouter.New()
 
 	mainrouter := http.NewServeMux()
 	fs := http.FileServer(http.Dir("./static"))
