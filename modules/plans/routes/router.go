@@ -9,13 +9,15 @@ import (
 
 	"github.com/go-chi/render"
 	planmodel "github.com/rbaylon/srvcman/modules/plans/model"
+	"github.com/rbaylon/srvcmanui/client"
 )
 
-func New(db planmodel.Crud) *http.ServeMux {
+func New() *http.ServeMux {
 	Router := http.NewServeMux() // 3
 
 	Router.HandleFunc("GET /", func(w http.ResponseWriter, r *http.Request) {
-		records, err := db.GetAll()
+		var records []planmodel.Plan
+		err := client.Rester("plans", "GET", &records, r)
 		if err != nil {
 			log.Println(err)
 		}
@@ -31,8 +33,8 @@ func New(db planmodel.Crud) *http.ServeMux {
 	})
 
 	Router.HandleFunc("GET /{id}", func(w http.ResponseWriter, r *http.Request) {
-		planid, _ := strconv.Atoi(r.PathValue("id"))
-		record, err := db.GetById(uint(planid))
+		var record planmodel.Plan
+		err := client.Rester("plans/"+r.PathValue("id"), "GET", &record, r)
 		if err != nil {
 			log.Println(err)
 		}
@@ -71,7 +73,7 @@ func New(db planmodel.Crud) *http.ServeMux {
 		id := s.ID
 		if id > 0 {
 			s.ID = uint(id)
-			err := db.Update(s)
+			err := client.Rester("plans/"+strconv.FormatUint(uint64(id), 10), "PUT", &s, r)
 			if err != nil {
 				log.Println(err)
 				http.Redirect(w, r, "/ui/plans", http.StatusSeeOther)
@@ -80,7 +82,7 @@ func New(db planmodel.Crud) *http.ServeMux {
 			http.Redirect(w, r, "/ui/plans", http.StatusSeeOther)
 			return
 		}
-		err := db.Add(s)
+		err := client.Rester("plans/create", "POST", &s, r)
 		if err != nil {
 			log.Println(err)
 		}
