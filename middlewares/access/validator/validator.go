@@ -24,11 +24,6 @@ func Check(next http.Handler) http.Handler {
 				http.Redirect(w, r, "/ui/users/login?prevurl="+url.PathEscape(r.URL.Path), http.StatusSeeOther)
 				return
 			}
-			me := session.Values["whoami"]
-			if me != "admin" && !strings.Contains(r.URL.Path, "/ui/subs") {
-				http.Redirect(w, r, "/ui/users/login?prevurl="+url.PathEscape(r.URL.Path), http.StatusSeeOther)
-				return
-			}
 		}
 		next.ServeHTTP(w, r)
 	})
