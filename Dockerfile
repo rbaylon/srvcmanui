@@ -21,7 +21,7 @@ RUN go mod download
 COPY . .
 
 # Build the application
-RUN go build -o srvcman
+RUN go build -o srvcmanui
 RUN rm -rf /root/.ssh
 # Document the port that may need to be published
 EXPOSE 8000
