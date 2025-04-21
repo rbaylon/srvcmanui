@@ -5,7 +5,7 @@ services:
       dockerfile: Dockerfile
     container_name: srvcmanui
     ports:
-      - "8084:44445" # Maps port 8080 on your host to port 80 on the container
+      - "8084:8000" # Maps port 8080 on your host to port 80 on the container
     volumes:
       - ./.env:/build/.env:ro # Mount your static HTML directory
     environment:
