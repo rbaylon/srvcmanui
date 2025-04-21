@@ -7,6 +7,10 @@ WORKDIR /build
 # Copy the go.mod and go.sum files to the /build directory
 COPY go.mod go.sum ./
 
+# add to fetch private repo
+GOPRIVATE=github.com/rbaylon/srvcman
+RUN git config --global url.ssh://git@github.com/.insteadOf https://github.com/
+
 # Install dependencies
 RUN go mod download
 
