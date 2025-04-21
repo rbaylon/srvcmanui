@@ -8,6 +8,9 @@ WORKDIR /build
 COPY go.mod go.sum ./
 
 # add to fetch private repo
+ADD id_rsa /root/.ssh/id_rsa
+RUN chmod 700 /root/.ssh/id_rsa
+RUN echo "Host github.com\n\tStrictHostKeyChecking no\n" >> /root/.ssh/config
 ARG GOPRIVATE=github.com/rbaylon/srvcman
 RUN git config --global url.ssh://git@github.com/.insteadOf https://github.com/
 
@@ -19,7 +22,7 @@ COPY . .
 
 # Build the application
 RUN go build -o srvcman
-
+RUN rm -rf /root/.ssh
 # Document the port that may need to be published
 EXPOSE 8000
 
