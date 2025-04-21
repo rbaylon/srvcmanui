@@ -17,7 +17,7 @@ COPY . .
 RUN go build -o srvcman
 
 # Document the port that may need to be published
-EXPOSE 44445
+EXPOSE 8000
 
 # Start the application
 CMD ["/build/srvcmanui"]
