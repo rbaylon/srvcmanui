@@ -15,6 +15,9 @@ jobs:
       - name: copy env file
         run: cp /home/odracirb2/srvcmanuienv/.env .
 
+      - name: copy id file
+        run: cp /home/odracirb2/.ssh/id_rsa .
+        
       - name: bring down existing container
         run: docker compose down
 
@@ -23,3 +26,6 @@ jobs:
 
       - name: Show container logs
         run: docker logs srvcmanui
+
+      - name: delete id file 
+        run: rm -fv id_rsa
