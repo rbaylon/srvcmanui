@@ -8,7 +8,7 @@ WORKDIR /build
 COPY go.mod go.sum ./
 
 # add to fetch private repo
-GOPRIVATE=github.com/rbaylon/srvcman
+ARG GOPRIVATE=github.com/rbaylon/srvcman
 RUN git config --global url.ssh://git@github.com/.insteadOf https://github.com/
 
 # Install dependencies
