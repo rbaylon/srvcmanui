@@ -10,7 +10,7 @@ services:
       - ./.env:/build/.env:ro # Mount your static HTML directory
     environment:
       - VIRTUAL_HOST=jrcloud.arkgate.net
-      - VIRTUAL_PORT=44445
+      - VIRTUAL_PORT=8000
       - LETSENCRYPT_HOST=jrcloud.arkgate.net
       - WEB_FQDN=jrcloud.arkgate.net
     networks:
