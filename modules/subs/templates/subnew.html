@@ -1,0 +1,82 @@
+{{define "title"}}Subscriber Form{{end}}
+{{define "content"}}
+ <form method="POST" action="/ui/subs/addorupdate">
+   <div class="mb-3">
+     <label class="form-label" for="basic-form-created">Date Created</label>
+     <input class="form-control" id="basic-form-created" type="datetime-local" name="CreatedAt"/>
+     <input type="hidden" name="ID"/>
+     <input type="hidden" name="Downspeed"/>
+     <input type="hidden" name="Upspeed"/>
+     <input type="hidden" name="Burstspeed"/>
+     <input type="hidden" name="Duration"/>
+   </div>
+   <div class="mb-3">
+     <label class="form-label" for="basic-form-updated">Date updated</label>
+     <input class="form-control" id="basic-form-updated" type="datetime-local"  name="UpdatedAt"/>
+   </div>
+   <div class="mb-3">
+     <label class="form-label" for="basic-form-fname">First Name</label>
+     <input class="form-control" id="basic-form-fname" type="text" placeholder="First Name" name="FirstName"/>
+   </div>
+   <div class="mb-3">
+     <label class="form-label" for="basic-form-lname">Last Name</label>
+     <input class="form-control" id="basic-form-lname" type="text" placeholder="Last Name" name="LastName"/>
+   </div>
+   <div class="mb-3">
+     <label class="form-label" for="basic-form-loc">Address</label>
+     <input class="form-control" id="basic-form-loc" type="text" placeholder="Address" name="Loc">
+   </div>
+   <div class="mb-3">
+     <label class="form-label" for="basic-form-ip">IP address</label>
+     <input class="form-control" id="basic-form-ip" type="text" placeholder="192.0.2.100" name="FramedIp"/>
+   </div>
+   <div class="mb-3">
+     <label class="form-label" for="basic-form-mac">Mac address</label>
+     <input class="form-control" id="basic-form-mac" type="text" placeholder="FF:FF:DE:AD:BE:EF" name="Mac"/>
+   </div>
+   <div class="mb-3">
+     <label class="form-label" for="basic-form-gw">Gateway Address</label>
+     <input class="form-control" id="basic-form-gw" type="text" placeholder="192.0.2.1" name="Gateway"/>
+   </div>
+   <div class="mb-3">
+     <label class="form-label" for="basic-form-type">Interface type</label>
+     <input class="form-control" id="basic-form-type" type="text" placeholder="PF interface type" name="Type"/>
+   </div>
+   <div class="mb-3">
+     <label class="form-label" for="basic-form-status">Status</label>
+     <select class="form-select" id="basic-form-status" aria-label="Select Type" name="Status"/>
+       <option value="active">active</option>
+       <option value="inactive">inactive</option>
+     </select>
+   </div>
+   <div class="mb-3">
+     <label class="form-label" for="basic-form-plan">Plan</label>
+     <select class="form-select" id="basic-form-plan" aria-label="Select Type" name="Plan"/>
+      {{ range . }}
+        <option value="{{ .Plan }}">{{ .Plan }}</option>
+      {{ end }}
+     </select>
+   </div>
+   <div class="mb-3">
+     <label class="form-label" for="basic-form-prio">Priority</label>
+     <input class="form-control" id="basic-form-prio" type="text" placeholder="0" name="Priority"/>
+   </div>
+   <div class="mb-3">
+     <label class="form-label" for="basic-form-pfconfig_id">Router ID</label>
+     <input class="form-control" id="basic-form-pfconfig_id" type="text" placeholder="1" name="PfconfigID"/>
+   </div>
+   <div class="mb-3">
+     <label class="form-label" for="basic-form-due_day">Due day</label>
+     <input class="form-control" id="basic-form-due_day" type="text" placeholder="15" name="DueDay"/>
+   </div>
+   <div class="mb-3">
+     <label class="form-label" for="basic-form-later_count">Pay later count</label>
+     <input class="form-control" id="basic-form-later_count" type="text" placeholder="0" name="LaterCount"/>
+   </div>
+   <div class="mb-3 form-check">
+     <input class="form-check-input" id="basic-form-checkbox" type="checkbox" name="OverDue"/>
+     <label class="form-check-label" for="basic-form-checkbox">Over due</label>
+   </div>
+   <button class="btn btn-primary" type="submit">Submit</button>
+ </form>
+{{end}}
