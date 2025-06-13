@@ -3,49 +3,49 @@
  <form method="POST" action="/ui/subs/addorupdate">
    <div class="mb-3">
      <label class="form-label" for="basic-form-created">Date Created</label>
-     <input class="form-control" id="basic-form-created" type="datetime-local" name="CreatedAt" value="{{.CreatedAt.Format "2006-01-02T15:04:05"}}"/>
-     <input type="hidden" name="ID" value="{{.ID}}" />
-     <input type="hidden" name="Downspeed" value="{{.Downspeed}}"/>
-     <input type="hidden" name="Upspeed" value="{{.Upspeed}}"/>
-     <input type="hidden" name="Burstspeed" value="{{.Burstspeed}}"/>
-     <input type="hidden" name="Duration" value="{{.Duration}}"/>
+     <input class="form-control" id="basic-form-created" type="datetime-local" name="CreatedAt" value="{{.Record.CreatedAt.Format "2006-01-02T15:04:05"}}"/>
+     <input type="hidden" name="ID" value="{{.Record.ID}}" />
+     <input type="hidden" name="Downspeed" value="{{.Record.Downspeed}}"/>
+     <input type="hidden" name="Upspeed" value="{{.Record.Upspeed}}"/>
+     <input type="hidden" name="Burstspeed" value="{{.Record.Burstspeed}}"/>
+     <input type="hidden" name="Duration" value="{{.Record.Duration}}"/>
    </div>
    <div class="mb-3">
      <label class="form-label" for="basic-form-updated">Date updated</label>
-     <input class="form-control" id="basic-form-updated" type="datetime-local"  name="UpdatedAt" value="{{.UpdatedAt.Format "2006-01-02T15:04:05"}}"/>
+     <input class="form-control" id="basic-form-updated" type="datetime-local"  name="UpdatedAt" value="{{.Record.UpdatedAt.Format "2006-01-02T15:04:05"}}"/>
    </div>
    <div class="mb-3">
      <label class="form-label" for="basic-form-fname">First Name</label>
-     <input class="form-control" id="basic-form-fname" type="text" placeholder="First Name" name="FirstName" value="{{.FirstName}}"/>
+     <input class="form-control" id="basic-form-fname" type="text" placeholder="First Name" name="FirstName" value="{{.Record.FirstName}}"/>
    </div>
    <div class="mb-3">
      <label class="form-label" for="basic-form-lname">Last Name</label>
-     <input class="form-control" id="basic-form-lname" type="text" placeholder="Last Name" name="LastName" value="{{.LastName}}"/>
+     <input class="form-control" id="basic-form-lname" type="text" placeholder="Last Name" name="LastName" value="{{.Record.LastName}}"/>
    </div>
    <div class="mb-3">
      <label class="form-label" for="basic-form-loc">Address</label>
-     <input class="form-control" id="basic-form-loc" type="text" placeholder="Address" name="Loc" value="{{.Loc}}">
+     <input class="form-control" id="basic-form-loc" type="text" placeholder="Address" name="Loc" value="{{.Record.Loc}}">
    </div>
    <div class="mb-3">
      <label class="form-label" for="basic-form-ip">IP address</label>
-     <input class="form-control" id="basic-form-ip" type="text" placeholder="192.0.2.100" name="FramedIp" value="{{.FramedIp}}"/>
+     <input class="form-control" id="basic-form-ip" type="text" placeholder="192.0.2.100" name="FramedIp" value="{{.Record.FramedIp}}"/>
    </div>
    <div class="mb-3">
      <label class="form-label" for="basic-form-mac">Mac address</label>
-     <input class="form-control" id="basic-form-mac" type="text" placeholder="FF:FF:DE:AD:BE:EF" name="Mac" value="{{.Mac}}"/>
+     <input class="form-control" id="basic-form-mac" type="text" placeholder="FF:FF:DE:AD:BE:EF" name="Mac" value="{{.Record.Mac}}"/>
    </div>
    <div class="mb-3">
      <label class="form-label" for="basic-form-gw">Gateway Address</label>
-     <input class="form-control" id="basic-form-gw" type="text" placeholder="192.0.2.1" name="Gateway" value="{{.Gateway}}"/>
+     <input class="form-control" id="basic-form-gw" type="text" placeholder="192.0.2.1" name="Gateway" value="{{.Record.Gateway}}"/>
    </div>
    <div class="mb-3">
      <label class="form-label" for="basic-form-type">Interface type</label>
-     <input class="form-control" id="basic-form-type" type="text" placeholder="PF interface type" name="Type" value="{{.Type}}"/>
+     <input class="form-control" id="basic-form-type" type="text" placeholder="PF interface type" name="Type" value="{{.Record.Type}}"/>
    </div>
    <div class="mb-3">
      <label class="form-label" for="basic-form-status">Status</label>
      <select class="form-select" id="basic-form-status" aria-label="Select Type" name="Status"/>
-       <option selected="selected" value="{{.Status}}">{{.Status}}</option>
+       <option selected="selected" value="{{.Record.Status}}">{{.Record.Status}}</option>
        <option value="active">active</option>
        <option value="inactive">inactive</option>
      </select>
@@ -53,33 +53,29 @@
    <div class="mb-3">
      <label class="form-label" for="basic-form-plan">Plan</label>
      <select class="form-select" id="basic-form-plan" aria-label="Select Type" name="Plan"/>
-       <option selected="selected" value="{{.Plan}}">{{.Plan}}</option>
-       <option value="Plan500">Plan500</option>
-       <option value="Plan799">Plan799</option>
-       <option value="Plan999">Plan999</option>
-       <option value="Plan1299">Plan1299</option>
-       <option value="Plan1499">Plan1499</option>
-       <option value="Plan1999">Plan1999</option>
+      {{ range .Plans}}
+        <option value="{{ .Plan }}" {{ if eq $.Record.Plan .Plan }}selected="selected"{{ end }}>{{ .Plan }}</option>
+      {{ end }}
      </select>
    </div>
    <div class="mb-3">
      <label class="form-label" for="basic-form-prio">Priority</label>
-     <input class="form-control" id="basic-form-prio" type="text" placeholder="0" name="Priority" value="{{.Priority}}"/>
+     <input class="form-control" id="basic-form-prio" type="text" placeholder="0" name="Priority" value="{{.Record.Priority}}"/>
    </div>
    <div class="mb-3">
      <label class="form-label" for="basic-form-pfconfig_id">Router ID</label>
-     <input class="form-control" id="basic-form-pfconfig_id" type="text" placeholder="1" name="PfconfigID" value="{{.PfconfigID}}"/>
+     <input class="form-control" id="basic-form-pfconfig_id" type="text" placeholder="1" name="PfconfigID" value="{{.Record.PfconfigID}}"/>
    </div>
    <div class="mb-3">
      <label class="form-label" for="basic-form-due_day">Due day</label>
-     <input class="form-control" id="basic-form-due_day" type="text" placeholder="15" name="DueDay" value="{{.DueDay}}"/>
+     <input class="form-control" id="basic-form-due_day" type="text" placeholder="15" name="DueDay" value="{{.Record.DueDay}}"/>
    </div>
    <div class="mb-3">
      <label class="form-label" for="basic-form-later_count">Pay later count</label>
-     <input class="form-control" id="basic-form-later_count" type="text" placeholder="0" name="LaterCount" value="{{.LaterCount}}"/>
+     <input class="form-control" id="basic-form-later_count" type="text" placeholder="0" name="LaterCount" value="{{.Record.LaterCount}}"/>
    </div>
    <div class="mb-3 form-check">
-     <input class="form-check-input" id="basic-form-checkbox" type="checkbox" name="OverDue" value="{{.OverDue}}"/>
+     <input class="form-check-input" id="basic-form-checkbox" type="checkbox" name="OverDue" value="{{.Record.OverDue}}"/>
      <label class="form-check-label" for="basic-form-checkbox">Over due</label>
    </div>
    <button class="btn btn-primary" type="submit">Submit</button>

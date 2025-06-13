@@ -8,6 +8,7 @@ import (
 	"strconv"
 
 	"github.com/go-chi/render"
+	planmodel "github.com/rbaylon/srvcman/modules/plans/model"
 	submodel "github.com/rbaylon/srvcman/modules/subs/model"
 	"github.com/rbaylon/srvcmanui/client"
 )
@@ -30,6 +31,11 @@ func New() *http.ServeMux {
 		tmpl.ExecuteTemplate(w, "darktheme", records)
 	})
 
+	type subFormData struct {
+		Record *submodel.Sub
+		Plans  []planmodel.Plan
+	}
+
 	Router.HandleFunc("GET /{id}", func(w http.ResponseWriter, r *http.Request) {
 		var record submodel.Sub
 		err := client.Rester("subs/"+r.PathValue("id"), "GET", &record, r)
@@ -41,8 +47,14 @@ func New() *http.ServeMux {
 			pwd + "/layouts/darknav.html",
 			pwd + "/modules/subs/templates/sub.html",
 		}
+		plans := []planmodel.Plan{}
+		err = client.Rester("plans", "GET", &plans, r)
+		if err != nil {
+			log.Println(err)
+		}
+		formdata := subFormData{&record, plans}
 		tmpl := template.Must(template.ParseFiles(files...))
-		err = tmpl.ExecuteTemplate(w, "darktheme", record)
+		err = tmpl.ExecuteTemplate(w, "darktheme", formdata)
 		if err != nil {
 			log.Println(err)
 		}
@@ -50,12 +62,17 @@ func New() *http.ServeMux {
 
 	Router.HandleFunc("GET /create", func(w http.ResponseWriter, r *http.Request) {
 		pwd, _ := os.Getwd()
+		plans := []planmodel.Plan{}
+		err := client.Rester("plans", "GET", &plans, r)
+		if err != nil {
+			log.Println(err)
+		}
 		files := []string{
 			pwd + "/layouts/darknav.html",
-			pwd + "/modules/subs/templates/sub.html",
+			pwd + "/modules/subs/templates/subnew.html",
 		}
 		tmpl := template.Must(template.ParseFiles(files...))
-		err := tmpl.ExecuteTemplate(w, "darktheme", nil)
+		err = tmpl.ExecuteTemplate(w, "darktheme", plans)
 		if err != nil {
 			log.Println(err)
 		}
