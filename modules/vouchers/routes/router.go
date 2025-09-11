@@ -12,7 +12,7 @@ import (
 	"github.com/rbaylon/srvcmanui/client"
 )
 
-var letters = []byte("abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789<^@!*")
+var letters = []byte("abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789")
 
 func New() *http.ServeMux {
 	Router := http.NewServeMux() // 3
