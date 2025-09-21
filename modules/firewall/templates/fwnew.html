@@ -1,0 +1,100 @@
+{{define "title"}}Firewall Form{{end}}
+{{define "content"}}
+ <form method="POST" action="/ui/firewall/addorupdate">
+   <div class="mb-3">
+     <label class="form-label" for="basic-form-created">Date Created</label>
+     <input class="form-control" id="basic-form-created" type="datetime-local" name="CreatedAt"/>
+   </div>
+   <div class="mb-3">
+     <label class="form-label" for="basic-form-updated">Date updated</label>
+     <input class="form-control" id="basic-form-updated" type="datetime-local"  name="UpdatedAt"/>
+   </div>
+   <div class="mb-3">
+     <label class="form-label" for="basic-form-status">Status</label>
+     <select class="form-select" id="basic-form-status" aria-label="Select Type" name="Status"/>
+       <option value="active">active</option>
+       <option value="inactive">inactive</option>
+     </select>
+   </div>
+   <div class="mb-3">
+     <label class="form-label" for="basic-form-pfconfig">Router</label>
+     <select class="form-select" id="basic-form-pfconfig" aria-label="Select Type" name="Pfconfig"/>
+      {{ range .Pfconfigs}}
+        <option value="{{ .ID }}">{{ .Router }}</option>
+      {{ end }}
+     </select>
+   </div>
+   <div class="mb-3">
+     <label class="form-label" for="basic-form-action">Action</label>
+     <select class="form-select" id="basic-form-action" aria-label="Select Type" name="Action"/>
+       <option value="pass">pass</option>
+       <option value="block">block</option>
+     </select>
+   </div>
+   <div class="mb-3">
+     <label class="form-label" for="basic-form-direction">Direction</label>
+     <select class="form-select" id="basic-form-direction" aria-label="Select Type" name="Direction"/>
+       <option value="in">in</option>
+       <option value="out">out</option>
+     </select>
+   </div>
+   <div class="mb-3">
+     <label class="form-label" for="basic-form-log">Log</label>
+     <input class="form-control" id="basic-form-log" type="text" placeholder="log" name="Log"/>
+   </div>
+   <div class="mb-3 form-check">
+     <input class="form-check-input" id="basic-form-checkbox" type="checkbox" name="Quick"/>
+     <label class="form-check-label" for="basic-form-checkbox">Quick</label>
+   </div>
+   <div class="mb-3">
+     <label class="form-label" for="basic-form-interface">On Interface</label>
+     <select class="form-select" id="basic-form-interface" aria-label="Select Type" name="Interface"/>
+        <option value="any">any</option>
+     </select>
+   </div>
+   <div class="mb-3">
+     <label class="form-label" for="basic-form-address_family">Address Family</label>
+     <select class="form-select" id="basic-form-address_family" aria-label="Select Type" name="AddressFamily"/>
+       <option value="inet">inet</option>
+       <option value="inet6">inet6</option>
+     </select>
+   </div>
+   <div class="mb-3">
+     <label class="form-label" for="basic-form-protocol">Protocol</label>
+     <input class="form-control" id="basic-form-protocol" type="text" placeholder="tcp" name="Protocol"/>
+   </div>
+   <div class="mb-3">  
+     <label class="form-label" for="basic-form-source">Source</label>
+     <input class="form-control" id="basic-form-source" type="text" placeholder="ip or network block" name="Source">
+   </div>
+   <div class="mb-3">
+     <label class="form-label" for="basic-form-srcport">Source Port</label>
+     <input class="form-control" id="basic-form-srcport" type="text" placeholder="any" name="SrcPort"/>
+   </div>
+   <div class="mb-3">  
+     <label class="form-label" for="basic-form-destination">Destination</label>
+     <input class="form-control" id="basic-form-destination" type="text" placeholder="ip or network block" name="Destination">
+   </div>
+   <div class="mb-3">
+     <label class="form-label" for="basic-form-dstport">Destination Port</label>
+     <input class="form-control" id="basic-form-dstport" type="text" placeholder="443" name="DstPort"/>
+   </div>
+   <div class="mb-3">
+     <label class="form-label" for="basic-form-gw">Gateway</label>
+     <input class="form-control" id="basic-form-gw" type="text" placeholder="192.0.2.1" name="Gateway"/>
+   </div>
+   <div class="mb-3">
+     <label class="form-label" for="basic-form-plan">Plan</label>
+     <select class="form-select" id="basic-form-plan" aria-label="Select Type" name="Plan"/>
+      {{ range .Plans}}
+        <option value="{{ .Plan }}">{{ .Plan }}</option>
+      {{ end }}
+     </select>
+   </div>
+   <div class="mb-3">
+     <label class="form-label" for="basic-form-prio">Priority</label>
+     <input class="form-control" id="basic-form-prio" type="text" placeholder="0" name="Priority"/>
+   </div>
+   <button class="btn btn-primary" type="submit">Submit</button>
+ </form>
+{{end}}
