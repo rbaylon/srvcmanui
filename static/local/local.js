@@ -5,15 +5,14 @@ function getPfconfig(id){
       const itemsSelect = document.getElementById('basic-form-interface');
       itemsSelect.innerHTML = '<option value="any">any</option>'; // Clear previous options
 
-      data.forEach(pfcfg => {
-        pfcfg.ifaces.forEach(iface => {
+      data.ifaces.forEach(iface => {
         const option = document.createElement('option');
         option.value = iface.device;
         option.textContent = iface.name;
         itemsSelect.appendChild(option);
       });
     })
-    .catch(error => console.error('Error fetching items:', error))});
+    .catch(error => console.error('Error fetching items:', error));
 }
 
 document.getElementById('basic-form-pfconfig').addEventListener('change', function() {
