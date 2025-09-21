@@ -1,7 +1,5 @@
-document.getElementById('basic-form-pfconfig').addEventListener('change', function() {
-  const selectedCategory = this.value;
-
-  fetch(`/ui/firewall/pfconfig/${encodeURIComponent(selectedCategory)}`)
+function getPfconfig(id){
+  fetch(`/ui/firewall/pfconfig/${id}`)
     .then(response => response.json())
     .then(data => {
       const itemsSelect = document.getElementById('basic-form-interface');
@@ -15,4 +13,14 @@ document.getElementById('basic-form-pfconfig').addEventListener('change', functi
       });
     })
     .catch(error => console.error('Error fetching items:', error));
+}
+
+document.getElementById('basic-form-pfconfig').addEventListener('change', function() {
+  const selectedCategory = this.value;
+  getPfconfig(encodeURIComponent(selectedCategory));
+});
+
+document.getElementById('basic-form-pfconfig').addEventListener('load', function() {
+  const selectedCategory = this.value;
+  getPfconfig(encodeURIComponent(selectedCategory));
 });
