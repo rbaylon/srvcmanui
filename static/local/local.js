@@ -20,7 +20,7 @@ document.getElementById('basic-form-pfconfig').addEventListener('change', functi
   getPfconfig(encodeURIComponent(selectedCategory));
 });
 
-document.getElementById('basic-form-pfconfig').addEventListener('load', function() {
-  const selectedCategory = this.value;
-  getPfconfig(encodeURIComponent(selectedCategory));
+document.addEventListener('DOMContentLoaded', function() {
+    const myField = document.getElementById('basic-form-pfconfig');
+    getPfconfig(encodeURIComponent(myField.value));
 });
