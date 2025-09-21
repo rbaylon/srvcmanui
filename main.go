@@ -8,6 +8,7 @@ import (
 	accesslogger "github.com/rbaylon/srvcmanui/middlewares/access/logger"
 	accessvalidator "github.com/rbaylon/srvcmanui/middlewares/access/validator"
 	collectionrouter "github.com/rbaylon/srvcmanui/modules/colls/routes"
+	fwrouter "github.com/rbaylon/srvcmanui/modules/firewall/routes"
 	planrouter "github.com/rbaylon/srvcmanui/modules/plans/routes"
 	subrouter "github.com/rbaylon/srvcmanui/modules/subs/routes"
 	userrouter "github.com/rbaylon/srvcmanui/modules/users/routes"
@@ -21,6 +22,7 @@ func main() {
 	collsrouter := collectionrouter.New()
 	vouchersrouter := voucherrouter.New()
 	plansrouter := planrouter.New()
+	fwsrouter := fwrouter.New()
 
 	mainrouter := http.NewServeMux()
 	fs := http.FileServer(http.Dir("./static"))
@@ -30,6 +32,7 @@ func main() {
 	mainrouter.Handle("/ui/collections/", http.StripPrefix("/ui/collections", collsrouter))
 	mainrouter.Handle("/ui/vouchers/", http.StripPrefix("/ui/vouchers", vouchersrouter))
 	mainrouter.Handle("/ui/plans/", http.StripPrefix("/ui/plans", plansrouter))
+	mainrouter.Handle("/ui/firewall/", http.StripPrefix("/ui/firewall", fwsrouter))
 	finalrouter := accessvalidator.Check(accesslogger.Log(mainrouter))
 
 	log.Println("Go app listening on port", port)
