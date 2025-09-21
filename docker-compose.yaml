@@ -9,10 +9,9 @@ services:
     volumes:
       - ./.env:/build/.env:ro # Mount your static HTML directory
     environment:
-      - VIRTUAL_HOST=jrcloud.arkgate.net
+      - VIRTUAL_HOST=arkgate.workload.it.com
       - VIRTUAL_PORT=8000
-      - LETSENCRYPT_HOST=jrcloud.arkgate.net
-      - WEB_FQDN=jrcloud.arkgate.net
+      - LETSENCRYPT_HOST=arkgate.workload.it.com
     networks:
       - nginx-reverse-proxy
 
