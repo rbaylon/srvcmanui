@@ -16,7 +16,11 @@ function getPfconfig(id){
         if (iface.type == "external"){
             const optiongw = document.createElement('option');
             optiongw.value = iface.gateway;
-            optiongw.textContent = `${iface.gateway} ${iface.name}`;
+            if (iface.default) {
+                optiongw.textContent = `${iface.gateway} ${iface.name} Default`;
+            } else {
+                optiongw.textContent = `${iface.gateway} ${iface.name}`;
+            }
             gwSelect.appendChild(optiongw);
         }
       });
