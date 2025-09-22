@@ -13,12 +13,12 @@ function getPfconfig(id){
         option.value = iface.device;
         option.textContent = iface.name;
         ifaceSelect.appendChild(option);
-
-        const optiongw = document.createElement('option');
-        optiongw.value = iface.gateway;
-        optiongw.textContent = iface.gateway;
-        gwSelect.appendChild(optiongw);
-
+        if (iface.type == "external"){
+            const optiongw = document.createElement('option');
+            optiongw.value = iface.gateway;
+            optiongw.textContent = iface.gateway;
+            gwSelect.appendChild(optiongw);
+        }
       });
     })
     .catch(error => console.error('Error fetching items:', error));
