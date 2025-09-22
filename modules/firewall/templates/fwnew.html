@@ -70,23 +70,25 @@
    </div>
    <div class="mb-3">  
      <label class="form-label" for="basic-form-source">Source</label>
-     <input class="form-control" id="basic-form-source" type="text" placeholder="ip or network block" name="Source">
+     <input class="form-control" id="basic-form-source" type="text" placeholder="any or ip or network block or alias " name="Source">
    </div>
    <div class="mb-3">
      <label class="form-label" for="basic-form-srcport">Source Port</label>
-     <input class="form-control" id="basic-form-srcport" type="text" placeholder="empty or port number" name="SrcPort"/>
+     <input class="form-control" id="basic-form-srcport" type="text" placeholder="any or port number" name="SrcPort"/>
    </div>
    <div class="mb-3">  
      <label class="form-label" for="basic-form-destination">Destination</label>
-     <input class="form-control" id="basic-form-destination" type="text" placeholder="ip or network block" name="Destination">
+     <input class="form-control" id="basic-form-destination" type="text" placeholder="any or ip or network block or alias" name="Destination">
    </div>
    <div class="mb-3">
      <label class="form-label" for="basic-form-dstport">Destination Port</label>
-     <input class="form-control" id="basic-form-dstport" type="text" placeholder="empty or port number" name="DstPort"/>
+     <input class="form-control" id="basic-form-dstport" type="text" placeholder="any or port number" name="DstPort"/>
    </div>
    <div class="mb-3">
-     <label class="form-label" for="basic-form-gw">Gateway</label>
-     <input class="form-control" id="basic-form-gw" type="text" placeholder="192.0.2.1" name="Gateway"/>
+     <label class="form-label" for="basic-form-gateway">Gateway</label>
+     <select class="form-select" id="basic-form-gateway" aria-label="Select Type" name="Gateway"/>
+        <option value="">Default</option>
+     </select>
    </div>
    <div class="mb-3">
      <label class="form-label" for="basic-form-plan">Plan</label>

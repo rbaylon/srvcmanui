@@ -2,14 +2,23 @@ function getPfconfig(id){
   fetch(`/ui/firewall/pfconfig/${id}`)
     .then(response => response.json())
     .then(data => {
-      const itemsSelect = document.getElementById('basic-form-interface');
-      itemsSelect.innerHTML = '<option value="any">any</option>'; // Clear previous options
+      const ifaceSelect = document.getElementById('basic-form-interface');
+      ifaceSelect.innerHTML = '<option value="any">any</option>'; // Clear previous options
+
+      const gwSelect = document.getElementById('basic-form-gateway');
+      gwSelect.innerHTML = '<option value="">Default</option>'; // Clear previous options
 
       data.ifaces.forEach(iface => {
         const option = document.createElement('option');
         option.value = iface.device;
         option.textContent = iface.name;
-        itemsSelect.appendChild(option);
+        ifaceSelect.appendChild(option);
+
+        const optiongw = document.createElement('option');
+        optiongw.value = iface.gateway;
+        optiongw.textContent = iface.gateway;
+        gwSelect.appendChild(optiongw);
+
       });
     })
     .catch(error => console.error('Error fetching items:', error));
