@@ -19,18 +19,18 @@ func New() *http.ServeMux {
 	Router := http.NewServeMux() // 3
 
 	Router.HandleFunc("GET /", func(w http.ResponseWriter, r *http.Request) {
-		var records []fwmodel.Fw
-		err := client.Rester("firewall", "GET", &records, r)
+		var records []fwmodel.Pfrule
+		err := client.Rester("firewall/?option=rules", "GET", &records, r)
 		if err != nil {
 			log.Println(err)
 		}
 		pwd, _ := os.Getwd()
 		files := []string{
-			pwd + "/layouts/darknav.html",
+			pwd + "/layouts/newbase.html",
 			pwd + "/modules/firewall/templates/fws.html",
 		}
 		tmpl := template.Must(template.ParseFiles(files...))
-		tmpl.ExecuteTemplate(w, "darktheme", records)
+		tmpl.ExecuteTemplate(w, "htmx", records)
 	})
 
 	Router.HandleFunc("GET /pfconfig/{id}", func(w http.ResponseWriter, r *http.Request) {
