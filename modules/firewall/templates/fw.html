@@ -3,12 +3,12 @@
  <form method="POST" action="/ui/firewall/addorupdate">
    <div class="mb-3">
      <label class="form-label" for="basic-form-created">Date Created</label>
-     <input class="form-control" id="basic-form-created" type="datetime-local" name="CreatedAt" value="{{.Record.CreatedAt.Format "2006-01-02T15:04:05"}}"/>
+     <input class="form-control" id="basic-form-created" type="hidden" name="CreatedAt" value="{{.Record.CreatedAt.Format "2006-01-02T15:04:05"}}"/>
      <input type="hidden" name="ID" value="{{.Record.ID}}" />  
    </div>
    <div class="mb-3">
      <label class="form-label" for="basic-form-updated">Date updated</label>
-     <input class="form-control" id="basic-form-updated" type="datetime-local"  name="UpdatedAt" value="{{.Record.UpdatedAt.Format "2006-01-02T15:04:05"}}"/>
+     <input class="form-control" id="basic-form-updated" type="hidden"  name="UpdatedAt" value="{{.Record.UpdatedAt.Format "2006-01-02T15:04:05"}}"/>
    </div>
    <div class="mb-3">
      <label class="form-label" for="basic-form-status">Status</label>
@@ -91,8 +91,10 @@
      <input class="form-control" id="basic-form-dstport" type="text" placeholder="empty or port number" name="DstPort" value="{{.Record.DstPort}}"/>
    </div>
    <div class="mb-3">
-     <label class="form-label" for="basic-form-gw">Gateway</label>
-     <input class="form-control" id="basic-form-gw" type="text" placeholder="192.0.2.1" name="Gateway" value="{{.Record.Gateway}}"/>
+     <label class="form-label" for="basic-form-gateway">Gateway</label>
+     <select class="form-select" id="basic-form-gateway" aria-label="Select Type" name="Gateway"/>
+        <option value="">Default</option>
+     </select>
    </div>
    <div class="mb-3">
      <label class="form-label" for="basic-form-plan">Plan</label>
