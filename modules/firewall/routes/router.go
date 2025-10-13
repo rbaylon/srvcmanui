@@ -19,7 +19,7 @@ func New() *http.ServeMux {
 	Router := http.NewServeMux() // 3
 
 	Router.HandleFunc("GET /", func(w http.ResponseWriter, r *http.Request) {
-		var records []fwmodel.Pfrule
+		var records []fwmodel.Fw
 		err := client.Rester("firewall/?option=rules", "GET", &records, r)
 		if err != nil {
 			log.Println(err)
