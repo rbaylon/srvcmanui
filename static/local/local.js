@@ -13,7 +13,7 @@ function getPfconfig(id){
       gwSelect.innerHTML = '<option value="">Default</option>'; // Clear previous options
 
       data.ifaces.forEach(iface => {
-        if (pathname == "/ui/subs/create" && iface.type != "external") {
+        if (pathname == "/ui/subs/create" && iface.type == "internal") {
           const option = document.createElement('option');
           option.value = iface.device;
           option.textContent = iface.name;
