@@ -13,11 +13,13 @@ function getPfconfig(id){
       gwSelect.innerHTML = '<option value="">Default</option>'; // Clear previous options
 
       data.ifaces.forEach(iface => {
-        if (pathname == "/ui/subs/create" && iface.type == "internal") {
-          const option = document.createElement('option');
-          option.value = iface.device;
-          option.textContent = iface.name;
-          ifaceSelect.appendChild(option);
+        if (pathname == "/ui/subs/create") {
+          if (iface.type == "internal"){
+            const option = document.createElement('option');
+            option.value = iface.device;
+            option.textContent = iface.name;
+            ifaceSelect.appendChild(option);
+          }
         } else {
           const option = document.createElement('option');
           option.value = iface.device;
