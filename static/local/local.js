@@ -3,8 +3,9 @@ function getPfconfig(id){
     .then(response => response.json())
     .then(data => {
       const pathname = window.location.pathname;
+      console.log(pathname);
       const ifaceSelect = document.getElementById('basic-form-interface');
-      if (pathname != '/ui/subs/create') {
+      if (pathname != "/ui/subs/create") {
         ifaceSelect.innerHTML = '<option value="any">any</option>'; // Clear previous options
       }
 
@@ -12,7 +13,7 @@ function getPfconfig(id){
       gwSelect.innerHTML = '<option value="">Default</option>'; // Clear previous options
 
       data.ifaces.forEach(iface => {
-        if (pathname == '/ui/subs/create' && iface.type != "external") {
+        if (pathname == "/ui/subs/create" && iface.type != "external") {
           const option = document.createElement('option');
           option.value = iface.device;
           option.textContent = iface.name;
