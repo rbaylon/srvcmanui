@@ -8,6 +8,7 @@ import (
 	"strconv"
 
 	"github.com/go-chi/render"
+	pfconfigmodel "github.com/rbaylon/srvcman/modules/pfconfig/model"
 	planmodel "github.com/rbaylon/srvcman/modules/plans/model"
 	submodel "github.com/rbaylon/srvcman/modules/subs/model"
 	"github.com/rbaylon/srvcmanui/client"
@@ -60,19 +61,31 @@ func New() *http.ServeMux {
 		}
 	})
 
+	type fwFormData struct {
+		Record    *submodel.Sub
+		Plans     []planmodel.Plan
+		Pfconfigs []pfconfigmodel.Pfconfig
+	}
+
 	Router.HandleFunc("GET /create", func(w http.ResponseWriter, r *http.Request) {
 		pwd, _ := os.Getwd()
 		plans := []planmodel.Plan{}
+		pfconfigs := []pfconfigmodel.Pfconfig{}
 		err := client.Rester("plans", "GET", &plans, r)
 		if err != nil {
 			log.Println(err)
 		}
+		err = client.Rester("pfconfig", "GET", &pfconfigs, r)
+		if err != nil {
+			log.Println(err)
+		}
+		formdata := fwFormData{nil, plans, pfconfigs}
 		files := []string{
 			pwd + "/layouts/newbase.html",
 			pwd + "/modules/subs/templates/subnew.html",
 		}
 		tmpl := template.Must(template.ParseFiles(files...))
-		err = tmpl.ExecuteTemplate(w, "htmx", plans)
+		err = tmpl.ExecuteTemplate(w, "htmx", formdata)
 		if err != nil {
 			log.Println(err)
 		}

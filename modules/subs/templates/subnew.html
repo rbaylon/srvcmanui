@@ -35,12 +35,16 @@
      <input class="form-control" id="basic-form-mac" type="text" placeholder="FF:FF:DE:AD:BE:EF" name="Mac"/>
    </div>
    <div class="mb-3">
-     <label class="form-label" for="basic-form-gw">Gateway Address</label>
-     <input class="form-control" id="basic-form-gw" type="text" placeholder="192.0.2.1" name="Gateway"/>
+     <label class="form-label" for="basic-form-gateway">Gateway</label>
+     <select class="form-select" id="basic-form-gateway" aria-label="Select Type" name="Gateway"/>
+        <option value="">Default</option>
+     </select>
    </div>
    <div class="mb-3">
-     <label class="form-label" for="basic-form-type">Interface type</label>
-     <input class="form-control" id="basic-form-type" type="text" placeholder="PF interface type" name="Type"/>
+     <label class="form-label" for="basic-form-interface">On Interface</label>
+     <select class="form-select" id="basic-form-interface" aria-label="Select Type" name="Type"/>
+        <option value="any">any</option>
+     </select>
    </div>
    <div class="mb-3">
      <label class="form-label" for="basic-form-status">Status</label>
@@ -52,7 +56,8 @@
    <div class="mb-3">
      <label class="form-label" for="basic-form-plan">Plan</label>
      <select class="form-select" id="basic-form-plan" aria-label="Select Type" name="Plan"/>
-      {{ range . }}
+      <option value="">None</option>
+      {{ range .Plans}}
         <option value="{{ .Plan }}">{{ .Plan }}</option>
       {{ end }}
      </select>
@@ -62,8 +67,12 @@
      <input class="form-control" id="basic-form-prio" type="text" placeholder="0" name="Priority"/>
    </div>
    <div class="mb-3">
-     <label class="form-label" for="basic-form-pfconfig_id">Router ID</label>
-     <input class="form-control" id="basic-form-pfconfig_id" type="text" placeholder="1" name="PfconfigID"/>
+     <label class="form-label" for="basic-form-pfconfig">Router</label>
+     <select class="form-select" id="basic-form-pfconfig" aria-label="Select Type" name="PfconfigID"/>
+      {{ range .Pfconfigs}}
+        <option value="{{ .ID }}">{{ .Router }}</option>
+      {{ end }}
+     </select>
    </div>
    <div class="mb-3">
      <label class="form-label" for="basic-form-due_day">Due day</label>
@@ -79,4 +88,5 @@
    </div>
    <button class="btn btn-primary" type="submit">Submit</button>
  </form>
+ <script src="/ui/static/local/local.js"></script>
 {{end}}
