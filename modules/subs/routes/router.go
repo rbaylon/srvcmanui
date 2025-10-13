@@ -24,11 +24,11 @@ func New() *http.ServeMux {
 		}
 		pwd, _ := os.Getwd()
 		files := []string{
-			pwd + "/layouts/darknav.html",
+			pwd + "/layouts/newbase.html",
 			pwd + "/modules/subs/templates/subs.html",
 		}
 		tmpl := template.Must(template.ParseFiles(files...))
-		tmpl.ExecuteTemplate(w, "darktheme", records)
+		tmpl.ExecuteTemplate(w, "htmx", records)
 	})
 
 	type subFormData struct {
@@ -44,7 +44,7 @@ func New() *http.ServeMux {
 		}
 		pwd, _ := os.Getwd()
 		files := []string{
-			pwd + "/layouts/darknav.html",
+			pwd + "/layouts/newbase.html",
 			pwd + "/modules/subs/templates/sub.html",
 		}
 		plans := []planmodel.Plan{}
@@ -54,7 +54,7 @@ func New() *http.ServeMux {
 		}
 		formdata := subFormData{&record, plans}
 		tmpl := template.Must(template.ParseFiles(files...))
-		err = tmpl.ExecuteTemplate(w, "darktheme", formdata)
+		err = tmpl.ExecuteTemplate(w, "htmx", formdata)
 		if err != nil {
 			log.Println(err)
 		}
@@ -68,11 +68,11 @@ func New() *http.ServeMux {
 			log.Println(err)
 		}
 		files := []string{
-			pwd + "/layouts/darknav.html",
+			pwd + "/layouts/newbase.html",
 			pwd + "/modules/subs/templates/subnew.html",
 		}
 		tmpl := template.Must(template.ParseFiles(files...))
-		err = tmpl.ExecuteTemplate(w, "darktheme", plans)
+		err = tmpl.ExecuteTemplate(w, "htmx", plans)
 		if err != nil {
 			log.Println(err)
 		}
