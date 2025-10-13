@@ -16,7 +16,7 @@ function getPfconfig(id){
         if (pathname == "/ui/subs/create") {
           if (iface.type == "internal"){
             const option = document.createElement('option');
-            option.value = iface.device;
+            option.value = iface.name;
             option.textContent = iface.name;
             ifaceSelect.appendChild(option);
           }
