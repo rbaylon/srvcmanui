@@ -2,17 +2,27 @@ function getPfconfig(id){
   fetch(`/ui/firewall/pfconfig/${id}`)
     .then(response => response.json())
     .then(data => {
+      const pathname = window.location.pathname;
       const ifaceSelect = document.getElementById('basic-form-interface');
-      ifaceSelect.innerHTML = '<option value="any">any</option>'; // Clear previous options
+      if (pathname != '/ui/subs/create') {
+        ifaceSelect.innerHTML = '<option value="any">any</option>'; // Clear previous options
+      }
 
       const gwSelect = document.getElementById('basic-form-gateway');
       gwSelect.innerHTML = '<option value="">Default</option>'; // Clear previous options
 
       data.ifaces.forEach(iface => {
-        const option = document.createElement('option');
-        option.value = iface.device;
-        option.textContent = iface.name;
-        ifaceSelect.appendChild(option);
+        if (pathname == '/ui/subs/create' && iface.type != "external") {
+          const option = document.createElement('option');
+          option.value = iface.device;
+          option.textContent = iface.name;
+          ifaceSelect.appendChild(option);
+        } else {
+          const option = document.createElement('option');
+          option.value = iface.device;
+          option.textContent = iface.name;
+          ifaceSelect.appendChild(option);
+        }
         if (iface.type == "external"){
             const optiongw = document.createElement('option');
             optiongw.value = iface.gateway;
