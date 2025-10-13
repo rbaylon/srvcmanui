@@ -23,11 +23,11 @@ func New() *http.ServeMux {
 		}
 		pwd, _ := os.Getwd()
 		files := []string{
-			pwd + "/layouts/darknav.html",
+			pwd + "/layouts/newbase.html",
 			pwd + "/modules/plans/templates/plans.html",
 		}
 		tmpl := template.Must(template.ParseFiles(files...))
-		if err := tmpl.ExecuteTemplate(w, "darktheme", records); err != nil {
+		if err := tmpl.ExecuteTemplate(w, "htmx", records); err != nil {
 			log.Println("template error:", err)
 		}
 	})
@@ -40,11 +40,11 @@ func New() *http.ServeMux {
 		}
 		pwd, _ := os.Getwd()
 		files := []string{
-			pwd + "/layouts/darknav.html",
+			pwd + "/layouts/newbase.html",
 			pwd + "/modules/plans/templates/plan.html",
 		}
 		tmpl := template.Must(template.ParseFiles(files...))
-		err = tmpl.ExecuteTemplate(w, "darktheme", record)
+		err = tmpl.ExecuteTemplate(w, "htmx", record)
 		if err != nil {
 			log.Println(err)
 		}
@@ -53,11 +53,11 @@ func New() *http.ServeMux {
 	Router.HandleFunc("GET /create", func(w http.ResponseWriter, r *http.Request) {
 		pwd, _ := os.Getwd()
 		files := []string{
-			pwd + "/layouts/darknav.html",
+			pwd + "/layouts/newbase.html",
 			pwd + "/modules/plans/templates/plan.html",
 		}
 		tmpl := template.Must(template.ParseFiles(files...))
-		err := tmpl.ExecuteTemplate(w, "darktheme", nil)
+		err := tmpl.ExecuteTemplate(w, "htmx", nil)
 		if err != nil {
 			log.Println(err)
 		}
