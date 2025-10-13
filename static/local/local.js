@@ -4,8 +4,10 @@ function getPfconfig(id){
     .then(data => {
       const ifaceSelect = document.getElementById('basic-form-interface');
       ifaceSelect.innerHTML = '<option value="any">any</option>'; // Clear previous options
+
       const SubifaceSelect = document.getElementById('basic-form-interface-sub');
-      ifaceSelect.innerHTML = '<option value=""></option>'; // Clear previous options
+      SubifaceSelect.innerHTML = '<option value=""></option>'; // Clear previous options
+      
       const gwSelect = document.getElementById('basic-form-gateway');
       gwSelect.innerHTML = '<option value="">Default</option>'; // Clear previous options
 
