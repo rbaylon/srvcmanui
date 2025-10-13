@@ -4,7 +4,7 @@ function getPfconfig(id){
     .then(data => {
       const ifaceSelect = document.getElementById('basic-form-interface');
       ifaceSelect.innerHTML = '<option value="any">any</option>'; // Clear previous options
-
+      const SubifaceSelect = document.getElementById('basic-form-interface-sub');
       const gwSelect = document.getElementById('basic-form-gateway');
       gwSelect.innerHTML = '<option value="">Default</option>'; // Clear previous options
 
@@ -22,6 +22,11 @@ function getPfconfig(id){
                 optiongw.textContent = `${iface.gateway} ${iface.name}`;
             }
             gwSelect.appendChild(optiongw);
+        } else {
+          const suboption = document.createElement('option');
+          suboption.value = iface.device;
+          suboption.textContent = iface.name;
+          SubifaceSelect.appendChild(suboption);         
         }
       });
     })
