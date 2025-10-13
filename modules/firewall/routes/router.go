@@ -102,11 +102,11 @@ func New() *http.ServeMux {
 		}
 		formdata := fwFormData{nil, plans, pfconfigs}
 		files := []string{
-			pwd + "/layouts/darknav.html",
+			pwd + "/layouts/newbase.html",
 			pwd + "/modules/firewall/templates/fwnew.html",
 		}
 		tmpl := template.Must(template.ParseFiles(files...))
-		err = tmpl.ExecuteTemplate(w, "darktheme", formdata)
+		err = tmpl.ExecuteTemplate(w, "htmx", formdata)
 		if err != nil {
 			log.Println(err)
 		}
