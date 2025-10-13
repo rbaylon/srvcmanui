@@ -67,7 +67,7 @@ func New() *http.ServeMux {
 		}
 		pwd, _ := os.Getwd()
 		files := []string{
-			pwd + "/layouts/darknav.html",
+			pwd + "/layouts/newbase.html",
 			pwd + "/modules/firewall/templates/fw.html",
 		}
 		plans := []planmodel.Plan{}
@@ -82,7 +82,7 @@ func New() *http.ServeMux {
 		}
 		formdata := fwFormData{&record, plans, pfconfigs}
 		tmpl := template.Must(template.ParseFiles(files...))
-		err = tmpl.ExecuteTemplate(w, "darktheme", formdata)
+		err = tmpl.ExecuteTemplate(w, "htmx", formdata)
 		if err != nil {
 			log.Println(err)
 		}
