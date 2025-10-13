@@ -42,7 +42,7 @@
    </div>
    <div class="mb-3">
      <label class="form-label" for="basic-form-interface">On Interface</label>
-     <select class="form-select" id="basic-form-interface" aria-label="Select Type" name="Type"/>
+     <select class="form-select" id="basic-form-interface-sub" aria-label="Select Type" name="Type"/>
         <option value="any">any</option>
      </select>
    </div>
@@ -56,7 +56,6 @@
    <div class="mb-3">
      <label class="form-label" for="basic-form-plan">Plan</label>
      <select class="form-select" id="basic-form-plan" aria-label="Select Type" name="Plan"/>
-      <option value="">None</option>
       {{ range .Plans}}
         <option value="{{ .Plan }}">{{ .Plan }}</option>
       {{ end }}
