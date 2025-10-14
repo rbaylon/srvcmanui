@@ -41,11 +41,13 @@ function getPfconfig(id){
     .catch(error => console.error('Error fetching items:', error));
 }
 
+// update interface drop down on router change
 document.getElementById('basic-form-pfconfig').addEventListener('change', function() {
   const selectedCategory = this.value;
   getPfconfig(encodeURIComponent(selectedCategory));
 });
 
+// load routers
 document.addEventListener('DOMContentLoaded', function() {
     const myField = document.getElementById('basic-form-pfconfig');
     getPfconfig(encodeURIComponent(myField.value));
