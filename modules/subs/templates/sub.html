@@ -39,7 +39,7 @@
      <select class="form-select" id="basic-form-gateway" aria-label="Select Type" name="Gateway"/>
         {{ range .Pfconfig.Ifaces}}
           {{ if eq .Type "external" }}
-            <option value="{{ .Gateway }}" {{ if eq $.Record.Gateway .Gateway }}selected="selected"{{ end }}>{{ .Gateway }}</option>
+            <option value="{{ .Gateway }}" {{ if eq $.Record.Gateway .Gateway }}selected="selected"{{ end }}>{{ .Gateway .Name }}</option>
           {{ end }}
         {{ end }}
      </select>
@@ -94,5 +94,4 @@
    </div>
    <button class="btn btn-primary" type="submit">Submit</button>
  </form>
- <script src="/ui/static/local/fwonchange.js"></script>
 {{end}}
