@@ -1,9 +1,8 @@
+const pathname = window.location.pathname;
 function getPfconfig(id){
   fetch(`/ui/firewall/pfconfig/${id}`)
     .then(response => response.json())
     .then(data => {
-      const pathname = window.location.pathname;
-      console.log(pathname);
       const ifaceSelect = document.getElementById('basic-form-interface');
       if (pathname != "/ui/subs/create") {
         ifaceSelect.innerHTML = '<option value="any">any</option>'; // Clear previous options
@@ -45,10 +44,4 @@ function getPfconfig(id){
 document.getElementById('basic-form-pfconfig').addEventListener('change', function() {
   const selectedCategory = this.value;
   getPfconfig(encodeURIComponent(selectedCategory));
-});
-
-// load routers
-document.addEventListener('DOMContentLoaded', function() {
-    const myField = document.getElementById('basic-form-pfconfig');
-    getPfconfig(encodeURIComponent(myField.value));
 });
