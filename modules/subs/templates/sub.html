@@ -38,7 +38,9 @@
      <label class="form-label" for="basic-form-gateway">Gateway</label>
      <select class="form-select" id="basic-form-gateway" aria-label="Select Type" name="Gateway"/>
         {{ range .Pfconfig.Ifaces}}
-          <option value="{{ .Gateway }}" {{ if eq $.Record.Gateway .Gateway }}selected="selected"{{ end }}>{{ .Gateway }}</option>
+          {{ if eq .Type "external" }}
+            <option value="{{ .Gateway }}" {{ if eq $.Record.Gateway .Gateway }}selected="selected"{{ end }}>{{ .Gateway }}</option>
+          {{ end }}
         {{ end }}
      </select>
    </div>
