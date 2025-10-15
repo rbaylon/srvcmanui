@@ -2,8 +2,7 @@
 {{define "content"}}
  <form method="POST" action="/ui/subs/addorupdate">
    <div class="mb-3">
-     <label class="form-label" for="basic-form-created">Date Created</label>
-     <input class="form-control" id="basic-form-created" type="datetime-local" name="CreatedAt" value="{{.Record.CreatedAt.Format "2006-01-02T15:04:05"}}"/>
+     <input class="form-control" id="basic-form-created" type="hidden" name="CreatedAt" value="{{.Record.CreatedAt.Format "2006-01-02T15:04:05"}}"/>
      <input type="hidden" name="ID" value="{{.Record.ID}}" />
      <input type="hidden" name="Downspeed" value="{{.Record.Downspeed}}"/>
      <input type="hidden" name="Upspeed" value="{{.Record.Upspeed}}"/>
@@ -11,8 +10,7 @@
      <input type="hidden" name="Duration" value="{{.Record.Duration}}"/>
    </div>
    <div class="mb-3">
-     <label class="form-label" for="basic-form-updated">Date updated</label>
-     <input class="form-control" id="basic-form-updated" type="datetime-local"  name="UpdatedAt" value="{{.Record.UpdatedAt.Format "2006-01-02T15:04:05"}}"/>
+     <input class="form-control" id="basic-form-updated" type="hidden"  name="UpdatedAt" value="{{.Record.UpdatedAt.Format "2006-01-02T15:04:05"}}"/>
    </div>
    <div class="mb-3">
      <label class="form-label" for="basic-form-fname">First Name</label>
