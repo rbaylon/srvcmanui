@@ -103,7 +103,7 @@
      <label class="form-label" for="basic-form-plan">Pipe</label>
      <select class="form-select" id="basic-form-plan" aria-label="Select Type" name="Pipe"/>
       {{ range .Plans}}
-        <option value="{{ .Pipe }}" {{ if eq $.Record.Pipe .Pipe }}selected="selected"{{ end }}>{{ .Pipe }}</option>
+        <option value="{{ .Plan }}" {{ if eq $.Record.Pipe .Plan }}selected="selected"{{ end }}>{{ .Plan }}</option>
       {{ end }}
      </select>
    </div>
