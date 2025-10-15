@@ -1,6 +1,7 @@
 package subrouter
 
 import (
+	"fmt"
 	"html/template"
 	"log"
 	"net/http"
@@ -33,13 +34,19 @@ func New() *http.ServeMux {
 	})
 
 	type subFormData struct {
-		Record *submodel.Sub
-		Plans  []planmodel.Plan
+		Record   *submodel.Sub
+		Plans    []planmodel.Plan
+		Pfconfig pfconfigmodel.Pfconfig
 	}
 
 	Router.HandleFunc("GET /{id}", func(w http.ResponseWriter, r *http.Request) {
 		var record submodel.Sub
+		var pfc pfconfigmodel.Pfconfig
 		err := client.Rester("subs/"+r.PathValue("id"), "GET", &record, r)
+		if err != nil {
+			log.Println(err)
+		}
+		err = client.Rester(fmt.Sprintf("pfconfig/%d", record.PfconfigID), "GET", &pfc, r)
 		if err != nil {
 			log.Println(err)
 		}
@@ -53,7 +60,7 @@ func New() *http.ServeMux {
 		if err != nil {
 			log.Println(err)
 		}
-		formdata := subFormData{&record, plans}
+		formdata := subFormData{&record, plans, pfc}
 		tmpl := template.Must(template.ParseFiles(files...))
 		err = tmpl.ExecuteTemplate(w, "htmx", formdata)
 		if err != nil {
