@@ -2,6 +2,7 @@ package fwrouter
 
 import (
 	"encoding/json"
+	"fmt"
 	"html/template"
 	"log"
 	"net/http"
@@ -58,7 +59,11 @@ func New() *http.ServeMux {
 		Plans     []planmodel.Plan
 		Pfconfigs []pfconfigmodel.Pfconfig
 	}
-
+	type subFormData struct {
+		Record   *fwmodel.Fw
+		Plans    []planmodel.Plan
+		Pfconfig pfconfigmodel.Pfconfig
+	}
 	Router.HandleFunc("GET /{id}", func(w http.ResponseWriter, r *http.Request) {
 		var record fwmodel.Fw
 		err := client.Rester("firewall/"+r.PathValue("id"), "GET", &record, r)
@@ -71,16 +76,16 @@ func New() *http.ServeMux {
 			pwd + "/modules/firewall/templates/fw.html",
 		}
 		plans := []planmodel.Plan{}
-		pfconfigs := []pfconfigmodel.Pfconfig{}
+		pfconfig := pfconfigmodel.Pfconfig{}
 		err = client.Rester("plans", "GET", &plans, r)
 		if err != nil {
 			log.Println(err)
 		}
-		err = client.Rester("pfconfig", "GET", &pfconfigs, r)
+		err = client.Rester(fmt.Sprintf("pfconfig/%d", record.PfconfigID), "GET", &pfconfig, r)
 		if err != nil {
 			log.Println(err)
 		}
-		formdata := fwFormData{&record, plans, pfconfigs}
+		formdata := subFormData{&record, plans, pfconfig}
 		tmpl := template.Must(template.ParseFiles(files...))
 		err = tmpl.ExecuteTemplate(w, "htmx", formdata)
 		if err != nil {
