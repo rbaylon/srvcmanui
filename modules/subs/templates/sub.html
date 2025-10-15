@@ -46,7 +46,9 @@
      <label class="form-label" for="basic-form-interface">Interface</label>
      <select class="form-select" id="basic-form-interface" aria-label="Select Type" name="Type"/>
         {{ range .Pfconfig.Ifaces}}
+          {{ if eq .Type "internal" }}
           <option value="{{ .Name }}" {{ if eq $.Record.Type .Name }}selected="selected"{{ end }}>{{ .Name }}</option>
+          {{ end }}
         {{ end }}
      </select>
    </div>
@@ -72,7 +74,7 @@
    </div>
    <div class="mb-3">
      <label class="form-label" for="basic-form-pfconfig">Router</label>
-     <select class="form-select" id="basic-form-pfconfig" aria-label="Select Type" name="PfconfigID" disabled/>
+     <select class="form-select" id="basic-form-pfconfig" aria-label="Select Type" name="PfconfigID"/>
       {{ range .Pfconfigs}}
         <option value="{{ .ID }}" {{ if eq $.Record.PfconfigID .ID }} selected="selected"{{ end }}>{{ .Router }}</option>
       {{ end }}
@@ -92,4 +94,5 @@
    </div>
    <button class="btn btn-primary" type="submit">Submit</button>
  </form>
+ <script src="/ui/static/local/fwonchange.js"></script>
 {{end}}
