@@ -21,9 +21,7 @@
    <div class="mb-3">
      <label class="form-label" for="basic-form-pfconfig">Router</label>
      <select class="form-select" id="basic-form-pfconfig" aria-label="Select Type" name="Pfconfig"/>
-      {{ range .Pfconfigs}}
-        <option value="{{ .ID }}" {{ if eq $.Record.PfconfigID .ID }}selected="selected"{{ end }}>{{ .Router }}</option>
-      {{ end }}
+      <option value="{{ .Pfconfig.ID }}" selected="selected">{{ .Pfconfig.Router }}</option>
      </select>
    </div>
    <div class="mb-3">
@@ -59,7 +57,9 @@
    <div class="mb-3">
      <label class="form-label" for="basic-form-interface">On Interface</label>
      <select class="form-select" id="basic-form-interface" aria-label="Select Type" name="Interface"/>
-        <option value="any">any</option>
+        {{ range .Pfconfig.Ifaces}}
+          <option value="{{ .Device }}" {{ if eq $.Record.Interface .Device }}selected="selected"{{ end }}>{{ .Name }}</option>
+        {{ end }}
      </select>
    </div>
    <div class="mb-3">
@@ -93,12 +93,16 @@
    <div class="mb-3">
      <label class="form-label" for="basic-form-gateway">Gateway</label>
      <select class="form-select" id="basic-form-gateway" aria-label="Select Type" name="Gateway"/>
-        <option value="">Default</option>
+        {{ range .Pfconfig.Ifaces}}
+          {{ if eq .Type "external" }}
+            <option value="{{ .Gateway }}" {{ if eq $.Record.Gateway .Gateway }}selected="selected"{{ end }}>{{ .Gateway }} {{ .Name }}</option>
+          {{ end }}
+        {{ end }}
      </select>
    </div>
    <div class="mb-3">
-     <label class="form-label" for="basic-form-plan">Plan</label>
-     <select class="form-select" id="basic-form-plan" aria-label="Select Type" name="Plan"/>
+     <label class="form-label" for="basic-form-plan">Pipe</label>
+     <select class="form-select" id="basic-form-plan" aria-label="Select Type" name="Pipe"/>
       {{ range .Plans}}
         <option value="{{ .Plan }}" {{ if eq $.Record.Plan .Plan }}selected="selected"{{ end }}>{{ .Plan }}</option>
       {{ end }}
@@ -106,8 +110,18 @@
    </div>
    <div class="mb-3">
      <label class="form-label" for="basic-form-prio">Priority</label>
-     <input class="form-control" id="basic-form-prio" type="text" placeholder="0" name="Priority" value="{{.Record.Priority}}"/>
-   </div>
+     <select class="form-select" id="basic-form-prio" aria-label="Select Type" name="Priority"/>
+       <option selected="selected" value="{{.Record.Priority}}">{{.Record.Priority}}</option>
+       <option value="0">0</option>
+       <option value="1">1</option>
+       <option value="2">2</option>
+       <option value="3">3</option>
+       <option value="4">4</option>
+       <option value="5">5</option>
+       <option value="6">6</option>
+       <option value="7">7</option>
+     </select>
+    </div>
    <button class="btn btn-primary" type="submit">Submit</button>
  </form>
 <script src="/ui/static/local/local.js"></script>
