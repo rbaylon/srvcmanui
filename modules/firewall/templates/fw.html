@@ -49,7 +49,8 @@
      </select>
    </div>
    <div class="mb-3 form-check">
-     <input class="form-check-input" id="basic-form-checkbox" type="checkbox" name="Quick" value="{{.Record.Quick}}"/>
+     <input class="form-check-input" id="basic-form-checkbox" type="checkbox" name="Quick" 
+      value="{{.Record.Quick}}" {{ if eq .Record.Quick "on" }}checked{{ end }}/>
      <label class="form-check-label" for="basic-form-checkbox">Quick</label>
    </div>
    <div class="mb-3">
