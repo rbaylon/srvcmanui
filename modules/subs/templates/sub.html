@@ -35,13 +35,25 @@
      <input class="form-control" id="basic-form-mac" type="text" placeholder="FF:FF:DE:AD:BE:EF" name="Mac" value="{{.Record.Mac}}"/>
    </div>
    <div class="mb-3">
-     <label class="form-label" for="basic-form-gw">Gateway Address</label>
-     <input class="form-control" id="basic-form-gw" type="text" placeholder="192.0.2.1" name="Gateway" value="{{.Record.Gateway}}"/>
+     <label class="form-label" for="basic-form-gateway">Gateway</label>
+     <select class="form-select" id="basic-form-gateway" aria-label="Select Type" name="Gateway"/>
+        {{ range .Pfconfigs}}
+          {{ range .Ifaces}}
+            <option value="{{ .Gateway }}" {{ if eq $.Record.Gateway .Gateway }}selected="selected"{{ end }}>{{ .Gateway }}</option>  
+          {{ end }}
+        {{ end }}
+     </select>
    </div>
    <div class="mb-3">
-     <label class="form-label" for="basic-form-type">Interface type</label>
-     <input class="form-control" id="basic-form-type" type="text" placeholder="PF interface type" name="Type" value="{{.Record.Type}}"/>
-   </div> 
+     <label class="form-label" for="basic-form-interface">Interface</label>
+     <select class="form-select" id="basic-form-interface" aria-label="Select Type" name="Type"/>
+        {{ range .Pfconfigs}}
+          {{ range .Ifaces}}
+            <option value="{{ .Name }}" {{ if eq $.Record.Type .Name }}selected="selected"{{ end }}>{{ .Name }}</option>  
+          {{ end }}
+        {{ end }}
+     </select>
+   </div>
    <div class="mb-3">
      <label class="form-label" for="basic-form-status">Status</label>
      <select class="form-select" id="basic-form-status" aria-label="Select Type" name="Status"/>
@@ -63,8 +75,12 @@
      <input class="form-control" id="basic-form-prio" type="text" placeholder="0" name="Priority" value="{{.Record.Priority}}"/>
    </div>
    <div class="mb-3">
-     <label class="form-label" for="basic-form-pfconfig_id">Router ID</label>
-     <input class="form-control" id="basic-form-pfconfig_id" type="text" placeholder="1" name="PfconfigID" value="{{.Record.PfconfigID}}"/>
+     <label class="form-label" for="basic-form-pfconfig">Router</label>
+     <select class="form-select" id="basic-form-pfconfig" aria-label="Select Type" name="PfconfigID"/>
+      {{ range .Pfconfigs}}
+        <option value="{{ .ID }}" {{ if eq $.Record.PfconfigID .ID }} selected="selected"{{ end }}>{{ .Router }}</option>
+      {{ end }}
+     </select>
    </div>
    <div class="mb-3">
      <label class="form-label" for="basic-form-due_day">Due day</label>
@@ -80,4 +96,5 @@
    </div>
    <button class="btn btn-primary" type="submit">Submit</button>
  </form>
+ <script src="/ui/static/local/fwonchange.js"></script>
 {{end}}
