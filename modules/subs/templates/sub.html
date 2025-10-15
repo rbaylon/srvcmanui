@@ -37,20 +37,16 @@
    <div class="mb-3">
      <label class="form-label" for="basic-form-gateway">Gateway</label>
      <select class="form-select" id="basic-form-gateway" aria-label="Select Type" name="Gateway"/>
-        {{ range .Pfconfigs}}
-          {{ range .Ifaces}}
-            <option value="{{ .Gateway }}" {{ if eq $.Record.Gateway .Gateway }}selected="selected"{{ end }}>{{ .Gateway }}</option>  
-          {{ end }}
+        {{ range .Pfconfig.Ifaces}}
+          <option value="{{ .Gateway }}" {{ if eq $.Record.Gateway .Gateway }}selected="selected"{{ end }}>{{ .Gateway }}</option>
         {{ end }}
      </select>
    </div>
    <div class="mb-3">
      <label class="form-label" for="basic-form-interface">Interface</label>
      <select class="form-select" id="basic-form-interface" aria-label="Select Type" name="Type"/>
-        {{ range .Pfconfigs}}
-          {{ range .Ifaces}}
-            <option value="{{ .Name }}" {{ if eq $.Record.Type .Name }}selected="selected"{{ end }}>{{ .Name }}</option>  
-          {{ end }}
+        {{ range .Pfconfig.Ifaces}}
+          <option value="{{ .Name }}" {{ if eq $.Record.Type .Name }}selected="selected"{{ end }}>{{ .Name }}</option>
         {{ end }}
      </select>
    </div>
@@ -76,7 +72,7 @@
    </div>
    <div class="mb-3">
      <label class="form-label" for="basic-form-pfconfig">Router</label>
-     <select class="form-select" id="basic-form-pfconfig" aria-label="Select Type" name="PfconfigID"/>
+     <select class="form-select" id="basic-form-pfconfig" aria-label="Select Type" name="PfconfigID" disabled/>
       {{ range .Pfconfigs}}
         <option value="{{ .ID }}" {{ if eq $.Record.PfconfigID .ID }} selected="selected"{{ end }}>{{ .Router }}</option>
       {{ end }}
@@ -96,5 +92,4 @@
    </div>
    <button class="btn btn-primary" type="submit">Submit</button>
  </form>
- <script src="/ui/static/local/fwonchange.js"></script>
 {{end}}
