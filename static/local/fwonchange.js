@@ -49,9 +49,11 @@ function disableFields(interface){
         if (iface.device == interface) {
           const gwSelect = document.getElementById('basic-form-gateway');
           const planSelect = document.getElementById('basic-form-plan');
+          console.log("interface matched")
           if (iface.type == "internal"){
             gwSelect.disabled = true;
             planSelect.disabled = true;
+            console.log("disabled")
           } else {
             gwSelect.disabled = false;
             planSelect.disabled = false;
