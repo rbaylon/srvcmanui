@@ -1,6 +1,7 @@
 package dashrouter
 
 import (
+	"encoding/json"
 	"html/template"
 	"log"
 	"net/http"
@@ -11,13 +12,19 @@ func New() *http.ServeMux {
 	Router := http.NewServeMux() // 3
 
 	Router.HandleFunc("GET /", func(w http.ResponseWriter, r *http.Request) {
+		stats, _ := os.ReadFile("/tmp/mystats")
+		var data interface{}
+		err := json.Unmarshal(stats, &data)
+		if err != nil {
+			log.Println(err)
+		}
 		pwd, _ := os.Getwd()
 		files := []string{
 			pwd + "/layouts/newbase.html",
 			pwd + "/modules/dashboard/templates/dash.html",
 		}
 		tmpl := template.Must(template.ParseFiles(files...))
-		if err := tmpl.ExecuteTemplate(w, "htmx", nil); err != nil {
+		if err := tmpl.ExecuteTemplate(w, "htmx", data); err != nil {
 			log.Println("template error:", err)
 		}
 	})
