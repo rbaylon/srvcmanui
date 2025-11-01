@@ -5,7 +5,7 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"log"
 	"net/http"
 
@@ -28,11 +28,11 @@ func GetToken(username string, password string) (*string, error) {
 	req, _ := http.NewRequest("GET", url, nil)
 	req.Header.Set("Authorization", fmt.Sprintf("Basic %s", api_auth))
 	res, err := client.Do(req)
-	defer res.Body.Close()
 	if err != nil || res.StatusCode != 200 {
-		return nil, fmt.Errorf("Login failed")
+		return nil, fmt.Errorf("login failed")
 	}
-	responseData, ioerr := ioutil.ReadAll(res.Body)
+	defer res.Body.Close()
+	responseData, ioerr := io.ReadAll(res.Body)
 	if ioerr != nil {
 		return nil, ioerr
 	}
@@ -60,10 +60,13 @@ func Rester(module_uri string, method string, data any, r *http.Request) error {
 		req = preq
 	}
 	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", session.Values["jwt"]))
-	res, _ := client.Do(req)
+	res, rerror := client.Do(req)
+	if rerror != nil {
+		return rerror
+	}
 	defer res.Body.Close()
 	if res.StatusCode == 200 || res.StatusCode == 201 {
-		responseData, ioerr := ioutil.ReadAll(res.Body)
+		responseData, ioerr := io.ReadAll(res.Body)
 		if ioerr != nil {
 			return ioerr
 		}
