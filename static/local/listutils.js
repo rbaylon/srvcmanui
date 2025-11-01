@@ -3,5 +3,6 @@ function confirmDelete() {
         console.log("Item deleted!"); 
     } else {
         console.log("Deletion cancelled.");
+        location.reload();
     }
 }
