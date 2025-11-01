@@ -1,6 +1,18 @@
-function confirmDelete() {
+async function getData(path) {
+    try {
+        const response = await fetch(path);
+        if (!response.ok) {
+            throw new Error(`Response status: ${response.status}`);
+        }
+    } catch (error) {
+        console.error(error.message);
+    }
+}
+
+function confirmDelete(path) {
     if (confirm("Are you sure you want to delete this item?")) {
-        console.log("Item deleted!"); 
+        getData(path);
+        console.log("Item deleted!");
     } else {
         console.log("Deletion cancelled.");
         location.reload();
