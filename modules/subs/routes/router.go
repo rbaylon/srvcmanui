@@ -128,5 +128,13 @@ func New() *http.ServeMux {
 		http.Redirect(w, r, "/ui/subs", http.StatusSeeOther)
 	})
 
+	Router.HandleFunc("GET /delete/{id}", func(w http.ResponseWriter, r *http.Request) {
+		err := client.Rester("subs/"+r.PathValue("id"), "DELETE", nil, r)
+		if err != nil {
+			log.Println(err)
+		}
+		http.Redirect(w, r, "/ui/subs", http.StatusSeeOther)
+	})
+
 	return Router
 }

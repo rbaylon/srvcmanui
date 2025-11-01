@@ -11,6 +11,17 @@ import (
 func New() *http.ServeMux {
 	Router := http.NewServeMux() // 3
 
+	Router.HandleFunc("GET /stats", func(w http.ResponseWriter, r *http.Request) {
+		stats, _ := os.ReadFile("/tmp/mystats")
+		var data interface{}
+		err := json.Unmarshal(stats, &data)
+		if err != nil {
+			log.Println(err)
+		}
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(data)
+	})
+
 	Router.HandleFunc("GET /", func(w http.ResponseWriter, r *http.Request) {
 		stats, _ := os.ReadFile("/tmp/mystats")
 		var data interface{}
