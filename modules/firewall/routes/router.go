@@ -143,5 +143,13 @@ func New() *http.ServeMux {
 		http.Redirect(w, r, "/ui/firewall", http.StatusSeeOther)
 	})
 
+	Router.HandleFunc("GET /delete/{id}", func(w http.ResponseWriter, r *http.Request) {
+		err := client.Rester("firewall/"+r.PathValue("id"), "DELETE", nil, r)
+		if err != nil {
+			log.Println(err)
+		}
+		http.Redirect(w, r, "/ui/firewall", http.StatusSeeOther)
+	})
+
 	return Router
 }

@@ -20,7 +20,7 @@
             <tr>
               <td>{{ .ID }}</td>
               <td>{{ .Rule }}</td>
-              <td><span data-feather="edit"></span> | <span data-feather="x-square"></span></td>
+              <td><a href="{{.ID}}"><span data-feather="edit"></span></a> | <a onclick="confirmDelete('/ui/firewall/delete/{{.ID}}')" href="#"><span data-feather="x-square"></span></a></td>
             </tr>
             {{ end }}
           </tbody>
@@ -29,4 +29,5 @@
 <script>
   new DataTable('#records');
 </script>
+<script src="/ui/static/local/listutils.js"></script>
 {{end}} 
