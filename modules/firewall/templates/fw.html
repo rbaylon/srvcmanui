@@ -89,9 +89,14 @@
      <label class="form-label" for="basic-form-dstport">Destination Port</label>
      <input class="form-control" id="basic-form-dstport" type="text" placeholder="empty or port number" name="DstPort" value="{{.Record.DstPort}}"/>
    </div>
+   <br>
+   <hr>
+   <h3><label class="form-label" for="basic-form-gateway">Advance</label></h3>
+   <br>
    <div class="mb-3">
      <label class="form-label" for="basic-form-gateway">Gateway</label>
      <select class="form-select" id="basic-form-gateway" aria-label="Select Type" name="Gateway"/>
+        <option value="">Default</option>
         {{ range .Pfconfig.Ifaces}}
           {{ if eq .Type "external" }}
             <option value="{{ .Gateway }}" {{ if eq $.Record.Gateway .Gateway }}selected="selected"{{ end }}>{{ .Gateway }} {{ .Name }}</option>
@@ -100,15 +105,16 @@
      </select>
    </div>
    <div class="mb-3">
-     <label class="form-label" for="basic-form-plan">Pipe</label>
+     <label class="form-label" for="basic-form-plan">Plan (QoS)</label>
      <select class="form-select" id="basic-form-plan" aria-label="Select Type" name="Pipe"/>
+      <option value="">None</option>
       {{ range .Plans}}
-        <option value="{{ .Plan }}" {{ if eq $.Record.Pipe .Plan }}selected="selected"{{ end }}>{{ .Plan }}</option>
+        <option value="{{ .Plan }}" {{ if eq $.Record.Plan .Plan }}selected="selected"{{ end }}>{{ .Plan }}</option>
       {{ end }}
      </select>
    </div>
    <div class="mb-3">
-     <label class="form-label" for="basic-form-prio">Priority</label>
+     <label class="form-label" for="basic-form-prio">Priority (QoS)</label>
      <select class="form-select" id="basic-form-prio" aria-label="Select Type" name="Priority"/>
        <option selected="selected" value="{{.Record.Priority}}">{{.Record.Priority}}</option>
        <option value="0">0</option>
@@ -120,8 +126,13 @@
        <option value="6">6</option>
        <option value="7">7</option>
      </select>
-    </div>
+   </div>
+   <div class="mb-3">
+     <label class="form-label" for="basic-form-advance">Advance options</label>
+     <input class="form-control" id="basic-form-advance" type="text" placeholder="" name="AdvanceOpts" value="{{.Record.AdvanceOpts}}"/>
+   </div>
    <button class="btn btn-primary" type="submit">Submit</button>
  </form>
-<script src="/ui/static/local/local.js"></script>
+ <script src="/ui/static/local/fwonchange.js"></script>
+ <script src="/ui/static/local/fwonload.js"></script>
 {{end}}
