@@ -6,15 +6,16 @@
   <div class="card-body">
     {{ range .}}
     <table class="table table-bordered table-sm table-hover">
+      {{ range .}}
         <tr><td>RouterID</td><td>{{ .PfconfigID }}</td></tr>
         <tr><td>Name</td><td>{{ .Name }}&deg;C</td></tr>
         <tr><td>Device</td><td>{{ .Device }}&deg;C</td></tr>
         <tr><td>IP</td><td>{{ .Ip}}</td></tr>
         <tr><td>Address Pool</td><td>{{ .PoolAddress }}</td></tr>
         <tr><td>DNS Address</td><td>{{ .DnsAddress}}</td></tr>
+        {{ end }}
     </table>
-    {{ if .ID }}<a href="{{ .ID }}">Edit</a>{{ else }}<a href="create">Edit</a>{{ end }}
-    {{ end }}
+    {{ if . }}<a href="{{ .ID }}">Edit</a>{{ else }}<a href="create">Edit</a>{{ end }}
   </div>
 </div>
 {{end}}
