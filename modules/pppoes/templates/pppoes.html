@@ -15,7 +15,7 @@
         {{ break }}
       {{ end }}
     </table>
-    {{ range . }}<a href="{{ .ID }}">Edit</a> {{break}} {{ else }}<a href="create">Create</a>{{ end }}
+    {{ range . }}<a href="{{.ID}}"><span data-feather="edit"></span></a> | <a onclick="confirmDelete('/ui/pppoes/delete/{{.ID}}')" href="#"><span data-feather="x-square"></span></a>{{break}} {{ else }}<a href="create">Create</a>{{ end }}
   </div>
 </div>
 {{end}}
