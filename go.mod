@@ -5,7 +5,7 @@ go 1.24.0
 require (
 	github.com/go-chi/render v1.0.3
 	github.com/gorilla/sessions v1.4.0
-	github.com/rbaylon/srvcman v1.1.14
+	github.com/rbaylon/srvcman v1.1.19
 )
 
 require (
