@@ -16,7 +16,7 @@
         {{ break }}
       {{ end }}
     </table>
-    {{ if . }}<a href="{{ .ID }}">Edit</a>{{ else }}<a href="create">Edit</a>{{ end }}
+    {{ range . }}<a href="{{ .ID }}">Edit</a> {{break}} {{ else }}<a href="create">Edit</a>{{ end }}
   </div>
 </div>
 {{end}}
