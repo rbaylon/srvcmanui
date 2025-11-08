@@ -13,9 +13,10 @@
         <tr><td>IP</td><td>{{ .Ip}}</td></tr>
         <tr><td>Address Pool</td><td>{{ .PoolAddress }}</td></tr>
         <tr><td>DNS Address</td><td>{{ .DnsAddress}}</td></tr>
+        {{ break }}
         {{ end }}
     </table>
-    {{ if . }}<a href="{{ .ID }}">Edit</a>{{ else }}<a href="create">Edit</a>{{ end }}
+    {{ if len . gt 0 }}<a href="{{ .ID }}">Edit</a>{{ else }}<a href="create">Edit</a>{{ end }}
   </div>
 </div>
 {{end}}
