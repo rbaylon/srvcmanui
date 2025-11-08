@@ -16,7 +16,8 @@
         {{ break }}
         {{ end }}
     </table>
-    {{ if len . gt 0 }}<a href="{{ .ID }}">Edit</a>{{ else }}<a href="create">Edit</a>{{ end }}
+    {{ $count := len .records }}
+    {{ if $count gt 0 }}<a href="{{ .ID }}">Edit</a>{{ else }}<a href="create">Edit</a>{{ end }}
   </div>
 </div>
 {{end}}
