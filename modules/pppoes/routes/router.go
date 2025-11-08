@@ -1,4 +1,4 @@
-pfconfigpackage pppoerouter
+package pppoerouter
 
 import (
 	"encoding/json"
