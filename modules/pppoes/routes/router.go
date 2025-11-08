@@ -127,7 +127,7 @@ func New() *http.ServeMux {
 		id := s.ID
 		if id > 0 {
 			s.ID = uint(id)
-			err := client.Rester("pppoes/"+strconv.FormatUint(uint64(id), 10), "PUT", s, r)
+			err := client.Rester("pppoe/"+strconv.FormatUint(uint64(id), 10), "PUT", s, r)
 			if err != nil {
 				log.Println(err)
 				http.Redirect(w, r, "/ui/pppoes", http.StatusSeeOther)
@@ -136,7 +136,7 @@ func New() *http.ServeMux {
 			http.Redirect(w, r, "/ui/pppoes", http.StatusSeeOther)
 			return
 		}
-		err := client.Rester("pppoes/create", "POST", s, r)
+		err := client.Rester("pppoe/create", "POST", s, r)
 		if err != nil {
 			log.Println(err)
 		}
@@ -144,7 +144,7 @@ func New() *http.ServeMux {
 	})
 
 	Router.HandleFunc("GET /delete/{id}", func(w http.ResponseWriter, r *http.Request) {
-		err := client.Rester("pppoes/"+r.PathValue("id"), "DELETE", nil, r)
+		err := client.Rester("pppoe/"+r.PathValue("id"), "DELETE", nil, r)
 		if err != nil {
 			log.Println(err)
 		}
