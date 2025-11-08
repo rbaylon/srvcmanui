@@ -1,7 +1,6 @@
 package pppoerouter
 
 import (
-	"encoding/json"
 	"fmt"
 	"html/template"
 	"log"
@@ -32,26 +31,6 @@ func New() *http.ServeMux {
 		}
 		tmpl := template.Must(template.ParseFiles(files...))
 		tmpl.ExecuteTemplate(w, "htmx", records)
-	})
-
-	Router.HandleFunc("GET /pfconfig/{id}", func(w http.ResponseWriter, r *http.Request) {
-		var record pfconfigmodel.Pfconfig
-		err := client.Rester("pfconfig/"+r.PathValue("id"), "GET", &record, r)
-		if err != nil {
-			log.Println(err)
-		}
-		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(record)
-	})
-
-	Router.HandleFunc("GET /pfconfig", func(w http.ResponseWriter, r *http.Request) {
-		var records []pfconfigmodel.Pfconfig
-		err := client.Rester("pfconfig", "GET", &records, r)
-		if err != nil {
-			log.Println(err)
-		}
-		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(records)
 	})
 
 	type pppoeFormData struct {
