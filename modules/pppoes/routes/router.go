@@ -21,7 +21,7 @@ func New() *http.ServeMux {
 
 	Router.HandleFunc("GET /", func(w http.ResponseWriter, r *http.Request) {
 		var records []pppoemodel.Pppoe
-		err := client.Rester("pppoes/?option=rules", "GET", &records, r)
+		err := client.Rester("pppoe", "GET", &records, r)
 		if err != nil {
 			log.Println(err)
 		}
