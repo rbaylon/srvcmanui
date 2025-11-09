@@ -3,6 +3,7 @@
  <form method="POST" action="/ui/pppoes/addorupdate">
    <div class="mb-3">
      <input class="form-control" id="basic-form-created" type="hidden" name="CreatedAt"/>
+     <input type="hidden" name="ID" value="{{.Record.ID}}" />  
    </div>
    <div class="mb-3">
      <input class="form-control" id="basic-form-updated" type="hidden"  name="UpdatedAt"/>
