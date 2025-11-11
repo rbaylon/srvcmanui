@@ -7,7 +7,7 @@ function getPfconfig(id){
       data.ifaces.forEach(iface => {
         if (iface.type == "internal"){
             const option = document.createElement('option');
-            option.value = iface.name;
+            option.value = iface.device;
             option.textContent = iface.name;
             ifaceSelect.appendChild(option);
         }
