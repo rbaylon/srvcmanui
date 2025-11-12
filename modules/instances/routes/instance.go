@@ -11,7 +11,6 @@ import (
 	"github.com/go-chi/render"
 	pfconfigmodel "github.com/rbaylon/srvcman/modules/pfconfig/model"
 	planmodel "github.com/rbaylon/srvcman/modules/plans/model"
-	pppoemodel "github.com/rbaylon/srvcman/modules/pppoes/model"
 	"github.com/rbaylon/srvcmanui/client"
 )
 
@@ -19,7 +18,7 @@ func New() *http.ServeMux {
 	Router := http.NewServeMux() // 3
 
 	Router.HandleFunc("GET /", func(w http.ResponseWriter, r *http.Request) {
-		var records []pppoemodel.Pppoe
+		var records []pfconfigmodel.Pfconfig
 		err := client.Rester("pfconfig", "GET", &records, r)
 		if err != nil {
 			log.Println(err)
@@ -34,26 +33,26 @@ func New() *http.ServeMux {
 		tmpl.ExecuteTemplate(w, "htmx", records)
 	})
 
-	type pppoeFormData struct {
-		Record    *pppoemodel.Pppoe
+	type pfconfigFormData struct {
+		Record    *pfconfigmodel.Pfconfig
 		Plans     []planmodel.Plan
 		Pfconfigs []pfconfigmodel.Pfconfig
 	}
 	type subFormData struct {
-		Record   *pppoemodel.Pppoe
+		Record   *pfconfigmodel.Pfconfig
 		Plans    []planmodel.Plan
 		Pfconfig pfconfigmodel.Pfconfig
 	}
 	Router.HandleFunc("GET /{id}", func(w http.ResponseWriter, r *http.Request) {
-		var record pppoemodel.Pppoe
-		err := client.Rester("pppoe/"+r.PathValue("id"), "GET", &record, r)
+		var record pfconfigmodel.Pfconfig
+		err := client.Rester("pfconfig/"+r.PathValue("id"), "GET", &record, r)
 		if err != nil {
 			log.Println(err)
 		}
 		pwd, _ := os.Getwd()
 		files := []string{
 			pwd + "/layouts/newbase.html",
-			pwd + "/modules/pppoes/templates/pppoe.html",
+			pwd + "/modules/pfconfigs/templates/pfconfig.html",
 		}
 		plans := []planmodel.Plan{}
 		pfconfig := pfconfigmodel.Pfconfig{}
@@ -61,7 +60,7 @@ func New() *http.ServeMux {
 		if err != nil {
 			log.Println(err)
 		}
-		err = client.Rester(fmt.Sprintf("pfconfig/%d", record.PfconfigID), "GET", &pfconfig, r)
+		err = client.Rester(fmt.Sprintf("pfconfig/%d", record.ID), "GET", &pfconfig, r)
 		if err != nil {
 			log.Println(err)
 		}
@@ -85,10 +84,10 @@ func New() *http.ServeMux {
 		if err != nil {
 			log.Println(err)
 		}
-		formdata := pppoeFormData{nil, plans, pfconfigs}
+		formdata := pfconfigFormData{nil, plans, pfconfigs}
 		files := []string{
 			pwd + "/layouts/newbase.html",
-			pwd + "/modules/pppoes/templates/pppoenew.html",
+			pwd + "/modules/pfconfigs/templates/pfconfignew.html",
 		}
 		tmpl := template.Must(template.ParseFiles(files...))
 		err = tmpl.ExecuteTemplate(w, "htmx", formdata)
@@ -98,37 +97,37 @@ func New() *http.ServeMux {
 	})
 
 	Router.HandleFunc("POST /addorupdate", func(w http.ResponseWriter, r *http.Request) {
-		s := &pppoemodel.Pppoe{}
+		s := &pfconfigmodel.Pfconfig{}
 		if err := render.Bind(r, s); err != nil {
 			log.Println(err)
-			http.Redirect(w, r, "/ui/pppoes", http.StatusSeeOther)
+			http.Redirect(w, r, "/ui/pfconfigs", http.StatusSeeOther)
 			return
 		}
 		id := s.ID
 		if id > 0 {
 			s.ID = uint(id)
-			err := client.Rester("pppoe/"+strconv.FormatUint(uint64(id), 10), "PUT", s, r)
+			err := client.Rester("pfconfig/"+strconv.FormatUint(uint64(id), 10), "PUT", s, r)
 			if err != nil {
 				log.Println(err)
-				http.Redirect(w, r, "/ui/pppoes", http.StatusSeeOther)
+				http.Redirect(w, r, "/ui/pfconfigs", http.StatusSeeOther)
 				return
 			}
-			http.Redirect(w, r, "/ui/pppoes", http.StatusSeeOther)
+			http.Redirect(w, r, "/ui/pfconfigs", http.StatusSeeOther)
 			return
 		}
-		err := client.Rester("pppoe/create", "POST", s, r)
+		err := client.Rester("pfconfig/create", "POST", s, r)
 		if err != nil {
 			log.Println(err)
 		}
-		http.Redirect(w, r, "/ui/pppoes", http.StatusSeeOther)
+		http.Redirect(w, r, "/ui/pfconfigs", http.StatusSeeOther)
 	})
 
 	Router.HandleFunc("GET /delete/{id}", func(w http.ResponseWriter, r *http.Request) {
-		err := client.Rester("pppoe/"+r.PathValue("id"), "DELETE", nil, r)
+		err := client.Rester("pfconfig/"+r.PathValue("id"), "DELETE", nil, r)
 		if err != nil {
 			log.Println(err)
 		}
-		http.Redirect(w, r, "/ui/pppoes", http.StatusSeeOther)
+		http.Redirect(w, r, "/ui/pfconfigs", http.StatusSeeOther)
 	})
 
 	return Router
