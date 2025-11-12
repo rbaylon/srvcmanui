@@ -1,6 +1,6 @@
-{{define "title"}}PPPOE Form{{end}}
+{{define "title"}}Instance Form{{end}}
 {{define "content"}}
- <form method="POST" action="/ui/pppoes/addorupdate">
+ <form method="POST" action="/ui/instances/addorupdate">
    <div class="mb-3">
      <input class="form-control" id="basic-form-created" type="hidden" name="CreatedAt"/>
    </div>
@@ -8,36 +8,37 @@
      <input class="form-control" id="basic-form-updated" type="hidden"  name="UpdatedAt"/>
    </div>
    <div class="mb-3">
-     <label class="form-label" for="basic-form-pfconfig">Router</label>
-     <select class="form-select" id="basic-form-pfconfig" aria-label="Select Type" name="PfconfigID"/>
-      {{ range .Pfconfigs}}
-        <option value="{{ .ID }}">{{ .Router }}</option>
-      {{ end }}
-     </select>
+     <label class="form-label" for="basic-form-router">Router</label>
+     <input class="form-control" id="basic-form-router" type="text" placeholder="instance name" name="Router"/>
    </div>
    <div class="mb-3">
-     <label class="form-label" for="basic-form-interface">Device</label>
-     <select class="form-select" id="basic-form-interface" aria-label="Select Device" name="Device"/>
-     </select>
-   </div>
-   <div class="mb-3">
-     <label class="form-label" for="basic-form-protocol">Name</label>
-     <input class="form-control" id="basic-form-protocol" type="text" placeholder="" name="Name"/>
+     <label class="form-label" for="basic-form-worker">Worker Name</label>
+     <input class="form-control" id="basic-form-worker" type="text" placeholder="Worker name" name="Workername"/>
    </div>
    <div class="mb-3">  
-     <label class="form-label" for="basic-form-source">IP</label>
-     <input class="form-control" id="basic-form-source" type="text" placeholder="IP address from device not currently assigned" name="Ip">
+     <label class="form-label" for="basic-form-wifilist">WifiIpList</label>
+     <input class="form-control" id="basic-form-source" type="text" placeholder="path to wifi clients list" name="WifiIpList">
    </div>
    <div class="mb-3">  
-     <label class="form-label" for="basic-form-destination">Pool range</label>
-     <input class="form-control" id="basic-form-destination" type="text" placeholder="ip range in format x.x.x.x-y.y.y.y" name="PoolAddress">
+     <label class="form-label" for="basic-form-subslist">SubsIpList</label>
+     <input class="form-control" id="basic-form-subslist" type="text" placeholder="path to subscribers list" name="SubsIpList">
    </div>
    <div class="mb-3">
-     <label class="form-label" for="basic-form-dstport">DNS servers</label>
-     <input class="form-control" id="basic-form-dstport" type="text" placeholder="space separated dns server ip addresses" name="DnsAddress"/>
+     <label class="form-label" for="basic-form-dns">DNS servers</label>
+     <input class="form-control" id="basic-form-dns" type="text" placeholder="space separated dns server ip addresses" name="Dns"/>
+   </div>
+   <div class="mb-3">
+     <label class="form-label" for="basic-form-captiveportal">Captive Portal Port</label>
+     <input class="form-control" id="basic-form-captiveportal" type="text" placeholder="captive portal port" name="CaptivePortalPort"/>
+   </div>
+   <div class="mb-3">
+     <label class="form-label" for="basic-form-subsportal">Subscribers Portal Port</label>
+     <input class="form-control" id="basic-form-subsportal" type="text" placeholder="subscribers portal port" name="SubsPortalPort"/>
+   </div>
+   <div class="mb-3 form-check">
+     <input class="form-check-input" id="basic-form-lb" type="checkbox" name="LoadBalance"/>
+     <label class="form-check-label" for="basic-form-lb">Enable Load Balancer</label>
    </div>
    <button class="btn btn-primary" type="submit">Submit</button>
  </form>
- <script src="/ui/static/local/pppoe.js"></script>
- <script src="/ui/static/local/fwonload.js"></script>
 {{end}}

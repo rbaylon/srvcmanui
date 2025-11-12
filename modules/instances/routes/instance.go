@@ -1,7 +1,6 @@
 package instancerouter
 
 import (
-	"fmt"
 	"html/template"
 	"log"
 	"net/http"
@@ -10,7 +9,6 @@ import (
 
 	"github.com/go-chi/render"
 	pfconfigmodel "github.com/rbaylon/srvcman/modules/pfconfig/model"
-	planmodel "github.com/rbaylon/srvcman/modules/plans/model"
 	"github.com/rbaylon/srvcmanui/client"
 )
 
@@ -33,16 +31,6 @@ func New() *http.ServeMux {
 		tmpl.ExecuteTemplate(w, "htmx", records)
 	})
 
-	type pfconfigFormData struct {
-		Record    *pfconfigmodel.Pfconfig
-		Plans     []planmodel.Plan
-		Pfconfigs []pfconfigmodel.Pfconfig
-	}
-	type subFormData struct {
-		Record   *pfconfigmodel.Pfconfig
-		Plans    []planmodel.Plan
-		Pfconfig pfconfigmodel.Pfconfig
-	}
 	Router.HandleFunc("GET /{id}", func(w http.ResponseWriter, r *http.Request) {
 		var record pfconfigmodel.Pfconfig
 		err := client.Rester("pfconfig/"+r.PathValue("id"), "GET", &record, r)
@@ -52,21 +40,10 @@ func New() *http.ServeMux {
 		pwd, _ := os.Getwd()
 		files := []string{
 			pwd + "/layouts/newbase.html",
-			pwd + "/modules/pfconfigs/templates/pfconfig.html",
+			pwd + "/modules/instances/templates/instance.html",
 		}
-		plans := []planmodel.Plan{}
-		pfconfig := pfconfigmodel.Pfconfig{}
-		err = client.Rester("plans", "GET", &plans, r)
-		if err != nil {
-			log.Println(err)
-		}
-		err = client.Rester(fmt.Sprintf("pfconfig/%d", record.ID), "GET", &pfconfig, r)
-		if err != nil {
-			log.Println(err)
-		}
-		formdata := subFormData{&record, plans, pfconfig}
 		tmpl := template.Must(template.ParseFiles(files...))
-		err = tmpl.ExecuteTemplate(w, "htmx", formdata)
+		err = tmpl.ExecuteTemplate(w, "htmx", record)
 		if err != nil {
 			log.Println(err)
 		}
@@ -74,23 +51,12 @@ func New() *http.ServeMux {
 
 	Router.HandleFunc("GET /create", func(w http.ResponseWriter, r *http.Request) {
 		pwd, _ := os.Getwd()
-		plans := []planmodel.Plan{}
-		pfconfigs := []pfconfigmodel.Pfconfig{}
-		err := client.Rester("plans", "GET", &plans, r)
-		if err != nil {
-			log.Println(err)
-		}
-		err = client.Rester("pfconfig", "GET", &pfconfigs, r)
-		if err != nil {
-			log.Println(err)
-		}
-		formdata := pfconfigFormData{nil, plans, pfconfigs}
 		files := []string{
 			pwd + "/layouts/newbase.html",
-			pwd + "/modules/pfconfigs/templates/pfconfignew.html",
+			pwd + "/modules/instances/templates/instance.html",
 		}
 		tmpl := template.Must(template.ParseFiles(files...))
-		err = tmpl.ExecuteTemplate(w, "htmx", formdata)
+		err := tmpl.ExecuteTemplate(w, "htmx", nil)
 		if err != nil {
 			log.Println(err)
 		}
@@ -100,7 +66,7 @@ func New() *http.ServeMux {
 		s := &pfconfigmodel.Pfconfig{}
 		if err := render.Bind(r, s); err != nil {
 			log.Println(err)
-			http.Redirect(w, r, "/ui/pfconfigs", http.StatusSeeOther)
+			http.Redirect(w, r, "/ui/instances", http.StatusSeeOther)
 			return
 		}
 		id := s.ID
@@ -109,17 +75,17 @@ func New() *http.ServeMux {
 			err := client.Rester("pfconfig/"+strconv.FormatUint(uint64(id), 10), "PUT", s, r)
 			if err != nil {
 				log.Println(err)
-				http.Redirect(w, r, "/ui/pfconfigs", http.StatusSeeOther)
+				http.Redirect(w, r, "/ui/instances", http.StatusSeeOther)
 				return
 			}
-			http.Redirect(w, r, "/ui/pfconfigs", http.StatusSeeOther)
+			http.Redirect(w, r, "/ui/instances", http.StatusSeeOther)
 			return
 		}
 		err := client.Rester("pfconfig/create", "POST", s, r)
 		if err != nil {
 			log.Println(err)
 		}
-		http.Redirect(w, r, "/ui/pfconfigs", http.StatusSeeOther)
+		http.Redirect(w, r, "/ui/instances", http.StatusSeeOther)
 	})
 
 	Router.HandleFunc("GET /delete/{id}", func(w http.ResponseWriter, r *http.Request) {
@@ -127,7 +93,7 @@ func New() *http.ServeMux {
 		if err != nil {
 			log.Println(err)
 		}
-		http.Redirect(w, r, "/ui/pfconfigs", http.StatusSeeOther)
+		http.Redirect(w, r, "/ui/instances", http.StatusSeeOther)
 	})
 
 	return Router
