@@ -1,0 +1,30 @@
+{{define "title"}}PPPOE Server Config{{end}}
+{{define "content"}}
+<div class="d-flex align-items-center justify-content-end my-3">
+  <div id="bulk-select-replace-element">
+    <a href="create" ><button class="btn btn-phoenix-success btn-sm" type="button"><span data-feather="plus">New</span></button></a>
+  </div>
+</div>
+      <h2>Node Instances</h2>
+      <div class="table-responsive">
+        <table class="table table-striped table-sm" id="records">
+          <thead>
+            <tr>
+              <th scope="col">ID</th>
+              <th scope="col">Node details</th>
+              <th scope="col">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {{ range .}}
+            <tr>
+              <td>{{ .ID }}</td>
+              <td>{{ .Name }}</td>
+              <td><a href="{{.ID}}"><span data-feather="edit"></span></a> | <a onclick="confirmDelete('/ui/instances/delete/{{.ID}}')" href="#"><span data-feather="x-square"></span></a></td>
+            </tr>
+            {{ end }}
+          </tbody>
+        </table>
+      </div>
+<script src="/ui/static/local/listutils.js"></script>
+{{end}}
