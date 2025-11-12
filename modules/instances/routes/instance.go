@@ -68,6 +68,9 @@ func New() *http.ServeMux {
 			http.Redirect(w, r, "/ui/instances", http.StatusSeeOther)
 			return
 		}
+		if r.FormValue("LoadBalance") == "on" {
+			s.LoadBalance = true
+		}
 		id := s.ID
 		if id > 0 {
 			s.ID = uint(id)
