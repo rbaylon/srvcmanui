@@ -1,0 +1,45 @@
+{{define "title"}}PPPOE Form{{end}}
+{{define "content"}}
+ <form method="POST" action="/ui/pppoes/addorupdate">
+   <div class="mb-3">
+     <input class="form-control" id="basic-form-created" type="hidden" name="CreatedAt"/>
+     <input type="hidden" name="ID" value="{{.Record.ID}}" />  
+   </div>
+   <div class="mb-3">
+     <input class="form-control" id="basic-form-updated" type="hidden"  name="UpdatedAt"/>
+   </div>
+   <div class="mb-3">
+     <label class="form-label" for="basic-form-pfconfig">Router</label>
+     <select class="form-select" id="basic-form-pfconfig" aria-label="Select Type" name="PfconfigID"/>
+      <option value="{{ .Pfconfig.ID }}" selected="selected">{{ .Pfconfig.Router }}</option>
+     </select>
+   </div>
+   <div class="mb-3">
+     <label class="form-label" for="basic-form-interface">Device</label>
+     <select class="form-select" id="basic-form-interface" aria-label="Select Device" name="Device"/>
+        {{ range .Pfconfig.Ifaces}}
+          {{ if eq .Type "internal" }}
+            <option value="{{ .Device }}" {{ if eq $.Record.Device .Device }}selected="selected"{{ end }}>{{ .Name }}</option>
+          {{ end }}
+        {{ end }}
+     </select>
+   </div>
+   <div class="mb-3">
+     <label class="form-label" for="basic-form-protocol">Name</label>
+     <input class="form-control" id="basic-form-protocol" type="text" placeholder="" name="Name" value="{{ .Record.Name }}" />
+   </div>
+   <div class="mb-3">  
+     <label class="form-label" for="basic-form-source">IP</label>
+     <input class="form-control" id="basic-form-source" type="text" placeholder="IP address from device not currently assigned" name="Ip" value="{{ .Record.Ip }}"/>
+   </div>
+   <div class="mb-3">  
+     <label class="form-label" for="basic-form-destination">Pool range</label>
+     <input class="form-control" id="basic-form-destination" type="text" placeholder="ip range in format x.x.x.x-y.y.y.y" name="PoolAddress" value="{{ .Record.PoolAddress }}"/>
+   </div>
+   <div class="mb-3">
+     <label class="form-label" for="basic-form-dstport">DNS servers</label>
+     <input class="form-control" id="basic-form-dstport" type="text" placeholder="space separated dns server ip addresses" name="DnsAddress" value="{{ .Record.DnsAddress }}"/>
+   </div>
+   <button class="btn btn-primary" type="submit">Submit</button>
+ </form>
+{{end}}
