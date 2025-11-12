@@ -37,7 +37,7 @@
      <input class="form-control" id="basic-form-subsportal" type="text" placeholder="subscribers portal port" name="SubsPortalPort" value="{{ .SubsPortalPort }}"/>
    </div>
    <div class="mb-3 form-check">
-     <input class="form-check-input" id="basic-form-lb" type="checkbox" name="LoadBalance" value="{{ .LoadBalance }}" {{ if .LoadBalance }}checked{{ end }} />
+     <input class="form-check-input" id="basic-form-lb" type="checkbox" name="LoadBalance" value="true" {{ if .LoadBalance }}checked{{ end }} />
      <label class="form-check-label" for="basic-form-lb">Enable Load Balancer</label>
    </div>
    <button class="btn btn-primary" type="submit">Submit</button>
