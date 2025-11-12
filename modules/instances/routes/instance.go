@@ -22,7 +22,6 @@ func New() *http.ServeMux {
 			log.Println(err)
 		}
 		pwd, _ := os.Getwd()
-		log.Printf("%v\n", records[0])
 		files := []string{
 			pwd + "/layouts/newbase.html",
 			pwd + "/modules/instances/templates/instances.html",
