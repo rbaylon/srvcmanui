@@ -1,4 +1,4 @@
-package pppoerouter
+package instancerouter
 
 import (
 	"fmt"
