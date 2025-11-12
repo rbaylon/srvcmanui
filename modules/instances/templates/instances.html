@@ -19,7 +19,7 @@
             {{ range .}}
             <tr>
               <td>{{ .ID }}</td>
-              <td>{{ .Name }}</td>
+              <td>{{ .Router }}</td>
               <td><a href="{{.ID}}"><span data-feather="edit"></span></a> | <a onclick="confirmDelete('/ui/instances/delete/{{.ID}}')" href="#"><span data-feather="x-square"></span></a></td>
             </tr>
             {{ end }}
