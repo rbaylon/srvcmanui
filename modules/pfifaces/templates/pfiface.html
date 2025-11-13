@@ -30,7 +30,11 @@
    </div>
    <div class="mb-3">
      <label class="form-label" for="basic-form-type">Type</label>
-     <input class="form-control" id="basic-form-type" type="text" placeholder="" name="Type" value="{{.Record.Type}}"/>
+     <select class="form-select" id="basic-form-type" aria-label="Select Type" name="Type"/>
+       <option selected="selected" value="{{.Record.Type}}">{{.Record.Type}}</option>
+       <option value="internal">internal</option>
+       <option value="external">external</option>
+     </select>
    </div>
    <div class="mb-3">
      <label class="form-label" for="basic-form-lb">Load Balance Percentage</label>
@@ -38,7 +42,7 @@
    </div>
    <div class="mb-3">
      <input class="form-check-input" id="basic-form-default" type="checkbox" name="Default" value="true" {{ if .Record.Default }}checked{{ end }} />
-     <label class="form-check-label" for="basic-form-default"></label>
+     <label class="form-check-label" for="basic-form-default">Default Gateway</label>
    </div>
    <div class="mb-3">
      <label class="form-label" for="basic-form-pfconfig">Router</label>
