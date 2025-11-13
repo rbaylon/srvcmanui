@@ -47,7 +47,7 @@
      <input class="form-control" id="basic-form-lb" type="text" placeholder="" name="LbPercentage" {{ if .Record }} value="{{.Record.LbPercentage}}" {{end}}/>
    </div>
    <div class="mb-3">
-     <input class="form-check-input" id="basic-form-default" type="checkbox" name="Default" value="true" {{ if .Record.Default }}checked{{ end }} />
+     <input class="form-check-input" id="basic-form-default" type="checkbox" name="Default" value="true" {{ if .Record }} {{ if .Record.Default }}checked{{ end }} {{end}}/>
      <label class="form-check-label" for="basic-form-default">Default Gateway</label>
    </div>
    <div class="mb-3">
