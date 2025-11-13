@@ -44,7 +44,7 @@
      <label class="form-label" for="basic-form-pfconfig">Router</label>
      <select class="form-select" id="basic-form-pfconfig" aria-label="Select Type" name="PfconfigID"/>
      {{ range .Pfconfigs }}
-      <option value="{{ .ID }}" {{ if .ID eq $.Record.PfconfigID }} selected="selected" {{ end }}>{{ .Router }}</option>
+      <option value="{{ .ID }}" {{ if eq $.Record.PfconfigID .ID }} selected="selected" {{ end }}>{{ .Router }}</option>
      {{ end }}
      </select>
    </div>
