@@ -11,6 +11,7 @@ import (
 	dashrouter "github.com/rbaylon/srvcmanui/modules/dashboard/routes"
 	fwrouter "github.com/rbaylon/srvcmanui/modules/firewall/routes"
 	instancerouter "github.com/rbaylon/srvcmanui/modules/instances/routes"
+	pfifacerouter "github.com/rbaylon/srvcmanui/modules/pfifaces/routes"
 	planrouter "github.com/rbaylon/srvcmanui/modules/plans/routes"
 	pppoerouter "github.com/rbaylon/srvcmanui/modules/pppoes/routes"
 	subrouter "github.com/rbaylon/srvcmanui/modules/subs/routes"
@@ -29,6 +30,7 @@ func main() {
 	dashrouter := dashrouter.New()
 	pppoerouter := pppoerouter.New()
 	instacerouter := instancerouter.New()
+	ifacesrouter := pfifacerouter.New()
 
 	mainrouter := http.NewServeMux()
 	fs := http.FileServer(http.Dir("./static"))
@@ -42,6 +44,7 @@ func main() {
 	mainrouter.Handle("/ui/dashboard/", http.StripPrefix("/ui/dashboard", dashrouter))
 	mainrouter.Handle("/ui/pppoes/", http.StripPrefix("/ui/pppoes", pppoerouter))
 	mainrouter.Handle("/ui/instances/", http.StripPrefix("/ui/instances", instacerouter))
+	mainrouter.Handle("/ui/pfifaces/", http.StripPrefix("/ui/pfifaces", ifacesrouter))
 	finalrouter := accessvalidator.Check(accesslogger.Log(mainrouter))
 
 	log.Println("Go app listening on port", port)
