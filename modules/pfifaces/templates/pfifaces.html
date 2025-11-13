@@ -2,10 +2,11 @@
 {{define "content"}}
 <div class="d-flex align-items-center justify-content-end my-3">
   <div id="bulk-select-replace-element">
-    <a href="/ui/pfifaces/create" ><button class="btn btn-phoenix-success btn-sm" type="button"><span class="fas fa-plus" data-fa-transform="shrink-3 down-2"></span><span class="ms-1">New</span></button></a>
+    <a href="create" ><button class="btn btn-phoenix-success btn-sm" type="button"><span data-feather="plus">New</span></button></a>
   </div>
-  <div class="table-responsive mx-n1 px-1">
-    <table class="table table-sm border-top border-translucent fs-9 mb-0" id="records">
+</div>
+  <div class="table-responsive">
+    <table class="table table-striped table-sm" id="records">
       <thead>
         <tr>
           <th class="sort align-middle" data-sort="id">ID</th>
