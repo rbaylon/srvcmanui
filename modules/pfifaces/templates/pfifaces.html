@@ -1,0 +1,47 @@
+{{define "title"}}Plan List{{end}}
+{{define "content"}}
+<div class="d-flex align-items-center justify-content-end my-3">
+  <div id="bulk-select-replace-element">
+    <a href="/ui/pfifaces/create" ><button class="btn btn-phoenix-success btn-sm" type="button"><span class="fas fa-plus" data-fa-transform="shrink-3 down-2"></span><span class="ms-1">New</span></button></a>
+  </div>
+  <div class="table-responsive mx-n1 px-1">
+    <table class="table table-sm border-top border-translucent fs-9 mb-0" id="records">
+      <thead>
+        <tr>
+          <th class="sort align-middle" data-sort="id">ID</th>
+          <th class="sort align-middle" data-sort="pfiface">Name</th>
+          <th class="sort align-middle" data-sort="downspeed">Device</th>
+          <th class="sort align-middle" data-sort="upspeed">Link Speed</th>
+          <th class="sort align-middle" data-sort="stdown">Gateway</th>
+          <th class="sort align-middle" data-sort="stup">IP Address</th>
+          <th class="sort align-middle" data-sort="stup">Netmask</th>
+          <th class="sort align-middle" data-sort="stup">Type</th>
+          <th class="sort align-middle" data-sort="stup">Load Balance Percentage</th>
+          <th class="sort align-middle" data-sort="stup">Default Gateway</th>
+          <th class="sort align-middle" data-sort="pfconfigid">PfconfigID</th>
+          <th class="sort text-end align-middle pe-0" scope="col">ACTION</th>
+        </tr>
+      </thead>
+      <tbody class="list" id="bulk-select-body">
+        {{ range .}}
+        <tr>
+          <td class="align-middle id">{{.ID}}</td>
+          <td class="align-middle pfiface">{{.Name}}</td>
+          <td class="align-middle downspeed">{{.Device}}</td>
+          <td class="align-middle upspeed">{{.Speed}}</td>
+          <td class="align-middle stdown">{{.Gateway}}</td>
+          <td class="align-middle stup">{{.Ip}}</td>
+          <td class="align-middle stup">{{.Netmask}}</td>
+          <td class="align-middle stup">{{.Type}}</td>
+          <td class="align-middle stup">{{.LbPercentage}}</td>
+          <td class="align-middle stup">{{.Default}}</td>
+          <td class="align-middle pfconfigid">{{.PfconfigID}}</td>
+          <td><a href="{{.ID}}"><span data-feather="edit"></span></a> | <a onclick="confirmDelete('/ui/pfifaces/delete/{{.ID}}')" href="#"><span data-feather="x-square"></span></a></td>
+        </tr>
+        {{end}}
+      </tbody>
+    </table>
+  </div>
+</div>
+<script src="/ui/static/local/listutils.js"></script>
+{{end}} 

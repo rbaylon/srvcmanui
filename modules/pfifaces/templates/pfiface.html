@@ -1,0 +1,53 @@
+{{define "title"}}Plan Form{{end}}
+{{define "content"}}
+ <form method="POST" action="/ui/pfifaces/addorupdate">
+   <div class="mb-3">
+     <input class="form-control" id="basic-form-created" type="hidden" name="CreatedAt" value="{{.Record.CreatedAt.Format "2006-01-02T15:04:05"}}"/>
+     <input type="hidden" name="ID" value="{{.ID}}" />
+   </div>
+   <div class="mb-3">
+     <input class="form-control" id="basic-form-updated" type="hidden"  name="UpdatedAt" value="{{.Record.UpdatedAt.Format "2006-01-02T15:04:05"}}"/>
+   </div>
+   <div class="mb-3">
+     <label class="form-label" for="basic-form-downspeed">Name</label>
+     <input class="form-control" id="basic-form-downspeed" type="text" placeholder="" name="Name" value="{{.Record.Name}}"/>
+   </div>
+   <div class="mb-3">
+     <label class="form-label" for="basic-form-device">Device</label>
+     <input class="form-control" id="basic-form-device" type="text" placeholder="" name="Device" value="{{.Record.Device}}">
+   </div>
+   <div class="mb-3">
+     <label class="form-label" for="basic-form-ip">IP Address</label>
+     <input class="form-control" id="basic-form-ip" type="text" placeholder="" name="Ip" value="{{.Record.Ip}}"/>
+   </div>
+   <div class="mb-3">
+     <label class="form-label" for="basic-form-netmask">Netmask</label>
+     <input class="form-control" id="basic-form-netmask" type="text" placeholder="" name="Netmask" value="{{.Record.Netmask}}"/>
+   </div>
+   <div class="mb-3">
+     <label class="form-label" for="basic-form-gw">Gateway</label>
+     <input class="form-control" id="basic-form-gw" type="text" placeholder="" name="Gateway" value="{{.Record.Gateway}}"/>
+   </div>
+   <div class="mb-3">
+     <label class="form-label" for="basic-form-type">Type</label>
+     <input class="form-control" id="basic-form-type" type="text" placeholder="" name="Type" value="{{.Record.Type}}"/>
+   </div>
+   <div class="mb-3">
+     <label class="form-label" for="basic-form-lb">Load Balance Percentage</label>
+     <input class="form-control" id="basic-form-lb" type="text" placeholder="" name="LbPercentage" value="{{.Record.LbPercentage}}"/>
+   </div>
+   <div class="mb-3">
+     <input class="form-check-input" id="basic-form-default" type="checkbox" name="Default" value="true" {{ if .Record.Default }}checked{{ end }} />
+     <label class="form-check-label" for="basic-form-default"></label>
+   </div>
+   <div class="mb-3">
+     <label class="form-label" for="basic-form-pfconfig">Router</label>
+     <select class="form-select" id="basic-form-pfconfig" aria-label="Select Type" name="PfconfigID"/>
+     {{ range .Pfconfigs }}
+      <option value="{{ .ID }}" {{ if .ID eq .Record.PfconfigID }} selected="selected" {{ end }}>{{ .Router }}</option>
+     {{ end }}
+     </select>
+   </div>
+   <button class="btn btn-primary" type="submit">Submit</button>
+ </form>
+{{end}}
