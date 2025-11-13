@@ -3,7 +3,7 @@
  <form method="POST" action="/ui/pfifaces/addorupdate">
    <div class="mb-3">
      <input class="form-control" id="basic-form-created" type="hidden" name="CreatedAt" value="{{.Record.CreatedAt.Format "2006-01-02T15:04:05"}}"/>
-     <input type="hidden" name="ID" value="{{.ID}}" />
+     <input type="hidden" name="ID" value="{{.Record.ID}}" />
    </div>
    <div class="mb-3">
      <input class="form-control" id="basic-form-updated" type="hidden"  name="UpdatedAt" value="{{.Record.UpdatedAt.Format "2006-01-02T15:04:05"}}"/>
