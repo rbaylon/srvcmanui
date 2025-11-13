@@ -72,7 +72,7 @@ func New() *http.ServeMux {
 			pwd + "/layouts/newbase.html",
 			pwd + "/modules/pfifaces/templates/pfiface.html",
 		}
-		data := Formdata{Record: nil, Pfconfigs: pfconfigs}
+		data := Formdata{nil, pfconfigs}
 		tmpl := template.Must(template.ParseFiles(files...))
 		err = tmpl.ExecuteTemplate(w, "htmx", data)
 		if err != nil {
