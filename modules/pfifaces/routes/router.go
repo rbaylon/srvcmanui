@@ -34,7 +34,7 @@ func New() *http.ServeMux {
 	})
 
 	type Formdata struct {
-		Record    pfifacemodel.Pfiface
+		Record    *pfifacemodel.Pfiface
 		Pfconfigs []pfconfigmodel.Pfconfig
 	}
 	Router.HandleFunc("GET /{id}", func(w http.ResponseWriter, r *http.Request) {
@@ -49,7 +49,7 @@ func New() *http.ServeMux {
 			log.Println(err)
 		}
 		pwd, _ := os.Getwd()
-		data := Formdata{Record: record, Pfconfigs: pfconfigs}
+		data := Formdata{Record: &record, Pfconfigs: pfconfigs}
 		files := []string{
 			pwd + "/layouts/newbase.html",
 			pwd + "/modules/pfifaces/templates/pfiface.html",
@@ -72,8 +72,9 @@ func New() *http.ServeMux {
 			pwd + "/layouts/newbase.html",
 			pwd + "/modules/pfifaces/templates/pfiface.html",
 		}
+		data := Formdata{Record: nil, Pfconfigs: pfconfigs}
 		tmpl := template.Must(template.ParseFiles(files...))
-		err = tmpl.ExecuteTemplate(w, "htmx", pfconfigs)
+		err = tmpl.ExecuteTemplate(w, "htmx", data)
 		if err != nil {
 			log.Println(err)
 		}
