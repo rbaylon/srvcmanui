@@ -12,39 +12,39 @@
    {{ end }}
    <div class="mb-3">
      <label class="form-label" for="basic-form-downspeed">Name</label>
-     <input class="form-control" id="basic-form-downspeed" type="text" placeholder="" name="Name" value="{{.Record.Name}}"/>
+     <input class="form-control" id="basic-form-downspeed" type="text" placeholder="" name="Name" {{ if .Record }} value="{{.Record.Name}}" {{end}}/>
    </div>
    <div class="mb-3">
      <label class="form-label" for="basic-form-device">Device</label>
-     <input class="form-control" id="basic-form-device" type="text" placeholder="" name="Device" value="{{.Record.Device}}">
+     <input class="form-control" id="basic-form-device" type="text" placeholder="" name="Device" {{ if .Record }} value="{{.Record.Device}}" {{end}}>
    </div>
    <div class="mb-3">
      <label class="form-label" for="basic-form-speed">Link Speed</label>
-     <input class="form-control" id="basic-form-speed" type="text" placeholder="900M" name="Speed" value="{{.Record.Speed}}">
+     <input class="form-control" id="basic-form-speed" type="text" placeholder="900M" name="Speed" {{ if .Record }} value="{{.Record.Speed}}" {{end}}>
    </div>
    <div class="mb-3">
      <label class="form-label" for="basic-form-ip">IP Address</label>
-     <input class="form-control" id="basic-form-ip" type="text" placeholder="" name="Ip" value="{{.Record.Ip}}"/>
+     <input class="form-control" id="basic-form-ip" type="text" placeholder="" name="Ip" {{ if .Record }} value="{{.Record.Ip}}" {{end}}/>
    </div>
    <div class="mb-3">
      <label class="form-label" for="basic-form-netmask">Netmask</label>
-     <input class="form-control" id="basic-form-netmask" type="text" placeholder="" name="Netmask" value="{{.Record.Netmask}}"/>
+     <input class="form-control" id="basic-form-netmask" type="text" placeholder="" name="Netmask" {{ if .Record }} value="{{.Record.Netmask}}" {{end}}/>
    </div>
    <div class="mb-3">
      <label class="form-label" for="basic-form-gw">Gateway</label>
-     <input class="form-control" id="basic-form-gw" type="text" placeholder="" name="Gateway" value="{{.Record.Gateway}}"/>
+     <input class="form-control" id="basic-form-gw" type="text" placeholder="" name="Gateway" {{ if .Record }} value="{{.Record.Gateway}}" {{end}}>
    </div>
    <div class="mb-3">
      <label class="form-label" for="basic-form-type">Type</label>
      <select class="form-select" id="basic-form-type" aria-label="Select Type" name="Type"/>
-       <option selected="selected" value="{{.Record.Type}}">{{.Record.Type}}</option>
+       {{ if .Record }} <option selected="selected" value="{{.Record.Type}}">{{.Record.Type}}</option> {{end}}
        <option value="internal">internal</option>
        <option value="external">external</option>
      </select>
    </div>
    <div class="mb-3">
      <label class="form-label" for="basic-form-lb">Load Balance Percentage</label>
-     <input class="form-control" id="basic-form-lb" type="text" placeholder="" name="LbPercentage" value="{{.Record.LbPercentage}}"/>
+     <input class="form-control" id="basic-form-lb" type="text" placeholder="" name="LbPercentage" {{ if .Record }} value="{{.Record.LbPercentage}}" {{end}}/>
    </div>
    <div class="mb-3">
      <input class="form-check-input" id="basic-form-default" type="checkbox" name="Default" value="true" {{ if .Record.Default }}checked{{ end }} />
