@@ -13,4 +13,29 @@
     </table>
   </div>
 </div>
+<div class="d-flex align-items-center justify-content-end my-3">
+  <div id="bulk-select-replace-element">
+    <a href="create" ><button class="btn btn-phoenix-success btn-sm" type="button"><span data-feather="plus">New</span></button></a>
+  </div>
+</div>
+  <div class="table-responsive">
+    <table class="table table-striped table-sm" id="records">
+      <thead>
+        <tr>
+          <th class="sort align-middle" data-sort="id">User ID/MAC</th>
+          <th class="sort align-middle" data-sort="pfiface">Bandwidth Usage</th>
+        </tr>
+      </thead>
+      <tbody class="list" id="bulk-select-body">
+        {{ range $k, $v := .subs}}
+        <tr>
+          <td class="align-middle id">{{ $k }}</td>
+          <td class="align-middle pfiface">{{ $v }}</td>
+        </tr>
+        {{end}}
+      </tbody>
+    </table>
+  </div>
+</div>
+<script src="/ui/static/local/listutils.js"></script>
 {{end}}
