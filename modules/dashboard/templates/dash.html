@@ -27,7 +27,7 @@
         </tr>
       </thead>
       <tbody class="list" id="bulk-select-body">
-        {{ range $k, $v := .Usertraffic }}
+        {{ range $k, $v := .Usertraffic.subs }}
         <tr>
           <td class="align-middle id">{{ $k }}</td>
           <td class="align-middle pfiface">{{ $v }}</td>
