@@ -33,20 +33,34 @@ func New() *http.ServeMux {
 		json.NewEncoder(w).Encode(data)
 	})
 
+	type viewdata struct {
+		Systats     any
+		Usertraffic any
+	}
+
 	Router.HandleFunc("GET /", func(w http.ResponseWriter, r *http.Request) {
 		stats, _ := os.ReadFile("/tmp/mystats")
-		var data interface{}
-		err := json.Unmarshal(stats, &data)
+		var statsdata interface{}
+		err := json.Unmarshal(stats, &statsdata)
 		if err != nil {
 			log.Println(err)
 		}
+		traffic, _ := os.ReadFile("/tmp/usertraffic")
+		var trafficdata interface{}
+		err = json.Unmarshal(traffic, &trafficdata)
+		if err != nil {
+			log.Println(err)
+		}
+		dashdata := viewdata{}
+		dashdata.Systats = statsdata
+		dashdata.Usertraffic = trafficdata
 		pwd, _ := os.Getwd()
 		files := []string{
 			pwd + "/layouts/newbase.html",
 			pwd + "/modules/dashboard/templates/dash.html",
 		}
 		tmpl := template.Must(template.ParseFiles(files...))
-		if err := tmpl.ExecuteTemplate(w, "htmx", data); err != nil {
+		if err := tmpl.ExecuteTemplate(w, "htmx", dashdata); err != nil {
 			log.Println("template error:", err)
 		}
 	})
