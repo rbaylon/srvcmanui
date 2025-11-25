@@ -29,6 +29,14 @@
      <input class="form-control" id="basic-form-ip" type="text" placeholder="192.0.2.100" name="FramedIp" value="{{.Record.FramedIp}}"/>
    </div>
    <div class="mb-3">
+     <label class="form-label" for="basic-form-pppuname">PPPoE Username</label>
+     <input class="form-control" id="basic-form-ppppw" type="text" placeholder="Leave blank for non pppoe user" name="Pppusername" value="{{.Record.Pppusername}}"/>
+   </div>
+   <div class="mb-3">
+     <label class="form-label" for="basic-form-lname">PPPoE Password</label>
+     <input class="form-control" id="basic-form-lname" type="password" placeholder="" name="Ppppassword" value="{{.Record.Ppppassword}}"/>
+   </div>
+   <div class="mb-3">
      <label class="form-label" for="basic-form-mac">Mac address</label>
      <input class="form-control" id="basic-form-mac" type="text" placeholder="FF:FF:DE:AD:BE:EF" name="Mac" value="{{.Record.Mac}}"/>
    </div>
