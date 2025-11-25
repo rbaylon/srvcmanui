@@ -4,7 +4,7 @@
 <div class="card text-white bg-primary mb-3" style="max-width: 18rem;">
   <div class="card-header">System Info</div>
   <div class="card-body">
-    <table class="table table-bordered table-sm table-hover">
+    <table class="table table-bordered table-sm table-hover" id="stats">
       <tr class="text-white"><td>CPU Available</td><td>{{ .Systats.cpuusage }}%</td></tr>
       <tr class="text-white"><td>CPU Temperature</td><td>{{ .Systats.cputemp }}&deg;C</td></tr>
       <tr class="text-white"><td>Globe Active Subs</td><td>{{ .Systats.gwsubs.globe }}</td></tr>
