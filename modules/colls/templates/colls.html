@@ -50,7 +50,7 @@
           <td class="align-middle oct">{{.Oct}}</td>
           <td class="align-middle nov">{{.Nov}}</td>
           <td class="align-middle dec">{{.Dec}}</td>
-          <td><a href="{{.Year}}/{{.ID}}"><span data-feather="edit"></span>edit</a> | <a onclick="confirmDelete('/ui/collections/delete/{{.ID}}')" href="#"><span data-feather="x-square"></span>delete</a></td>
+          <td><a href="{{.Year}}/{{.ID}}"><span data-feather="edit"></span>edit</a> | <a href="/ui/subs/{{.SubID}}">view</a></td>
         </tr>
         {{end}}
       </tbody>
