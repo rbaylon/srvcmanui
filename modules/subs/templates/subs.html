@@ -32,7 +32,7 @@
           <td class="align-middle dueday">{{.DueDay}}</td>
           <td class="align-middle status">{{.Status}}</td>
           <td class="align-middle plan">{{.Plan}}</td>
-          <td><a href="{{.ID}}"><span data-feather="edit"></span></a> | <a onclick="confirmDelete('/ui/subs/delete/{{.ID}}')" href="#"><span data-feather="x-square"></span></a></td>
+          <td><a href="{{.ID}}"><span data-feather="edit"></span>edit</a> | <a onclick="confirmDelete('/ui/subs/delete/{{.ID}}')" href="#"><span data-feather="x-square"></span>delete</a></td>
         </tr>
         {{end}}
       </tbody>
