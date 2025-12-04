@@ -10,11 +10,6 @@
     <table class="table table-striped table-sm" id="records">
       <thead>
         <tr>
-          <th class="white-space-nowrap fs-9 align-middle ps-0" style="max-width:20px; width:18px;">
-            <div class="form-check mb-0 fs-8">
-              <input class="form-check-input" id="bulk-select-example" type="checkbox" data-bulk-select='{"body":"bulk-select-body","actions":"bulk-select-actions","replacedElement":"bulk-select-replace-element"}' />
-            </div>
-          </th>
           <th class="sort align-middle" data-sort="id">SubID</th>
           <th class="sort align-middle" data-sort="fullname">Name</th>
           <th class="sort align-middle" data-sort="plan">Plan</th>
@@ -38,11 +33,6 @@
       <tbody class="list" id="bulk-select-body">
         {{ range .}}
         <tr>
-          <td class="fs-9 align-middle">
-            <div class="form-check mb-0 fs-8">
-              <input class="form-check-input" type="checkbox" data-bulk-select-row="{&quot;year&quot;:&quot;{{.Year}}&quot;,&quot;sub_id&quot;:&quot;{{.SubID}}&quot;,&quot }" />
-            </div>
-          </td>
           <td class="align-middle id">{{.SubID}}</td>
           <td class="align-middle fullname">{{.SubName}}</td>
           <td class="align-middle plan">{{.SubPlan}}</td>
@@ -60,7 +50,7 @@
           <td class="align-middle oct">{{.Oct}}</td>
           <td class="align-middle nov">{{.Nov}}</td>
           <td class="align-middle dec">{{.Dec}}</td>
-          <td><a href="{{.ID}}"><span data-feather="edit"></span></a> | <a onclick="confirmDelete('/ui/collections/delete/{{.ID}}')" href="#"><span data-feather="x-square"></span></a></td>
+          <td><a href="{{.Year}}/{{.ID}}"><span data-feather="edit"></span></a> | <a onclick="confirmDelete('/ui/collections/delete/{{.ID}}')" href="#"><span data-feather="x-square"></span></a></td>
         </tr>
         {{end}}
       </tbody>
