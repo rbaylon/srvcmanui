@@ -32,14 +32,7 @@
           <td class="align-middle dueday">{{.DueDay}}</td>
           <td class="align-middle status">{{.Status}}</td>
           <td class="align-middle plan">{{.Plan}}</td>
-          <td class="align-middle white-space-nowrap text-end pe-0">
-            <div class="btn-reveal-trigger position-static">
-              <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs-10" type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent"><span class="fas fa-ellipsis-h fs-10"></span></button>
-              <div class="dropdown-menu dropdown-menu-end py-2"><a class="dropdown-item" href="{{.ID}}">Edit</a>
-                <div class="dropdown-divider"></div><a class="dropdown-item text-danger" onclick="confirmDelete('/ui/subs/delete/{{.ID}}')" href="#">Remove</a>
-              </div>
-            </div>
-          </td>
+          <td><a href="{{.ID}}"><span data-feather="edit"></span></a> | <a onclick="confirmDelete('/ui/subs/delete/{{.ID}}')" href="#"><span data-feather="x-square"></span></a></td>
         </tr>
         {{end}}
       </tbody>
