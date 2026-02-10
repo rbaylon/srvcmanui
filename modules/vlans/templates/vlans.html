@@ -1,0 +1,41 @@
+{{define "title"}}Firewall Rules{{end}}
+{{define "head_script"}}{{end}}
+{{define "content"}}
+<div class="d-flex align-items-center justify-content-end my-3">
+  <div id="bulk-select-replace-element">
+    <a href="/ui/vlans/create" ><button class="btn btn-phoenix-success btn-sm" type="button"><span data-feather="plus">New</span></button></a>
+  </div>
+</div>
+      <h2>Vlan List</h2>
+      <div class="table-responsive">
+        <table class="table table-striped table-sm" id="records">
+          <thead>
+            <tr>
+              <th scope="col">ID</th>
+              <th scope="col">Name</th>
+              <th scope="col">Parent Device</th>
+              <th scope="col">Vlan Tag</th>
+              <th scope="col">Rx Prio</th>
+              <th scope="col">Tx Prio</th>
+              <th scope="col">Instance ID</th>
+            </tr>
+          </thead>
+          <tbody>
+            {{ range .}}
+            <tr>
+              <td>{{ .ID }}</td>
+              <td>{{ .Name }}</td>
+              <td>{{ .ParentDevice }}</td>
+              <td>{{ .VlanTag }}</td>
+              <td>{{ .RxPrio }}</td>
+              <td>{{ .TxPrio }}</td>
+              <td>{{ .PfconfigID }}</td>
+              <td><a href="{{.ID}}"><span data-feather="edit"></span></a> | <a onclick="confirmDelete('/ui/firewall/delete/{{.ID}}')" href="#"><span data-feather="x-square"></span></a></td>
+            </tr>
+            {{ end }}
+          </tbody>
+        </table>
+      </div>
+
+<script src="/ui/static/local/listutils.js"></script>
+{{end}} 

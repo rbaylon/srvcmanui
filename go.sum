@@ -52,6 +52,12 @@ github.com/rbaylon/srvcman v1.1.19 h1:YrPp03JJXr3FsfM475UQwcron7ysBvTYM3yCAof1Lb
 github.com/rbaylon/srvcman v1.1.19/go.mod h1:2Qhnsc1POejOVZDYWO8A/dmYrpv/1EXSVH6+DQRo+sw=
 github.com/rbaylon/srvcman v1.1.21 h1:E2JmqPxxzfe9Jkcz8WnvRmNPqMeAGjMiAMu+VIvTrgw=
 github.com/rbaylon/srvcman v1.1.21/go.mod h1:2Qhnsc1POejOVZDYWO8A/dmYrpv/1EXSVH6+DQRo+sw=
+github.com/rbaylon/srvcman v1.1.22 h1:59z6oU/Lh/c3UBvEtgU8mw8dlbjd7aH0/QvWSwFgpOw=
+github.com/rbaylon/srvcman v1.1.22/go.mod h1:2Qhnsc1POejOVZDYWO8A/dmYrpv/1EXSVH6+DQRo+sw=
+github.com/rbaylon/srvcman v1.1.23 h1:foKr2ewbpjdiT6nx5AAI0tgtZWQDEikYOKP33UAuEBQ=
+github.com/rbaylon/srvcman v1.1.23/go.mod h1:2Qhnsc1POejOVZDYWO8A/dmYrpv/1EXSVH6+DQRo+sw=
+github.com/rbaylon/srvcman v1.1.24 h1:eV8BASyf4vmxAXNK7ngZFrlTe0SuaEIoPR+U8DO6YpU=
+github.com/rbaylon/srvcman v1.1.24/go.mod h1:2Qhnsc1POejOVZDYWO8A/dmYrpv/1EXSVH6+DQRo+sw=
 github.com/segmentio/asm v1.2.1 h1:DTNbBqs57ioxAD4PrArqftgypG4/qNpXoJx8TVXxPR0=
 github.com/segmentio/asm v1.2.1/go.mod h1:BqMnlJP91P8d+4ibuonYZw9mfnzI9HfxselHZr5aAcs=
 github.com/stretchr/objx v0.1.0/go.mod h1:HFkY916IF+rwdDfMAkV7OtwuqBVzrE8GR6GFx+wExME=
