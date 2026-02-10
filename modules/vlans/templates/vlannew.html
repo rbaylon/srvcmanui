@@ -1,0 +1,63 @@
+{{define "title"}}Firewall Form{{end}}
+{{define "head_script"}}{{end}}
+{{define "content"}}
+ <form method="POST" action="/ui/vlans/addorupdate">
+   <div class="mb-3">
+     <input class="form-control" id="basic-form-created" type="hidden" name="CreatedAt"/>
+   </div>
+   <div class="mb-3">
+     <input class="form-control" id="basic-form-updated" type="hidden"  name="UpdatedAt"/>
+   </div>
+   <div class="mb-3">
+     <label class="form-label" for="basic-form-name">Name</label>
+     <input class="form-control" id="basic-form-name" type="text" placeholder="interface name" name="Name"/>
+   </div>
+   <div class="mb-3">  
+     <label class="form-label" for="basic-form-vlantag">VLAN ID</label>
+     <input class="form-control" id="basic-form-vlantag" type="text" placeholder="1-4094" name="VlanTag">
+   </div>
+   <div class="mb-3">
+     <label class="form-label" for="basic-form-pfifaces">Parent Device</label>
+     <select class="form-select" id="basic-form-pfifaces" aria-label="Select Parent Interface" name="ParentDevice"/>
+      {{ range .Pfifaces}}
+        <option value="{{ .Device }}">{{ .Device }}</option>
+      {{ end }}
+     </select>
+   </div>
+   <div class="mb-3">
+     <label class="form-label" for="basic-form-rxprio">Priority (Receive)</label>
+     <select class="form-select" id="basic-form-rxprio" aria-label="Select Priority" name="RxPrio"/>
+       <option value="0">0</option>
+       <option value="1">1</option>
+       <option value="2">2</option>
+       <option value="3">3</option>
+       <option value="4">4</option>
+       <option value="5">5</option>
+       <option value="6">6</option>
+       <option value="7">7</option>
+     </select>
+   </div>
+   <div class="mb-3">
+     <label class="form-label" for="basic-form-txprio">Priority (Transmit)</label>
+     <select class="form-select" id="basic-form-txprio" aria-label="Select Priority" name="TxPrio"/>
+       <option value="0">0</option>
+       <option value="1">1</option>
+       <option value="2">2</option>
+       <option value="3">3</option>
+       <option value="4">4</option>
+       <option value="5">5</option>
+       <option value="6">6</option>
+       <option value="7">7</option>
+     </select>
+   </div>
+   <div class="mb-3">
+     <label class="form-label" for="basic-form-pfconfig">Router</label>
+     <select class="form-select" id="basic-form-pfconfig" aria-label="Select Type" name="PfconfigID"/>
+      {{ range .Pfconfigs}}
+        <option value="{{ .ID }}">{{ .Router }}</option>
+      {{ end }}
+     </select>
+   </div>
+   <button class="btn btn-primary" type="submit">Submit</button>
+ </form>
+{{end}}
