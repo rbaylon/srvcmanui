@@ -16,6 +16,7 @@ import (
 	pppoerouter "github.com/rbaylon/srvcmanui/modules/pppoes/routes"
 	subrouter "github.com/rbaylon/srvcmanui/modules/subs/routes"
 	userrouter "github.com/rbaylon/srvcmanui/modules/users/routes"
+	vlanrouter "github.com/rbaylon/srvcmanui/modules/vlans/routes"
 	voucherrouter "github.com/rbaylon/srvcmanui/modules/vouchers/routes"
 )
 
@@ -31,6 +32,7 @@ func main() {
 	pppoerouter := pppoerouter.New()
 	instacerouter := instancerouter.New()
 	ifacesrouter := pfifacerouter.New()
+	vlanrouter := vlanrouter.New()
 
 	mainrouter := http.NewServeMux()
 	fs := http.FileServer(http.Dir("./static"))
@@ -45,6 +47,7 @@ func main() {
 	mainrouter.Handle("/ui/pppoes/", http.StripPrefix("/ui/pppoes", pppoerouter))
 	mainrouter.Handle("/ui/instances/", http.StripPrefix("/ui/instances", instacerouter))
 	mainrouter.Handle("/ui/pfifaces/", http.StripPrefix("/ui/pfifaces", ifacesrouter))
+	mainrouter.Handle("/ui/vlan/", http.StripPrefix("/ui/vlan", vlanrouter))
 	finalrouter := accessvalidator.Check(accesslogger.Log(mainrouter))
 
 	log.Println("Go app listening on port", port)
