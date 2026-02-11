@@ -9,9 +9,9 @@ services:
     volumes:
       - ./.env:/build/.env:ro # Mount your static HTML directory
     environment:
-      - VIRTUAL_HOST=arkgate.workload.it.com
+      - VIRTUAL_HOST=devui.arkgate.space
       - VIRTUAL_PORT=8000
-      - LETSENCRYPT_HOST=arkgate.workload.it.com
+      - LETSENCRYPT_HOST=devui.arkgate.space
     networks:
       - nginx-reverse-proxy
 
