@@ -26,7 +26,7 @@ func New() *http.ServeMux {
 		pwd, _ := os.Getwd()
 		files := []string{
 			pwd + "/layouts/newbase.html",
-			pwd + "/modules/vlan/templates/vlans.html",
+			pwd + "/modules/vlans/templates/vlans.html",
 		}
 		tmpl := template.Must(template.ParseFiles(files...))
 		tmpl.ExecuteTemplate(w, "htmx", records)
@@ -46,7 +46,7 @@ func New() *http.ServeMux {
 		pwd, _ := os.Getwd()
 		files := []string{
 			pwd + "/layouts/newbase.html",
-			pwd + "/modules/vlan/templates/vlan.html",
+			pwd + "/modules/vlans/templates/vlan.html",
 		}
 		ifs := []pfifacemodel.Pfiface{}
 		err = client.Rester("pfiface", "GET", &ifs, r)
@@ -70,7 +70,7 @@ func New() *http.ServeMux {
 		pwd, _ := os.Getwd()
 		files := []string{
 			pwd + "/layouts/newbase.html",
-			pwd + "/modules/vlan/templates/vlannew.html",
+			pwd + "/modules/vlans/templates/vlannew.html",
 		}
 		ifs := []pfifacemodel.Pfiface{}
 		err := client.Rester("pfiface", "GET", &ifs, r)
