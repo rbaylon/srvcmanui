@@ -19,7 +19,7 @@ func New() *http.ServeMux {
 
 	Router.HandleFunc("GET /", func(w http.ResponseWriter, r *http.Request) {
 		var records []vlanmodel.Vlan
-		err := client.Rester("vlan", "GET", &records, r)
+		err := client.Rester("vlans", "GET", &records, r)
 		if err != nil {
 			log.Println(err)
 		}
@@ -39,7 +39,7 @@ func New() *http.ServeMux {
 	}
 	Router.HandleFunc("GET /{id}", func(w http.ResponseWriter, r *http.Request) {
 		var record vlanmodel.Vlan
-		err := client.Rester("vlan/"+r.PathValue("id"), "GET", &record, r)
+		err := client.Rester("vlans/"+r.PathValue("id"), "GET", &record, r)
 		if err != nil {
 			log.Println(err)
 		}
@@ -100,7 +100,7 @@ func New() *http.ServeMux {
 		id := s.ID
 		if id > 0 {
 			s.ID = uint(id)
-			err := client.Rester("vlan/"+strconv.FormatUint(uint64(id), 10), "PUT", s, r)
+			err := client.Rester("vlans/"+strconv.FormatUint(uint64(id), 10), "PUT", s, r)
 			if err != nil {
 				log.Println(err)
 				http.Redirect(w, r, "/ui/vlan", http.StatusSeeOther)
@@ -109,7 +109,7 @@ func New() *http.ServeMux {
 			http.Redirect(w, r, "/ui/vlan", http.StatusSeeOther)
 			return
 		}
-		err := client.Rester("vlan/create", "POST", s, r)
+		err := client.Rester("vlans/create", "POST", s, r)
 		if err != nil {
 			log.Println(err)
 		}
@@ -117,7 +117,7 @@ func New() *http.ServeMux {
 	})
 
 	Router.HandleFunc("GET /delete/{id}", func(w http.ResponseWriter, r *http.Request) {
-		err := client.Rester("vlan/"+r.PathValue("id"), "DELETE", nil, r)
+		err := client.Rester("vlans/"+r.PathValue("id"), "DELETE", nil, r)
 		if err != nil {
 			log.Println(err)
 		}
