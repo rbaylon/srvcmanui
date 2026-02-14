@@ -1,123 +1,33 @@
 {{define "title"}}Firewall Form{{end}}
 {{define "head_script"}}{{end}}
 {{define "content"}}
- <form method="POST" action="/ui/firewall/addorupdate">
+ <form method="POST" action="/ui/vlan/addorupdate">
    <div class="mb-3">
-     <input class="form-control" id="basic-form-created" type="hidden" name="CreatedAt" value="{{.Record.CreatedAt.Format "2006-01-02T15:04:05"}}"/>
-     <input type="hidden" name="ID" value="{{.Record.ID}}" />  
+     <input class="form-control" id="basic-form-created" type="hidden" name="CreatedAt"/>
    </div>
    <div class="mb-3">
-     <input class="form-control" id="basic-form-updated" type="hidden"  name="UpdatedAt" value="{{.Record.UpdatedAt.Format "2006-01-02T15:04:05"}}"/>
+     <input class="form-control" id="basic-form-updated" type="hidden"  name="UpdatedAt"/>
    </div>
    <div class="mb-3">
-     <label class="form-label" for="basic-form-status">Status</label>
-     <select class="form-select" id="basic-form-status" aria-label="Select Type" name="Status"/>
-       <option selected="selected" value="{{.Record.Status}}">{{.Record.Status}}</option>
-       <option value="active">active</option>
-       <option value="inactive">inactive</option>
-     </select>
-   </div>
-   <div class="mb-3">
-     <label class="form-label" for="basic-form-pfconfig">Router</label>
-     <select class="form-select" id="basic-form-pfconfig" aria-label="Select Type" name="PfconfigID"/>
-      <option value="{{ .Pfconfig.ID }}" selected="selected">{{ .Pfconfig.Router }}</option>
-     </select>
-   </div>
-   <div class="mb-3">
-     <label class="form-label" for="basic-form-action">Action</label>
-     <select class="form-select" id="basic-form-action" aria-label="Select Type" name="Action"/>
-       <option selected="selected" value="{{.Record.Action}}">{{.Record.Action}}</option>
-       <option value="pass">pass</option>
-       <option value="block">block</option>
-     </select>
-   </div>
-   <div class="mb-3">
-     <label class="form-label" for="basic-form-direction">Direction</label>
-     <select class="form-select" id="basic-form-direction" aria-label="Select Type" name="Direction"/>
-       <option selected="selected" value="{{.Record.Direction}}">{{.Record.Direction}}</option>
-       <option value="in">in</option>
-       <option value="out">out</option>
-     </select>
-   </div>
-   <div class="mb-3">
-     <label class="form-label" for="basic-form-log">Log</label>
-     <select class="form-select" id="basic-form-log" aria-label="Select Type" name="Log"/>
-       <option selected="selected" value="{{.Record.Log}}">{{.Record.Log}}</option>
-       <option value="">No log</option>
-       <option value="log">Log only when state is created</option>
-       <option value="log matches">Log when this rule is matched</option>
-       <option value="log all">Log all packets</option>
-     </select>
-   </div>
-   <div class="mb-3 form-check">
-     <input class="form-check-input" id="basic-form-checkbox" type="checkbox" name="Quick" 
-      value="{{.Record.Quick}}" {{ if eq .Record.Quick "on" }}checked{{ end }}/>
-     <label class="form-check-label" for="basic-form-checkbox">Quick</label>
-   </div>
-   <div class="mb-3">
-     <label class="form-label" for="basic-form-interface">On Interface</label>
-     <select class="form-select" id="basic-form-interface" aria-label="Select Type" name="Interface"/>
-        {{ range .Pfconfig.Ifaces}}
-          <option value="{{ .Device }}" {{ if eq $.Record.Interface .Device }}selected="selected"{{ end }}>{{ .Name }}</option>
-        {{ end }}
-     </select>
-   </div>
-   <div class="mb-3">
-     <label class="form-label" for="basic-form-address_family">Address Family</label>
-     <select class="form-select" id="basic-form-address_family" aria-label="Select Type" name="AddressFamily"/>
-       <option selected="selected" value="{{.Record.AddressFamily}}">{{.Record.AddressFamily}}</option>
-       <option value="inet">inet</option>
-       <option value="inet6">inet6</option>
-     </select>
-   </div>
-   <div class="mb-3">
-     <label class="form-label" for="basic-form-protocol">Protocol</label>
-     <input class="form-control" id="basic-form-protocol" type="text" placeholder="tcp" name="Proto" value="{{.Record.Proto}}"/>
+     <label class="form-label" for="basic-form-name">Name</label>
+     <input class="form-control" id="basic-form-name" type="text" placeholder="interface name" name="Name" value="{{.Record.Name}}"/>
    </div>
    <div class="mb-3">  
-     <label class="form-label" for="basic-form-source">Source</label>
-     <input class="form-control" id="basic-form-source" type="text" placeholder="ip or network block" name="Source" value="{{.Record.Source}}">
+     <label class="form-label" for="basic-form-vlantag">VLAN ID</label>
+     <input class="form-control" id="basic-form-vlantag" type="text" placeholder="1-4094" name="VlanTag" value="{{.Record.VlanTag}}">
    </div>
    <div class="mb-3">
-     <label class="form-label" for="basic-form-srcport">Source Port</label>
-     <input class="form-control" id="basic-form-srcport" type="text" placeholder="empty or port number" name="SrcPort" value="{{.Record.SrcPort}}"/>
-   </div>
-   <div class="mb-3">  
-     <label class="form-label" for="basic-form-destination">Destination</label>
-     <input class="form-control" id="basic-form-destination" type="text" placeholder="ip or network block" name="Destination" value="{{.Record.Destination}}">
-   </div>
-   <div class="mb-3">
-     <label class="form-label" for="basic-form-dstport">Destination Port</label>
-     <input class="form-control" id="basic-form-dstport" type="text" placeholder="empty or port number" name="DstPort" value="{{.Record.DstPort}}"/>
-   </div>
-   <br>
-   <hr>
-   <h3><label class="form-label" for="basic-form-gateway">Advance</label></h3>
-   <br>
-   <div class="mb-3">
-     <label class="form-label" for="basic-form-gateway">Gateway</label>
-     <select class="form-select" id="basic-form-gateway" aria-label="Select Type" name="Gateway"/>
-        <option value="">Default</option>
-        {{ range .Pfconfig.Ifaces}}
-          {{ if eq .Type "external" }}
-            <option value="{{ .Gateway }}" {{ if eq $.Record.Gateway .Gateway }}selected="selected"{{ end }}>{{ .Gateway }} {{ .Name }}</option>
-          {{ end }}
-        {{ end }}
-     </select>
-   </div>
-   <div class="mb-3">
-     <label class="form-label" for="basic-form-plan">Pipe (Upload/Download speeds)</label>
-     <select class="form-select" id="basic-form-plan" aria-label="Select Type" name="Pipe"/>
-      <option value="">None</option>
-      {{ range .Plans}}
-        <option value="{{ .Plan }}" {{ if eq $.Record.Pipe .Plan }}selected="selected"{{ end }}>{{ .Plan }}</option>
+     <label class="form-label" for="basic-form-pfifaces">Parent Device</label>
+     <select class="form-select" id="basic-form-pfifaces" aria-label="Select Parent Interface" name="ParentDevice"/>
+      {{ range .Pfifaces}}
+        <option value="{{ .Device }}" {{ if eq $.Record.ParentDevice .Device }}selected="selected"{{ end }}>{{ .Device }}</option>
       {{ end }}
      </select>
    </div>
    <div class="mb-3">
-     <label class="form-label" for="basic-form-prio">Priority (QoS)</label>
-     <select class="form-select" id="basic-form-prio" aria-label="Select Type" name="Priority"/>
-       <option selected="selected" value="{{.Record.Priority}}">{{.Record.Priority}}</option>
+     <label class="form-label" for="basic-form-rxprio">Priority (Receive)</label>
+     <select class="form-select" id="basic-form-rxprio" aria-label="Select Priority" name="RxPrio"/>
+       <option selected="selected" value="{{.Record.RxPrio}}">{{.Record.RxPrio}}</option>
        <option value="0">0</option>
        <option value="1">1</option>
        <option value="2">2</option>
@@ -129,10 +39,25 @@
      </select>
    </div>
    <div class="mb-3">
-     <label class="form-label" for="basic-form-advance">Advance options</label>
-     <input class="form-control" id="basic-form-advance" type="text" placeholder="" name="AdvanceOpts" value="{{.Record.AdvanceOpts}}"/>
+     <label class="form-label" for="basic-form-txprio">Priority (Transmit)</label>
+     <select class="form-select" id="basic-form-txprio" aria-label="Select Priority" name="TxPrio"/>
+       <option selected="selected" value="{{.Record.TxPrio}}">{{.Record.TxPrio}}</option>
+       <option value="0">0</option>
+       <option value="1">1</option>
+       <option value="2">2</option>
+       <option value="3">3</option>
+       <option value="4">4</option>
+       <option value="5">5</option>
+       <option value="6">6</option>
+       <option value="7">7</option>
+     </select>
+   </div>
+   <div class="mb-3">
+     <label class="form-label" for="basic-form-pfconfig">Router</label>
+     <select class="form-select" id="basic-form-pfconfig" aria-label="Select Type" name="PfconfigID"/>
+      <option value="{{ .Record.PfconfigID }}" selected="selected">{{ .Record.PfconfigID }}</option>
+     </select>
    </div>
    <button class="btn btn-primary" type="submit">Submit</button>
  </form>
- <script src="/ui/static/local/fwonchange.js"></script>
 {{end}}
