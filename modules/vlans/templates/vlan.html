@@ -8,6 +8,7 @@
    <div class="mb-3">
      <input class="form-control" id="basic-form-updated" type="hidden"  name="UpdatedAt"/>
    </div>
+   <input type="hidden" name="ID" value="{{.Record.ID}}" />  
    <div class="mb-3">
      <label class="form-label" for="basic-form-name">Name</label>
      <input class="form-control" id="basic-form-name" type="text" placeholder="interface name" name="Name" value="{{.Record.Name}}"/>
