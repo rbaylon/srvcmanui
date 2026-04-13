@@ -6,10 +6,23 @@ import (
 	"log"
 	"net/http"
 	"os"
+
+	Changemodel "github.com/rbaylon/srvcman/modules/changes/model"
+	"github.com/rbaylon/srvcmanui/client"
 )
 
 func New() *http.ServeMux {
 	Router := http.NewServeMux() // 3
+
+	Router.HandleFunc("GET /changes", func(w http.ResponseWriter, r *http.Request) {
+		var records []Changemodel.Change
+		err := client.Rester("changes/pending", "GET", &records, r)
+		if err != nil {
+			log.Println(err)
+		}
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(records)
+	})
 
 	Router.HandleFunc("GET /stats", func(w http.ResponseWriter, r *http.Request) {
 		stats, _ := os.ReadFile("/tmp/mystats")
