@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', function getPfconfig(id){
     .then(data => {
       if (data.length > 0) {
         const changebar = document.getElementById('changes');
-        changebar.innerHTML = '<button id="apply" type="button" class="btn btn-outline-dark">Apply Changes</button>';
+        changebar.innerHTML = 'Saved configuration not yet applied. <button id="apply" type="button" class="btn btn-outline-dark">Apply Changes</button>';
       }
     })
     .catch(error => console.error('Error fetching items:', error));
