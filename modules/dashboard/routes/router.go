@@ -24,6 +24,16 @@ func New() *http.ServeMux {
 		json.NewEncoder(w).Encode(records)
 	})
 
+	Router.HandleFunc("GET /changes/apply", func(w http.ResponseWriter, r *http.Request) {
+		var errors []Changemodel.Change
+		err := client.Rester("changes/pending", "PUT", &errors, r)
+		if err != nil {
+			log.Println(err)
+		}
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(errors)
+	})
+
 	Router.HandleFunc("GET /stats", func(w http.ResponseWriter, r *http.Request) {
 		stats, _ := os.ReadFile("/tmp/mystats")
 		var data interface{}
