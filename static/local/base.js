@@ -10,10 +10,6 @@ document.addEventListener('DOMContentLoaded', function getPfconfig(id){
     .catch(error => console.error('Error fetching items:', error));
 });
 
-function configerrors(data){
-
-}
-
 async function applyCahnges() {
   await fetch(`/ui/dashboard/changes/apply`)
     .then(response => response.json())
@@ -22,7 +18,7 @@ async function applyCahnges() {
         alert("Errors found while applying the configurations, see web console logs.")
         data.forEach(element => console.log(element));
       }
-      window.location.reload()
   })
   .catch(error => console.error('Error fetching items:', error));
+  window.location.reload()
 }
