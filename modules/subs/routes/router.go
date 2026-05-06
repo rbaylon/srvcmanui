@@ -120,9 +120,9 @@ func New() *http.ServeMux {
 			http.Redirect(w, r, "/ui/subs", http.StatusSeeOther)
 			return
 		}
-		code := []byte("00000000")
+		code := []byte("000000000000")
 		maxlen := len(letters) - 1
-		for j := 0; j < 8; j++ {
+		for j := 0; j < 12; j++ {
 			c := letters[rand.IntN(maxlen)]
 			code[j] = c
 		}
