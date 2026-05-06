@@ -38,6 +38,10 @@
      <input class="form-control" id="basic-form-lname" type="password" placeholder="" name="Ppppassword" value="{{.Record.Ppppassword}}"/>
    </div>
    <div class="mb-3">
+     <label class="form-label" for="basic-form-mac">Rule ID</label>
+     <p>{{.Record.Mac}}</p><input class="form-control" id="basic-form-mac" type="hidden" placeholder="FF:FF:DE:AD:BE:EF" name="Mac" value="{{.Record.Mac}}"/>
+   </div>
+   <div class="mb-3">
      <label class="form-label" for="basic-form-gateway">Gateway</label>
      <select class="form-select" id="basic-form-gateway" aria-label="Select Type" name="Gateway"/>
         <option value="">Default</option>
