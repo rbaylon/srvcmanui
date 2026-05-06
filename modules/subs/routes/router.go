@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"html/template"
 	"log"
+	"math/rand/v2"
 	"net/http"
 	"os"
 	"strconv"
@@ -14,6 +15,8 @@ import (
 	submodel "github.com/rbaylon/srvcman/modules/subs/model"
 	"github.com/rbaylon/srvcmanui/client"
 )
+
+var letters = []byte("abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789")
 
 func New() *http.ServeMux {
 	Router := http.NewServeMux() // 3
@@ -117,6 +120,13 @@ func New() *http.ServeMux {
 			http.Redirect(w, r, "/ui/subs", http.StatusSeeOther)
 			return
 		}
+		code := []byte("00000000")
+		maxlen := len(letters) - 1
+		for j := 0; j < 8; j++ {
+			c := letters[rand.IntN(maxlen)]
+			code[j] = c
+		}
+		s.Mac = "subid" + string(code)
 		s.Burstspeed = 60
 		s.Downspeed = 15
 		s.Upspeed = 10
