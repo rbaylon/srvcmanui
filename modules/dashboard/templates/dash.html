@@ -48,7 +48,7 @@
 <script>
     // Auto-refresh every 5 seconds (5000 ms)
     function forSpeed(bps, decimals =2) {
-      if (bps === 0) return '0 bps';
+      if (bps < 1) return '0 bps';
       const k = 1000;
       const sizes = ['bps', 'Kbps', 'Mbps', 'Gbps'];
       const i = Math.floor(Math.log(bps) / Math.log(k));
