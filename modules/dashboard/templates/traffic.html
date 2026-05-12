@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>SessionStorage Traffic Graph</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <canvas id="trafficChart" width="600" height="400"></canvas>
+
+  <script>
+    // Initialize session storage if empty
+    if (!sessionStorage.getItem("trafficData")) {
+      sessionStorage.setItem("trafficData", JSON.stringify([]));
+    }
+
+    // Chart.js setup
+    const ctx = document.getElementById("trafficChart").getContext("2d");
+    const trafficChart = new Chart(ctx, {
+      type: "line",
+      data: {
+        labels: [], // timestamps
+        datasets: [
+          {
+            label: "Inbound Bytes",
+            borderColor: "blue",
+            data: [],
+            fill: false
+          },
+          {
+            label: "Outbound Bytes",
+            borderColor: "red",
+            data: [],
+            fill: false
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          x: { title: { display: true, text: "Time" } },
+          y: { title: { display: true, text: "Bytes" } }
+        }
+      }
+    });
+
+    // 🔄 Reload existing data from sessionStorage on page load
+    const existingData = JSON.parse(sessionStorage.getItem("trafficData"));
+    existingData.forEach(entry => {
+      trafficChart.data.labels.push(entry.timestamp);
+      trafficChart.data.datasets[0].data.push(entry.inbytes);
+      trafficChart.data.datasets[1].data.push(entry.outbytes);
+    });
+    trafficChart.update();
+
+    // Simulate incoming JSON data every second
+    setInterval(() => {
+      const now = new Date().toLocaleTimeString();
+      const newData = {
+        ip: "192.168.1.10",
+        inbytes: Math.floor(Math.random() * 1000),
+        outbytes: Math.floor(Math.random() * 800),
+        timestamp: now
+      };
+
+      // Store in sessionStorage
+      let trafficData = JSON.parse(sessionStorage.getItem("trafficData"));
+      trafficData.push(newData);
+      sessionStorage.setItem("trafficData", JSON.stringify(trafficData));
+
+      // Update chart with latest data
+      trafficChart.data.labels.push(newData.timestamp);
+      trafficChart.data.datasets[0].data.push(newData.inbytes);
+      trafficChart.data.datasets[1].data.push(newData.outbytes);
+      trafficChart.update();
+    }, 1000);
+  </script>
+</body>
+</html>
