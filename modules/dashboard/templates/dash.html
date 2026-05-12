@@ -61,7 +61,7 @@
           box.textContent = forSpeed(box.innerText);
         });
         const drops = document.querySelectorAll('.fixed-num');
-        drops.forEach(d => { d.textContent = d.innerText.toFixed(2)});
+        drops.forEach(d => { d.textContent = parseFloat(d.innerText).toFixed(2); });
         setInterval(function () {
             // Reload the page without using cache
             location.reload(true);
