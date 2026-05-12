@@ -69,7 +69,7 @@
 
       // Update chart with latest data
       trafficChart.data.labels.push(newData.timestamp);
-      trafficChart.data.datasets[0].data.push(newData.inbytes);
+      trafficChart.data.datasets[0].data.push(-(newData.inbytes));
       trafficChart.data.datasets[1].data.push(newData.outbytes);
       trafficChart.update();
     }, 1000);
