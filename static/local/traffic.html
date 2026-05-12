@@ -5,7 +5,9 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
+  <div width="300" height="200">
   <canvas id="trafficChart" width="300" height="200"></canvas>
+  </div>
 
   <script>
     // Initialize session storage if empty
@@ -23,12 +25,14 @@
           {
             label: "Inbound Bytes",
             borderColor: "blue",
+            backgroundColor: "blue",
             data: [],
             fill: true
           },
           {
             label: "Outbound Bytes",
             borderColor: "red",
+            backgroundColor: "red",
             data: [],
             fill: true
           }
