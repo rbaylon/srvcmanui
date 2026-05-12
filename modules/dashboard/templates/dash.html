@@ -9,7 +9,7 @@
       <tr class="text-white"><td>CPU Available</td><td></td></tr>
       <tr class="text-white"><td>CPU Temperature</td><td>&deg;C</td></tr>
       {{ range $_, $v := .Systats.gateways }}
-          <tr class="text-white"><td>{{ $v.name }} Active Subs</td><td>{{ $v.count }}</td></tr>
+          <tr class="text-white"><td>{{ $v.name }}({{ $v.iface }}) Active Subs</td><td>{{ $v.count }}</td></tr>
       {{ end }}
     </table>
   </div>
