@@ -24,7 +24,7 @@
       <thead>
         <tr>
           <th class="sort align-middle" data-sort="id">User ID/MAC</th>
-          <th class="sort align-middle" data-sort="pfiface">Download Speed</th>
+          <th class="sort align-middle net-speed" data-sort="pfiface">Download Speed</th>
           <th class="sort align-middle" data-sort="pfiface">Upload Speed</th>
           <th class="sort align-middle" data-sort="pfiface">Drop Bytes</th>
           <th class="sort align-middle" data-sort="pfiface">Gateway</th>
@@ -34,8 +34,8 @@
         {{ range $_, $v := .Systats.ids }}
         <tr>
           <td class="align-middle id">{{ $v.addr }}</td>
-          <td class="align-middle pfiface">{{ $v.out }}</td>
-          <td class="align-middle pfiface">{{ $v.in }}</td>
+          <td class="align-middle pfiface net-speed">{{ $v.out }}</td>
+          <td class="align-middle pfiface net-speed">{{ $v.in }}</td>
           <td class="align-middle pfiface">{{ $v.dropout }}</td>
           <td class="align-middle pfiface">{{ $v.gateway }}</td>
         </tr>
@@ -47,7 +47,19 @@
 <script src="/ui/static/local/listutils.js"></script>
 <script>
     // Auto-refresh every 5 seconds (5000 ms)
+    function forSpeed(bps, decimals =2) {
+      if (bps === 0) return '0 bps';
+      const k = 1000;
+      const sizes = ['bps', 'Kbps', 'Mbps', 'Gbps'];
+      const i = Math.floor(Math.log(bps) / Math.log(k));
+      return parseFloat((bps / Math.pow(k,i)).toFixed(decimals)) + ' ' + sizes[i];
+    }
+
     document.addEventListener("DOMContentLoaded", function () {
+        const tds = document.querySelectorAll('.net-speed');
+        tds.forEach(box => {
+          box.textContent = forSpeed(box.innerText);
+        });
         setInterval(function () {
             // Reload the page without using cache
             location.reload(true);
