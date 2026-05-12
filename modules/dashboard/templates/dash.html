@@ -36,7 +36,7 @@
           <td class="align-middle id">{{ $v.addr }}</td>
           <td class="align-middle pfiface net-speed">{{ $v.out }}</td>
           <td class="align-middle pfiface net-speed">{{ $v.in }}</td>
-          <td class="align-middle pfiface">{{ $v.dropout }}</td>
+          <td class="align-middle pfiface fixed-num">{{ $v.dropout }}</td>
           <td class="align-middle pfiface">{{ $v.gateway }}</td>
         </tr>
         {{end}}
@@ -60,6 +60,8 @@
         tds.forEach(box => {
           box.textContent = forSpeed(box.innerText);
         });
+        const drops = document.querySelectorAll('.fixed-num');
+        drops.forEach(d => { d.textContent = d.innerText.toFixed(2)});
         setInterval(function () {
             // Reload the page without using cache
             location.reload(true);
