@@ -24,15 +24,15 @@
         datasets: [
           {
             label: "Inbound Bytes",
-            borderColor: "blue",
-            backgroundColor: "blue",
+            borderColor: "#3366ff",
+            backgroundColor: "#3366ff",
             data: [],
             fill: true
           },
           {
             label: "Outbound Bytes",
-            borderColor: "red",
-            backgroundColor: "red",
+            borderColor: "#ff3300",
+            backgroundColor: "#ff3300",
             data: [],
             fill: true
           }
@@ -51,7 +51,7 @@
     const existingData = JSON.parse(sessionStorage.getItem("trafficData"));
     existingData.forEach(entry => {
       trafficChart.data.labels.push(entry.timestamp);
-      trafficChart.data.datasets[0].data.push(entry.inbytes);
+      trafficChart.data.datasets[0].data.push(-(entry.inbytes));
       trafficChart.data.datasets[1].data.push(entry.outbytes);
     });
     trafficChart.update();
