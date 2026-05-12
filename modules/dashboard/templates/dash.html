@@ -8,8 +8,8 @@
     <table class="table table-bordered table-sm table-hover" id="stats">
       <tr class="text-white"><td>CPU Available</td><td></td></tr>
       <tr class="text-white"><td>CPU Temperature</td><td>&deg;C</td></tr>
-      {{ range $k, $_ := .Systats.gateways }}
-          <tr class="text-white"><td>{{ .Systats.gateways[$k].name }} Active Subs</td><td>{{ .Systats.gateways[$k].count }}</td></tr>
+      {{ range $_, $v := .Systats.gateways }}
+          <tr class="text-white"><td>{{ $v.name }} Active Subs</td><td>{{ $v.count }}</td></tr>
       {{ end }}
     </table>
   </div>
@@ -31,13 +31,13 @@
         </tr>
       </thead>
       <tbody class="list" id="bulk-select-body">
-        {{ range $k, $_ := .Systats.ids }}
+        {{ range $_, $v := .Systats.ids }}
         <tr>
-          <td class="align-middle id">{{ .Systats.ids[$k].addr }}</td>
-          <td class="align-middle pfiface">{{ .Systats.ids[$k].out }}</td>
-          <td class="align-middle pfiface">{{ .Systats.ids[$k].in }}</td>
-          <td class="align-middle pfiface">{{ .Systats.ids[$k].dropout }}</td>
-          <td class="align-middle pfiface">{{ .Systats.ids[$k].gateway }}</td>
+          <td class="align-middle id">{{ $v.addr }}</td>
+          <td class="align-middle pfiface">{{ $v.out }}</td>
+          <td class="align-middle pfiface">{{ $v.in }}</td>
+          <td class="align-middle pfiface">{{ $v.dropout }}</td>
+          <td class="align-middle pfiface">{{ $v.gateway }}</td>
         </tr>
         {{end}}
       </tbody>
