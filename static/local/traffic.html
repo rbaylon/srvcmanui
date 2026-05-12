@@ -47,7 +47,7 @@
     const existingData = JSON.parse(sessionStorage.getItem("trafficData"));
     existingData.forEach(entry => {
       trafficChart.data.labels.push(entry.timestamp);
-      trafficChart.data.datasets[0].data.push(-(entry.inbytes));
+      trafficChart.data.datasets[0].data.push(entry.inbytes);
       trafficChart.data.datasets[1].data.push(entry.outbytes);
     });
     trafficChart.update();
