@@ -6,10 +6,10 @@
   <div class="card-header">System Info</div>
   <div class="card-body">
     <table class="table table-bordered table-sm table-hover" id="stats">
-      <tr class="text-white"><td>CPU Available</td><td>{{ .Systats.cpuusage }}%</td></tr>
-      <tr class="text-white"><td>CPU Temperature</td><td>{{ .Systats.cputemp }}&deg;C</td></tr>
-      {{ range $k, $v := .Systats.gwsubs }}
-          <tr class="text-white"><td>{{ $k }} Active Subs</td><td>{{ $v }}</td></tr>
+      <tr class="text-white"><td>CPU Available</td><td></td></tr>
+      <tr class="text-white"><td>CPU Temperature</td><td>&deg;C</td></tr>
+      {{ range $k, $_ := .Systats.gateways }}
+          <tr class="text-white"><td>{{ .Systats.gateways[$k].name }} Active Subs</td><td>{{ .Systats.gateways[$k].count }}</td></tr>
       {{ end }}
     </table>
   </div>
@@ -24,14 +24,20 @@
       <thead>
         <tr>
           <th class="sort align-middle" data-sort="id">User ID/MAC</th>
-          <th class="sort align-middle" data-sort="pfiface">Bandwidth Usage</th>
+          <th class="sort align-middle" data-sort="pfiface">Download Speed</th>
+          <th class="sort align-middle" data-sort="pfiface">Upload Speed</th>
+          <th class="sort align-middle" data-sort="pfiface">Drop Bytes</th>
+          <th class="sort align-middle" data-sort="pfiface">Gateway</th>
         </tr>
       </thead>
       <tbody class="list" id="bulk-select-body">
-        {{ range $k, $v := .Usertraffic.subs }}
+        {{ range $k, $_ := .Systats.ids }}
         <tr>
-          <td class="align-middle id">{{ $k }}</td>
-          <td class="align-middle pfiface">{{ $v }}</td>
+          <td class="align-middle id">{{ .Systats.ids[$k].addr }}</td>
+          <td class="align-middle pfiface">{{ .Systats.ids[$k].out }}</td>
+          <td class="align-middle pfiface">{{ .Systats.ids[$k].in }}</td>
+          <td class="align-middle pfiface">{{ .Systats.ids[$k].dropout }}</td>
+          <td class="align-middle pfiface">{{ .Systats.ids[$k].gateway }}</td>
         </tr>
         {{end}}
       </tbody>
@@ -39,4 +45,13 @@
   </div>
 </div>
 <script src="/ui/static/local/listutils.js"></script>
+<script>
+    // Auto-refresh every 5 seconds (5000 ms)
+    document.addEventListener("DOMContentLoaded", function () {
+        setInterval(function () {
+            // Reload the page without using cache
+            location.reload(true);
+        }, 15000);
+    });
+</script>
 {{end}}

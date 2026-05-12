@@ -68,15 +68,8 @@ func New() *http.ServeMux {
 		if err != nil {
 			log.Println(err)
 		}
-		traffic, _ := os.ReadFile("/tmp/usertraffic")
-		var trafficdata interface{}
-		err = json.Unmarshal(traffic, &trafficdata)
-		if err != nil {
-			log.Println(err)
-		}
 		dashdata := viewdata{}
 		dashdata.Systats = statsdata
-		dashdata.Usertraffic = trafficdata
 		pwd, _ := os.Getwd()
 		files := []string{
 			pwd + "/layouts/newbase.html",
