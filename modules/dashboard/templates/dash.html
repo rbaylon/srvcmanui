@@ -55,7 +55,7 @@
       return parseFloat((bps / Math.pow(k,i)).toFixed(decimals)) + ' ' + sizes[i];
     }
 
-    document.addEventListener("DOMContentLoaded", function () {
+    /*document.addEventListener("DOMContentLoaded", function () {
         const tds = document.querySelectorAll('.net-speed');
         tds.forEach(box => {
           box.textContent = forSpeed(box.innerText);
@@ -66,6 +66,20 @@
             // Reload the page without using cache
             location.reload(true);
         }, 15000);
+    });*/
+    $('#records').DataTable({
+        "drawCallback": function(settings) {
+          const tds = document.querySelectorAll('.net-speed');
+          tds.forEach(box => {
+            box.textContent = forSpeed(box.innerText);
+          });
+          const drops = document.querySelectorAll('.fixed-num');
+          drops.forEach(d => { d.textContent = parseFloat(d.innerText).toFixed(0); });
+          setInterval(function () {
+              // Reload the page without using cache
+              location.reload(true);
+          }, 15000);
+        }
     });
 </script>
 {{end}}
