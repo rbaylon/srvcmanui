@@ -1,7 +1,9 @@
+new DataTable('#records-speed', {
+    paging: false
+});
 new DataTable('#records', {
     pageLength: 100
 });
-
 async function getData(path) {
     try {
         const response = await fetch(path);
