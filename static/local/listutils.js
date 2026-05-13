@@ -1,5 +1,5 @@
 new DataTable('#records-speed', {
-    paging: false
+    pageLength: -1
 });
 new DataTable('#records', {
     pageLength: 100
