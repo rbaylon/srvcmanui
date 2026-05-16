@@ -7,7 +7,7 @@ function getPfconfig(id){
       if (pathname != "/ui/subs/create") {
         ifaceSelect.innerHTML = '<option value="any">any</option>'; // Clear previous options
       } else {
-        ifaceSelect.innerHTML = '<option value="NONE"></option>'; // Clear previous options
+        ifaceSelect.innerHTML = '<option value="x">Choose One</option>'; // Clear previous options
       }
 
       const gwSelect = document.getElementById('basic-form-gateway');
