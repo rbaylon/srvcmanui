@@ -14,6 +14,14 @@
      <input class="form-control" id="basic-form-updated" type="hidden"  name="UpdatedAt"/>
    </div>
    <div class="mb-3">
+     <label class="form-label" for="basic-form-pfconfig">Router</label>
+     <select class="form-select" id="basic-form-pfconfig" aria-label="Select Type" name="PfconfigID"/>
+      {{ range .Pfconfigs}}
+        <option value="{{ .ID }}">{{ .Router }}</option>
+      {{ end }}
+     </select>
+   </div>
+   <div class="mb-3">
      <label class="form-label" for="basic-form-fname">First Name</label>
      <input class="form-control" id="basic-form-fname" type="text" placeholder="First Name" name="FirstName"/>
    </div>
@@ -74,14 +82,6 @@
        <option value="5">5</option>
        <option value="6">6</option>
        <option value="7">7</option>
-     </select>
-   </div>
-   <div class="mb-3">
-     <label class="form-label" for="basic-form-pfconfig">Router</label>
-     <select class="form-select" id="basic-form-pfconfig" aria-label="Select Type" name="PfconfigID"/>
-      {{ range .Pfconfigs}}
-        <option value="{{ .ID }}">{{ .Router }}</option>
-      {{ end }}
      </select>
    </div>
    <div class="mb-3">
