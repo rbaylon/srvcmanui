@@ -1,3 +1,4 @@
+# This assumes the use of nginx-proxy docker app see http://jasonwilder.com/blog/2014/03/25/automated-nginx-reverse-proxy-for-docker/
 services:
   srvcmanui:
     build:
