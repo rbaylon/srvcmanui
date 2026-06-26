@@ -23,3 +23,4 @@ go.work
 *.db
 srvcmanui
 srvcman.code-workspace
+tags
