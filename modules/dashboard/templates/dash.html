@@ -55,10 +55,10 @@ async function fetchChartData() {
     try {
         const response = await fetch('/ui/dashboard/stats');
         const data = await response.json();
-        
-        const labels = data.GwToSub.Gw;
+
+        const labels = data.GwToSub.Gws;
         const values = data.GwToSub.Subs;
-        const glabels = data.PlanTosub.Plan;
+        const glabels = data.PlanTosub.Plans;
         const gvalues = data.PlanTosub.Subs;
 
         renderPieChart(labels, values);
