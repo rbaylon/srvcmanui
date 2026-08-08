@@ -1,71 +1,39 @@
 {{define "title"}}Dashboard{{end}}
 {{define "head_script"}}<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>{{end}}
 {{define "content"}}
-<br>
-<div class="card text-white bg-primary mb-3" style="max-width: 18rem;">
-  <div class="card-header">System Info</div>
-  <div class="card-body">
-    <table class="table table-bordered table-sm table-hover" id="stats">
-      <tr class="text-white"><td>CPU Available</td><td>{{ .Systats.cpu.idle }}%</td></tr>
-      <tr class="text-white"><td>CPU Temperature</td><td>{{ .Systats.cpu.temperature }}</td></tr>
-      {{ range $_, $v := .Systats.gateways }}
-          <tr class="text-white"><td>{{ $v.name }}({{ $v.iface }}) Active Subs</td><td>{{ $v.count }}</td></tr>
-      {{ end }}
-    </table>
-  </div>
+<div class="container-fluid px-4">
+    <h1 class="mt-4">Dashboard</h1>
+    <div class="row">
+        <div class="col-lg-4">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <i class="fas fa-chart-bar me-1"></i>
+                    System Info
+                </div>
+                <div class="card-body"><canvas id="myBarChart" width="100%" height="50"></canvas></div>
+                <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <i class="fas fa-chart-pie me-1"></i>
+                    Subscribers to Plan distribution
+                </div>
+                <div class="card-body"><canvas id="myPieChart" width="100%" height="50"></canvas></div>
+                <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <i class="fas fa-chart-pie me-1"></i>
+                    Subscribers to gateway distribution
+                </div>
+                <div class="card-body"><canvas id="myPieChart" width="100%" height="50"></canvas></div>
+                <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
+            </div>
+        </div>
+    </div>
 </div>
-<div class="d-flex align-items-center justify-content-end my-3">
-  <div id="bulk-select-replace-element">
-    <a href="create" ><button class="btn btn-phoenix-success btn-sm" type="button"><span data-feather="plus">New</span></button></a>
-  </div>
-</div>
-  <div class="table-responsive">
-    <table class="table table-striped table-sm" id="records-speed">
-      <thead>
-        <tr>
-          <th class="sort align-middle" data-sort="id">User ID/MAC</th>
-          <th class="sort align-middle" data-sort="pfiface">Download Speed</th>
-          <th class="sort align-middle" data-sort="pfiface">Upload Speed</th>
-          <th class="sort align-middle" data-sort="pfiface">Drop Bytes</th>
-          <th class="sort align-middle" data-sort="pfiface">Gateway</th>
-        </tr>
-      </thead>
-      <tbody class="list" id="bulk-select-body">
-        {{ range $_, $v := .Systats.ids }}
-        <tr>
-          <td class="align-middle id">{{ $v.addr }}</td>
-          <td class="align-middle pfiface net-speed">{{ $v.out }}</td>
-          <td class="align-middle pfiface net-speed">{{ $v.in }}</td>
-          <td class="align-middle pfiface fixed-num">{{ $v.dropout }}</td>
-          <td class="align-middle pfiface">{{ $v.gateway }}</td>
-        </tr>
-        {{end}}
-      </tbody>
-    </table>
-  </div>
-</div>
-<script src="/ui/static/local/listutils.js"></script>
-<script>
-    // Auto-refresh every 5 seconds (5000 ms)
-    function forSpeed(bps, decimals =2) {
-      if (bps < 1) return '0 bps';
-      const k = 1000;
-      const sizes = ['bps', 'Kbps', 'Mbps', 'Gbps'];
-      const i = Math.floor(Math.log(bps) / Math.log(k));
-      return parseFloat((bps / Math.pow(k,i)).toFixed(decimals)) + ' ' + sizes[i];
-    }
-
-    document.addEventListener("DOMContentLoaded", function () {
-        const tds = document.querySelectorAll('.net-speed');
-        tds.forEach(box => {
-          box.textContent = forSpeed(box.innerText);
-        });
-        const drops = document.querySelectorAll('.fixed-num');
-        drops.forEach(d => { d.textContent = parseFloat(d.innerText).toFixed(0); });
-        setInterval(function () {
-            // Reload the page without using cache
-            location.reload(true);
-        }, 15000);
-    });
-</script>
 {{end}}
