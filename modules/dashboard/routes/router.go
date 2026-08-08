@@ -2,11 +2,11 @@ package dashrouter
 
 import (
 	"encoding/json"
-	"fmt"
 	"html/template"
 	"log"
 	"net/http"
 	"os"
+	"strconv"
 
 	Changemodel "github.com/rbaylon/srvcman/modules/changes/model"
 	"github.com/rbaylon/srvcmanui/client"
@@ -16,35 +16,35 @@ import (
 	"github.com/shirou/gopsutil/v4/mem"
 )
 
-func _sysinfo() []string {
-	info := []string{}
+func _sysinfo() map[string]string {
+	info := map[string]string{}
 	// 1. Host Information (Uptime, OS Version)
 	hostInfo, err := host.Info()
 	if err != nil {
 		log.Fatalf("Failed to get host info: %v", err)
 	}
-	info = append(info, fmt.Sprintf("<b>Host:</b> <p>%s, OS: %s %s, Uptime: %d sec</p>",
-		hostInfo.Hostname, hostInfo.OS, hostInfo.PlatformVersion, hostInfo.Uptime))
+	info["Host"] = hostInfo.Hostname
+	info["OS"] = hostInfo.OS + " " + hostInfo.PlatformVersion
+	info["Uptime"] = strconv.FormatUint(hostInfo.Uptime, 10)
 
 	// 2. CPU Information (Model Name & Speeds)
 	cpuInfo, err := cpu.Info()
 	if err == nil && len(cpuInfo) > 0 {
-		info = append(info, fmt.Sprintf("<b>CPU Model:</b> <p>%s, Cores: %d, Speed: %.2f MHz</p>",
-			cpuInfo[0].ModelName, cpuInfo[0].Cores, cpuInfo[0].Mhz))
+		info["CPU Model"] = cpuInfo[0].ModelName + " " + strconv.Itoa(int(cpuInfo[0].Cores)) + " " +
+			strconv.FormatFloat(cpuInfo[0].Mhz, 'f', -1, 64) + "MHz"
 	}
 
 	// 3. Virtual Memory Statistics (RAM usage)
 	vMem, err := mem.VirtualMemory()
 	if err == nil {
-		info = append(info, fmt.Sprintf("<b>Total Memory:</b> <p>%d GB, Available: %d GB, Used Percent: %.2f%%</p>",
-			vMem.Total/1024/1024/1024, vMem.Available/1024/1024/1024, vMem.UsedPercent))
+		info["Total Memory"] = strconv.FormatUint(vMem.Total/1024/1024/1024, 10) + "GB"
+		info["Available"] = strconv.FormatUint(vMem.Available/1024/1024/1024, 10) + "GB"
 	}
 
 	// 4. Disk Partition Usage
-	diskUsage, err := disk.Usage("/var")
+	diskUsage, err := disk.Usage("/")
 	if err == nil {
-		info = append(info, fmt.Sprintf("<b>Disk Space:</b> <p>Total: %d GB, Free: %d GB, Used Percent: %.2f%%</p>",
-			diskUsage.Total/1024/1024/1024, diskUsage.Free/1024/1024/1024, diskUsage.UsedPercent))
+		info["Disk /"] = strconv.FormatUint(diskUsage.Total/1024/1024, 10) + "MB"
 	}
 	return info
 }
@@ -73,7 +73,7 @@ func New() *http.ServeMux {
 	})
 
 	type viewdata struct {
-		SysInfo []string
+		SysInfo map[string]string
 	}
 
 	Router.HandleFunc("GET /", func(w http.ResponseWriter, r *http.Request) {

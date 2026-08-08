@@ -12,8 +12,8 @@
                     System Info
                 </div>
                 <div class="card-body">
-                    {{ range $_, $v := .SysInfo }}
-                        {{ $v }}
+                    {{ range $k, $v := .SysInfo }}
+                        <p><b>{{$k}}:</b>{{ $v }}</p>
                     {{end}}
                 </div>
                 <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
