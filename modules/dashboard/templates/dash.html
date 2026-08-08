@@ -54,6 +54,7 @@ Chart.defaults.global.defaultFontColor = '#292b2c';
 async function fetchChartData() {
     try {
         const response = await fetch('/ui/dashboard/stats');
+        const data = await response.json();
         
         const labels = data.GwToSub.Gw;
         const values = data.GwToSub.Subs;
