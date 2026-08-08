@@ -23,27 +23,27 @@ func _sysinfo() []string {
 	if err != nil {
 		log.Fatalf("Failed to get host info: %v", err)
 	}
-	info = append(info, fmt.Sprintf("<b>Host</b>: %s, OS: %s %s, Uptime: %d sec\n",
+	info = append(info, fmt.Sprintf("<b>Host:</b> <p>%s, OS: %s %s, Uptime: %d sec</p>",
 		hostInfo.Hostname, hostInfo.OS, hostInfo.PlatformVersion, hostInfo.Uptime))
 
 	// 2. CPU Information (Model Name & Speeds)
 	cpuInfo, err := cpu.Info()
 	if err == nil && len(cpuInfo) > 0 {
-		info = append(info, fmt.Sprintf("<b>CPU Model</b>: %s, Cores: %d, Speed: %.2f MHz\n",
+		info = append(info, fmt.Sprintf("<b>CPU Model:</b> <p>%s, Cores: %d, Speed: %.2f MHz</p>",
 			cpuInfo[0].ModelName, cpuInfo[0].Cores, cpuInfo[0].Mhz))
 	}
 
 	// 3. Virtual Memory Statistics (RAM usage)
 	vMem, err := mem.VirtualMemory()
 	if err == nil {
-		info = append(info, fmt.Sprintf("<b>Total Memory</b>: %d GB, Available: %d GB, Used Percent: %.2f%%\n",
+		info = append(info, fmt.Sprintf("<b>Total Memory:</b> <p>%d GB, Available: %d GB, Used Percent: %.2f%%</p>",
 			vMem.Total/1024/1024/1024, vMem.Available/1024/1024/1024, vMem.UsedPercent))
 	}
 
 	// 4. Disk Partition Usage
-	diskUsage, err := disk.Usage("/")
+	diskUsage, err := disk.Usage("/var")
 	if err == nil {
-		info = append(info, fmt.Sprintf("<b>Disk Space</b>: Total: %d GB, Free: %d GB, Used Percent: %.2f%%\n",
+		info = append(info, fmt.Sprintf("<b>Disk Space:</b> <p>Total: %d GB, Free: %d GB, Used Percent: %.2f%%</p>",
 			diskUsage.Total/1024/1024/1024, diskUsage.Free/1024/1024/1024, diskUsage.UsedPercent))
 	}
 	return info
