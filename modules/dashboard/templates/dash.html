@@ -53,15 +53,13 @@ Chart.defaults.global.defaultFontColor = '#292b2c';
 
 async function fetchChartData() {
     try {
-        const response = await fetch('/ui/dashboard/stats'); // Replace with your URL
-        const data = await response.json();
+        const response = await fetch('/ui/dashboard/stats');
         
-        // 2. Extract labels and values using .map()
         const labels = data.GwToSub.Gw;
         const values = data.GwToSub.Subs;
         const glabels = data.PlanTosub.Plan;
         const gvalues = data.PlanTosub.Subs;
-        // 3. Render the pie chart with your API data
+
         renderPieChart(labels, values);
         renderBarChart(glabels, gvalues);
     } catch (error) {
@@ -69,7 +67,16 @@ async function fetchChartData() {
     }
 }
 
-// 4. Initialize and build the Chart.js instance
+const generateColors = (count) => {
+  const colors = [];
+  for (let i = 0; i < count; i++) {
+    // Distribute hues evenly across the 360-degree color wheel
+    const hue = (i * (360 / count)) % 360; 
+    colors.push(`hsl(${hue}, 70%, 60%)`);
+  }
+  return colors;
+};
+
 function renderPieChart(labels, dataValues) {
     const ctx = document.getElementById('myPieChart').getContext('2d');
     // Dynamically size the color array to match the data length
@@ -77,10 +84,10 @@ function renderPieChart(labels, dataValues) {
     new Chart(ctx, {
         type: 'pie',
         data: {
-            labels: labels, // Array of strings from API
+            labels: labels,
             datasets: [{
                 label: 'Inventory Breakdown',
-                data: dataValues, // Array of numbers from API
+                data: dataValues,
                 backgroundColor: dynamicColors,
                 borderWidth: 1
             }]
