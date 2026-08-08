@@ -55,17 +55,17 @@ func _sysinfo() map[string]string {
 func New() *http.ServeMux {
 	Router := http.NewServeMux() // 3
 	type subgw struct {
-		Gw   string
-		Subs int
+		Gws  []string
+		Subs []int
 	}
 	type subplan struct {
-		Plan string
-		Subs int
+		Plans []string
+		Subs  []int
 	}
 	type viewdata struct {
 		SysInfo   map[string]string
-		GwToSub   []subgw
-		PlanTosub []subplan
+		GwToSub   subgw
+		PlanTosub subplan
 	}
 	Router.HandleFunc("GET /changes", func(w http.ResponseWriter, r *http.Request) {
 		var records []Changemodel.Change
@@ -103,30 +103,39 @@ func New() *http.ServeMux {
 		if err != nil {
 			log.Println(err)
 		}
-		sgws := []subgw{}
+		gws := []string{}
+		sgws := []int{}
 		for _, v := range ifs {
-			sgw := subgw{}
-			sgw.Gw = v.Gateway
+			gws = append(gws, v.Gateway)
+			scount := 0
 			for _, s := range subs {
 				if s.Gateway == v.Gateway {
-					sgw.Subs += 1
+					scount += 1
 				}
 			}
-			sgws = append(sgws, sgw)
+			sgws = append(sgws, scount)
 		}
-		splans := []subplan{}
+		sgw := subgw{}
+		sgw.Gws = gws
+		sgw.Subs = sgws
+
+		sPlans := []string{}
+		splans := []int{}
 		for _, v := range plans {
-			splan := subplan{}
-			splan.Plan = v.Plan
+			sPlans = append(sPlans, v.Plan)
+			scount := 0
 			for _, s := range subs {
 				if s.Plan == v.Plan {
-					splan.Subs += 1
+					scount += 1
 				}
 			}
-			splans = append(splans, splan)
+			splans = append(splans, scount)
 		}
-		subdata.GwToSub = sgws
-		subdata.PlanTosub = splans
+		splan := subplan{}
+		splan.Plans = sPlans
+		splan.Subs = splans
+		subdata.GwToSub = sgw
+		subdata.PlanTosub = splan
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(subdata)
 	})
