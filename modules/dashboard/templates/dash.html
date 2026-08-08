@@ -61,8 +61,8 @@ async function fetchChartData() {
         const glabels = data.PlanTosub.Plans;
         const gvalues = data.PlanTosub.Subs;
 
-        renderPieChart(labels, values);
-        renderBarChart(glabels, gvalues);
+        renderPieChart(glabels, gvalues);
+        renderBarChart(labels, values);
     } catch (error) {
         console.error('Error fetching API data:', error);
     }
@@ -133,7 +133,7 @@ function renderBarChart(glabels, gdataValues) {
         yAxes: [{
             ticks: {
             min: 0,
-            max: 1000,
+            max: 200,
             maxTicksLimit: 5
             },
             gridLines: {
