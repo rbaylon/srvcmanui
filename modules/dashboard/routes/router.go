@@ -25,26 +25,26 @@ func _sysinfo() map[string]string {
 	}
 	info["Host"] = hostInfo.Hostname
 	info["OS"] = hostInfo.OS + " " + hostInfo.PlatformVersion
-	info["Uptime"] = strconv.FormatUint(hostInfo.Uptime, 10)
+	info["Uptime"] = strconv.FormatUint(hostInfo.Uptime/60/60, 10) + " hours"
 
 	// 2. CPU Information (Model Name & Speeds)
 	cpuInfo, err := cpu.Info()
 	if err == nil && len(cpuInfo) > 0 {
 		info["CPU Model"] = cpuInfo[0].ModelName + " " + strconv.Itoa(int(cpuInfo[0].Cores)) + " " +
-			strconv.FormatFloat(cpuInfo[0].Mhz, 'f', -1, 64) + "MHz"
+			strconv.FormatFloat(cpuInfo[0].Mhz, 'f', -1, 64) + " MHz"
 	}
 
 	// 3. Virtual Memory Statistics (RAM usage)
 	vMem, err := mem.VirtualMemory()
 	if err == nil {
-		info["Total Memory"] = strconv.FormatUint(vMem.Total/1024/1024/1024, 10) + "GB"
-		info["Available Memory"] = strconv.FormatUint(vMem.Available/1024/1024/1024, 10) + "GB"
+		info["Memory"] = "Total: " + strconv.FormatUint(vMem.Total/1024/1024/1024, 10) + " GB " +
+			"Available: " + strconv.FormatUint(vMem.Available/1024/1024/1024, 10) + " GB"
 	}
 
 	// 4. Disk Partition Usage
 	diskUsage, err := disk.Usage("/")
 	if err == nil {
-		info["Disk /"] = strconv.FormatUint(diskUsage.Total/1024/1024, 10) + "MB"
+		info["Disk /"] = strconv.FormatUint(diskUsage.Total/1024/1024, 10) + " MB"
 	}
 	return info
 }
