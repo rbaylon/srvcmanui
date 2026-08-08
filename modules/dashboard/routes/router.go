@@ -38,7 +38,7 @@ func _sysinfo() map[string]string {
 	vMem, err := mem.VirtualMemory()
 	if err == nil {
 		info["Total Memory"] = strconv.FormatUint(vMem.Total/1024/1024/1024, 10) + "GB"
-		info["Available"] = strconv.FormatUint(vMem.Available/1024/1024/1024, 10) + "GB"
+		info["Available Memory"] = strconv.FormatUint(vMem.Available/1024/1024/1024, 10) + "GB"
 	}
 
 	// 4. Disk Partition Usage
