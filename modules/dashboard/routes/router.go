@@ -23,27 +23,27 @@ func _sysinfo() []string {
 	if err != nil {
 		log.Fatalf("Failed to get host info: %v", err)
 	}
-	info = append(info, fmt.Sprintf("Host: %s, OS: %s %s, Uptime: %d sec\n",
+	info = append(info, fmt.Sprintf("<b>Host</b>: %s, OS: %s %s, Uptime: %d sec\n",
 		hostInfo.Hostname, hostInfo.OS, hostInfo.PlatformVersion, hostInfo.Uptime))
 
 	// 2. CPU Information (Model Name & Speeds)
 	cpuInfo, err := cpu.Info()
 	if err == nil && len(cpuInfo) > 0 {
-		info = append(info, fmt.Sprintf("CPU Model: %s, Cores: %d, Speed: %.2f MHz\n",
+		info = append(info, fmt.Sprintf("<b>CPU Model</b>: %s, Cores: %d, Speed: %.2f MHz\n",
 			cpuInfo[0].ModelName, cpuInfo[0].Cores, cpuInfo[0].Mhz))
 	}
 
 	// 3. Virtual Memory Statistics (RAM usage)
 	vMem, err := mem.VirtualMemory()
 	if err == nil {
-		info = append(info, fmt.Sprintf("Total Memory: %d GB, Available: %d GB, Used Percent: %.2f%%\n",
+		info = append(info, fmt.Sprintf("<b>Total Memory</b>: %d GB, Available: %d GB, Used Percent: %.2f%%\n",
 			vMem.Total/1024/1024/1024, vMem.Available/1024/1024/1024, vMem.UsedPercent))
 	}
 
 	// 4. Disk Partition Usage
 	diskUsage, err := disk.Usage("/")
 	if err == nil {
-		info = append(info, fmt.Sprintf("Disk Space: Total: %d GB, Free: %d GB, Used Percent: %.2f%%\n",
+		info = append(info, fmt.Sprintf("<b>Disk Space</b>: Total: %d GB, Free: %d GB, Used Percent: %.2f%%\n",
 			diskUsage.Total/1024/1024/1024, diskUsage.Free/1024/1024/1024, diskUsage.UsedPercent))
 	}
 	return info
