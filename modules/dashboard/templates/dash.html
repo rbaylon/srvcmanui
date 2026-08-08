@@ -57,10 +57,10 @@ async function fetchChartData() {
         const data = await response.json();
         
         // 2. Extract labels and values using .map()
-        const labels = data.map(item => item.GwToSub.Gw);
-        const values = data.map(item => item.GwToSub.Subs);
-        const glabels = data.map(item => item.PlanToSub.Plan);
-        const gvalues = data.map(item => item.PlanToSub.Subs);
+        const labels = data.GwToSub.Gw;
+        const values = data.GwToSub.Subs;
+        const glabels = data.PlanToSub.Plan;
+        const gvalues = data.PlanToSub.Subs;
         // 3. Render the pie chart with your API data
         renderPieChart(labels, values);
         renderBarChart(glabels, gvalues);
