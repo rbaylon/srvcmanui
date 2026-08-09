@@ -83,7 +83,7 @@ function renderPieChart(labels, dataValues) {
     // Dynamically size the color array to match the data length
     const dynamicColors = generateColors(dataValues.length);
     new Chart(ctx, {
-        type: 'pie',
+        type: 'doughnut',
         data: {
             labels: labels,
             datasets: [{
