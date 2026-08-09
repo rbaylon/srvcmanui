@@ -33,7 +33,7 @@ func _sysinfo() map[string]string {
 	// 2. CPU Information (Model Name & Speeds)
 	cpuInfo, err := cpu.Info()
 	if err == nil && len(cpuInfo) > 0 {
-		info["CPU Model"] = cpuInfo[0].ModelName + " " + strconv.Itoa(int(cpuInfo[0].Cores)) + " " +
+		info["CPU Model"] = cpuInfo[0].ModelName + " " + strconv.Itoa(int(cpuInfo[0].Cores)) + " cores " +
 			strconv.FormatFloat(cpuInfo[0].Mhz, 'f', -1, 64) + " MHz"
 	}
 
