@@ -109,7 +109,7 @@ func New() *http.ServeMux {
 			gws = append(gws, v.Name)
 			scount := 0
 			for _, s := range subs {
-				if s.Gateway == v.Gateway {
+				if s.Gateway == v.Gateway && s.Status == "active" {
 					scount += 1
 				}
 			}
@@ -125,7 +125,7 @@ func New() *http.ServeMux {
 			sPlans = append(sPlans, v.Plan)
 			scount := 0
 			for _, s := range subs {
-				if s.Plan == v.Plan {
+				if s.Plan == v.Plan && s.Status == "active" {
 					scount += 1
 				}
 			}
