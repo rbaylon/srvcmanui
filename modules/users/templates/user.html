@@ -26,7 +26,7 @@
      <input class="form-control" id="basic-form-password" type="password" placeholder="" name="Password" value="{{.User.Password}}"/>
    </div>
    <hr>
-   <b>Select which group you want to be a member of. Groups already check is your current group(s).</b>
+   <b>Select which group this user should belong to. Groups already checked is the user's current group(s).</b>
     {{ range .Groups }}
     <input name="Groups" type="checkbox" value="{{.ID}}" 
     {{range $i, $v := $.User.Groups}}
