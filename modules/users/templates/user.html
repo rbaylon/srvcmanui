@@ -30,7 +30,7 @@
     {{ range .Groups }}
     <input name="Groups" type="checkbox" value="{{.Groupname}}" 
     {{range $i, $v := $.User.Groups}}
-      {{ if eq $v.Groupname .Groupname }}checked{{end}}
+      {{ if eq $v.Groupname .Groupname }}checked{{else}}unchecked{{end}}
     {{end}}><label for="Groups">{{.Groupname}}</label>&nbsp;
     {{ end }}
     <hr>
