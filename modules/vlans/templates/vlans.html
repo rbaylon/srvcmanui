@@ -31,7 +31,7 @@
               <td>{{ .RxPrio }}</td>
               <td>{{ .TxPrio }}</td>
               <td>{{ .PfconfigID }}</td>
-              <td><a href="{{.ID}}"><span data-feather="edit"></span></a> | <a onclick="confirmDelete('/ui/firewall/delete/{{.ID}}')" href="#"><span data-feather="x-square"></span></a></td>
+              <td><a href="{{.ID}}"><span data-feather="edit"></span>edit</a> | <a onclick="confirmDelete('/ui/firewall/delete/{{.ID}}')" href="#"><span data-feather="x-square"></span>delete</a></td>
             </tr>
             {{ end }}
           </tbody>
