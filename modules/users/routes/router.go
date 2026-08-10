@@ -12,6 +12,7 @@ import (
 	"github.com/rbaylon/srvcman/database"
 	usermodel "github.com/rbaylon/srvcman/modules/users/model"
 	"github.com/rbaylon/srvcmanui/client"
+	"github.com/rbaylon/srvcmanui/utils"
 )
 
 var (
@@ -41,7 +42,7 @@ func login() http.HandlerFunc {
 			http.Redirect(w, r, prevurl, http.StatusSeeOther)
 			return
 		}
-		http.Error(w, "User or password invalid", http.StatusForbidden)
+		utils.RenderErrorPage(w, http.StatusUnauthorized, "Invalid username or passowrd!")
 	})
 }
 
