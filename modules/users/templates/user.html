@@ -29,7 +29,7 @@
    <b>Select which group this user should belong to. Groups already checked is the user's current group(s).</b><br>
     {{ range .Groups }}
     <input name="Groups" type="checkbox" value="{{.Groupname}}" 
-    {{range _, $v := $.User.Groups}}
+    {{range $i, $v := $.User.Groups}}
       {{ if eq $v.Groupname .Groupname }}checked{{end}}
     {{end}}><label for="Groups">{{.Groupname}}</label>&nbsp;
     {{ end }}
