@@ -1,0 +1,41 @@
+{{define "title"}}Subscriber Form{{end}}
+{{define "head_script"}}{{end}}
+{{define "content"}}
+ <form method="POST" action="/ui/users/addorupdate">
+   <div class="mb-3">
+     <input class="form-control" id="basic-form-created" type="hidden" name="CreatedAt"/>
+     <input type="hidden" name="ID"/>
+   </div>
+   <div class="mb-3">
+     <input class="form-control" id="basic-form-updated" type="hidden"  name="UpdatedAt"/>
+   </div>
+   <div class="mb-3">
+     <label class="form-label" for="basic-form-fname">First Name</label>
+     <input class="form-control" id="basic-form-fname" type="text" placeholder="First Name" name="Firstname" value="{{User.Firstname}}"/>
+   </div>
+   <div class="mb-3">
+     <label class="form-label" for="basic-form-lname">Last Name</label>
+     <input class="form-control" id="basic-form-lname" type="text" placeholder="Last Name" name="Lastname" value="{{User.Lastname}}"/>
+   </div>
+   <div class="mb-3">
+     <label class="form-label" for="basic-form-loc">Username</label>
+     <input class="form-control" id="basic-form-loc" type="text" placeholder="Username" name="Username" value="{{User.Username}}">
+   </div>
+   <div class="mb-3">
+     <label class="form-label" for="basic-form-password">Password</label>
+     <input class="form-control" id="basic-form-password" type="password" placeholder="" name="Password" value="{{User.Password}}"/>
+   </div>
+   <hr>
+  <select name="Groups" id="groups" multiple>
+    {{ range .User.Groups }}
+    <option value="{{.ID}}" 
+    {{range .User.Groups}}
+      {{ if eq .Groupname $.Groupname }}selected{{end}}
+    {{end}}>
+    {{.Groupname}}</option>
+    {{ end }}
+  </select>
+   <button class="btn btn-primary" type="submit">Submit</button>
+ </form>
+{{end}}
+{{define "tail_script"}}{{end}}

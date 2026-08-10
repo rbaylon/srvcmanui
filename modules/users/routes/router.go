@@ -12,6 +12,7 @@ import (
 	"github.com/go-chi/render"
 	"github.com/gorilla/sessions"
 	"github.com/rbaylon/srvcman/database"
+	groupmodel "github.com/rbaylon/srvcman/modules/groups/model"
 	usermodel "github.com/rbaylon/srvcman/modules/users/model"
 	"github.com/rbaylon/srvcmanui/client"
 	"github.com/rbaylon/srvcmanui/utils"
@@ -115,6 +116,42 @@ func New() *http.ServeMux {
 			log.Println(err)
 		}
 		http.Redirect(w, r, "/ui/users", http.StatusSeeOther)
+	})
+
+	Router.HandleFunc("GET /delete/{id}", func(w http.ResponseWriter, r *http.Request) {
+		err := client.Rester("users/"+r.PathValue("id"), "DELETE", nil, r)
+		if err != nil {
+			log.Println(err)
+		}
+		http.Redirect(w, r, "/ui/users", http.StatusSeeOther)
+	})
+
+	type userdata struct {
+		User   usermodel.User
+		Groups []groupmodel.Group
+	}
+	Router.HandleFunc("GET /{id}", func(w http.ResponseWriter, r *http.Request) {
+		var record usermodel.User
+		groups := []groupmodel.Group{}
+		err := client.Rester("groups", "GET", &groups, r)
+		if err != nil {
+			log.Println(err)
+		}
+		formdata := userdata{record, groups}
+		err = client.Rester("users/"+r.PathValue("id"), "GET", &formdata, r)
+		if err != nil {
+			log.Println(err)
+		}
+		pwd, _ := os.Getwd()
+		files := []string{
+			pwd + "/layouts/newbase.html",
+			pwd + "/modules/plans/templates/user.html",
+		}
+		tmpl := template.Must(template.ParseFiles(files...))
+		err = tmpl.ExecuteTemplate(w, "htmx", record)
+		if err != nil {
+			log.Println(err)
+		}
 	})
 
 	Router.HandleFunc("GET /login", func(w http.ResponseWriter, r *http.Request) {
