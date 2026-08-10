@@ -145,7 +145,7 @@ func New() *http.ServeMux {
 		pwd, _ := os.Getwd()
 		files := []string{
 			pwd + "/layouts/newbase.html",
-			pwd + "/modules/plans/templates/user.html",
+			pwd + "/modules/users/templates/user.html",
 		}
 		tmpl := template.Must(template.ParseFiles(files...))
 		err = tmpl.ExecuteTemplate(w, "htmx", record)
