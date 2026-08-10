@@ -137,18 +137,18 @@ func New() *http.ServeMux {
 		if err != nil {
 			log.Println(err)
 		}
-		formdata := userdata{record, groups}
-		err = client.Rester("users/"+r.PathValue("id"), "GET", &formdata, r)
+		err = client.Rester("users/"+r.PathValue("id"), "GET", &record, r)
 		if err != nil {
 			log.Println(err)
 		}
+		formdata := userdata{record, groups}
 		pwd, _ := os.Getwd()
 		files := []string{
 			pwd + "/layouts/newbase.html",
 			pwd + "/modules/users/templates/user.html",
 		}
 		tmpl := template.Must(template.ParseFiles(files...))
-		err = tmpl.ExecuteTemplate(w, "htmx", record)
+		err = tmpl.ExecuteTemplate(w, "htmx", formdata)
 		if err != nil {
 			log.Println(err)
 		}
