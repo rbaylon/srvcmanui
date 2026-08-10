@@ -7,7 +7,9 @@ import (
 	"net/http"
 	"net/url"
 	"os"
+	"strconv"
 
+	"github.com/go-chi/render"
 	"github.com/gorilla/sessions"
 	"github.com/rbaylon/srvcman/database"
 	usermodel "github.com/rbaylon/srvcman/modules/users/model"
@@ -87,6 +89,32 @@ func New() *http.ServeMux {
 		if err != nil {
 			log.Println(err)
 		}
+	})
+
+	Router.HandleFunc("POST /addorupdate", func(w http.ResponseWriter, r *http.Request) {
+		s := &usermodel.User{}
+		if err := render.Bind(r, s); err != nil {
+			log.Println(err)
+			http.Redirect(w, r, "/ui/users", http.StatusSeeOther)
+			return
+		}
+		id := s.ID
+		if id > 0 {
+			s.ID = uint(id)
+			err := client.Rester("users/"+strconv.FormatUint(uint64(id), 10), "PUT", &s, r)
+			if err != nil {
+				log.Println(err)
+				http.Redirect(w, r, "/ui/users", http.StatusSeeOther)
+				return
+			}
+			http.Redirect(w, r, "/ui/users", http.StatusSeeOther)
+			return
+		}
+		err := client.Rester("users/create", "POST", &s, r)
+		if err != nil {
+			log.Println(err)
+		}
+		http.Redirect(w, r, "/ui/users", http.StatusSeeOther)
 	})
 
 	Router.HandleFunc("GET /login", func(w http.ResponseWriter, r *http.Request) {
