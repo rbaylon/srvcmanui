@@ -26,15 +26,16 @@
      <input class="form-control" id="basic-form-password" type="password" placeholder="" name="Password" value="{{.User.Password}}"/>
    </div>
    <hr>
-  <select name="Groups" id="groups" multiple>
+  <ol>
     {{ range .Groups }}
-    <option value="{{.ID}}" 
+    <li>
+    <input name="Groups" type="checkbox" value="{{.ID}}" 
     {{range .User.Groups}}
-      {{ if eq .Groupname $.Groupname }}selected{{end}}
-    {{end}}>
-    {{.Groupname}}</option>
+      {{ if eq .Groupname $.Groupname }}checked{{end}}
+    {{end}}><label for="Groups">{{.Groupname}}</label>&nbsp;
+    </li>
     {{ end }}
-  </select>
+  </ol>
    <button class="btn btn-primary" type="submit">Submit</button>
  </form>
 {{end}}
