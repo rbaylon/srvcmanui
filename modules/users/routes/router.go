@@ -75,6 +75,19 @@ func New() *http.ServeMux {
 		tmpl.ExecuteTemplate(w, "htmx", records)
 	})
 
+	Router.HandleFunc("GET /create", func(w http.ResponseWriter, r *http.Request) {
+		pwd, _ := os.Getwd()
+		files := []string{
+			pwd + "/layouts/newbase.html",
+			pwd + "/modules/users/templates/usernew.html",
+		}
+		tmpl := template.Must(template.ParseFiles(files...))
+		err := tmpl.ExecuteTemplate(w, "htmx", nil)
+		if err != nil {
+			log.Println(err)
+		}
+	})
+
 	Router.HandleFunc("GET /login", func(w http.ResponseWriter, r *http.Request) {
 		prevurl := r.URL.Query().Get("prevurl")
 		if prevurl != "" {
