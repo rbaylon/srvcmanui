@@ -26,16 +26,14 @@
      <input class="form-control" id="basic-form-password" type="password" placeholder="" name="Password" value="{{.User.Password}}"/>
    </div>
    <hr>
-  <ol>
+   <b>Select which group you want to be a member of. Groups already check is your current group(s).</b>
     {{ range .Groups }}
-    <li>
     <input name="Groups" type="checkbox" value="{{.ID}}" 
     {{range $i, $v := $.User.Groups}}
       {{ if eq $v.Groupname .Groupname }}checked{{end}}
     {{end}}><label for="Groups">{{.Groupname}}</label>&nbsp;
-    </li>
     {{ end }}
-  </ol>
+    <hr>
    <button class="btn btn-primary" type="submit">Submit</button>
  </form>
 {{end}}
