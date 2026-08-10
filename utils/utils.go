@@ -21,7 +21,7 @@ func RenderErrorPage(w http.ResponseWriter, statusCode int, message string) {
 		StatusCode: statusCode,
 		Message:    message,
 	}
-	err := templates.ExecuteTemplate(w, cwd+"/error.html", data)
+	err := templates.ExecuteTemplate(w, "error.html", data)
 	if err != nil {
 		log.Printf("Template execution error: %v", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)

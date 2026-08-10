@@ -25,7 +25,7 @@ func login() http.HandlerFunc {
 		username := r.PostFormValue("username")
 		password := r.PostFormValue("password")
 		if username == "" || password == "" {
-			http.Error(w, "User or password empty", http.StatusForbidden)
+			utils.RenderErrorPage(w, http.StatusUnauthorized, "username and password required!")
 			return
 		}
 		token, err := client.GetToken(username, password)
@@ -42,7 +42,7 @@ func login() http.HandlerFunc {
 			http.Redirect(w, r, prevurl, http.StatusSeeOther)
 			return
 		}
-		utils.RenderErrorPage(w, http.StatusUnauthorized, "Invalid username or passowrd!")
+		utils.RenderErrorPage(w, http.StatusUnauthorized, "Invalid username or password!")
 	})
 }
 
