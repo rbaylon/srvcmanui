@@ -10,6 +10,7 @@ import (
 
 	"github.com/gorilla/sessions"
 	"github.com/rbaylon/srvcman/database"
+	usermodel "github.com/rbaylon/srvcman/modules/users/model"
 	"github.com/rbaylon/srvcmanui/client"
 )
 
@@ -58,6 +59,21 @@ type LoginData struct {
 
 func New() *http.ServeMux {
 	Router := http.NewServeMux()
+
+	Router.HandleFunc("GET /", func(w http.ResponseWriter, r *http.Request) {
+		records := []usermodel.User{}
+		err := client.Rester("subs", "GET", &records, r)
+		if err != nil {
+			log.Println(err)
+		}
+		pwd, _ := os.Getwd()
+		files := []string{
+			pwd + "/layouts/newbase.html",
+			pwd + "/modules/users/templates/users.html",
+		}
+		tmpl := template.Must(template.ParseFiles(files...))
+		tmpl.ExecuteTemplate(w, "htmx", records)
+	})
 
 	Router.HandleFunc("GET /login", func(w http.ResponseWriter, r *http.Request) {
 		prevurl := r.URL.Query().Get("prevurl")
