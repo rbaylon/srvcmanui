@@ -27,11 +27,11 @@
    </div>
    <hr>
    <b>Select which group this user should belong to. Groups already checked is the user's current group(s).</b><br>
-    {{ range .Groups }}
-    <input name="Groups" type="checkbox" value="{{.Groupname}}" 
+    {{ range $x, $y := .Groups }}
+    <input name="Groups" type="checkbox" value="{{$y.Groupname}}" 
     {{range $i, $v := $.User.Groups}}
-      {{ if eq $v.Groupname $.Groupname }} checked{{end}}
-    {{end}}><label for="Groups">{{.Groupname}}</label>&nbsp;
+      {{ if eq $v.Groupname $y.Groupname }} checked{{end}}
+    {{end}}><label for="Groups">{{$y.Groupname}}</label>&nbsp;
     {{ end }}
     <hr>
    <button class="btn btn-primary" type="submit">Submit</button>
