@@ -11,23 +11,23 @@
    </div>
    <div class="mb-3">
      <label class="form-label" for="basic-form-fname">First Name</label>
-     <input class="form-control" id="basic-form-fname" type="text" placeholder="First Name" name="Firstname" value="{{User.Firstname}}"/>
+     <input class="form-control" id="basic-form-fname" type="text" placeholder="First Name" name="Firstname" value="{{.User.Firstname}}"/>
    </div>
    <div class="mb-3">
      <label class="form-label" for="basic-form-lname">Last Name</label>
-     <input class="form-control" id="basic-form-lname" type="text" placeholder="Last Name" name="Lastname" value="{{User.Lastname}}"/>
+     <input class="form-control" id="basic-form-lname" type="text" placeholder="Last Name" name="Lastname" value="{{.User.Lastname}}"/>
    </div>
    <div class="mb-3">
      <label class="form-label" for="basic-form-loc">Username</label>
-     <input class="form-control" id="basic-form-loc" type="text" placeholder="Username" name="Username" value="{{User.Username}}">
+     <input class="form-control" id="basic-form-loc" type="text" placeholder="Username" name="Username" value="{{.User.Username}}">
    </div>
    <div class="mb-3">
      <label class="form-label" for="basic-form-password">Password</label>
-     <input class="form-control" id="basic-form-password" type="password" placeholder="" name="Password" value="{{User.Password}}"/>
+     <input class="form-control" id="basic-form-password" type="password" placeholder="" name="Password" value="{{.User.Password}}"/>
    </div>
    <hr>
   <select name="Groups" id="groups" multiple>
-    {{ range .User.Groups }}
+    {{ range .Groups }}
     <option value="{{.ID}}" 
     {{range .User.Groups}}
       {{ if eq .Groupname $.Groupname }}selected{{end}}
