@@ -106,14 +106,16 @@ func New() *http.ServeMux {
 		gws := []string{}
 		sgws := []int{}
 		for _, v := range ifs {
-			gws = append(gws, v.Name)
-			scount := 0
-			for _, s := range subs {
-				if s.Gateway == v.Gateway && s.Status == "active" {
-					scount += 1
+			if v.Type == "external" {
+				gws = append(gws, v.Name)
+				scount := 0
+				for _, s := range subs {
+					if s.Gateway == v.Gateway && s.Status == "active" {
+						scount += 1
+					}
 				}
+				sgws = append(sgws, scount)
 			}
-			sgws = append(sgws, scount)
 		}
 		sgw := subgw{}
 		sgw.Gws = gws
