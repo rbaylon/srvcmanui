@@ -16,6 +16,7 @@ install:
 	cp -r layouts ${distdir}/
 	cp -r static ${distdir}/
 	cp -r modules ${distdir}/
+	cp utils/*.html ${distdir}/
 	rm -rf ${distdir}/modules/*/routes
 
 dist:
