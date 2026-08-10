@@ -62,7 +62,7 @@ func New() *http.ServeMux {
 
 	Router.HandleFunc("GET /", func(w http.ResponseWriter, r *http.Request) {
 		records := []usermodel.User{}
-		err := client.Rester("subs", "GET", &records, r)
+		err := client.Rester("users", "GET", &records, r)
 		if err != nil {
 			log.Println(err)
 		}
