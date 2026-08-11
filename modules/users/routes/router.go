@@ -106,9 +106,14 @@ func New() *http.ServeMux {
 			return
 		}
 		s.ID = uint(rid)
-		for _, v := range r.FormValue("Groups") {
+		if err := r.ParseForm(); err != nil {
+			log.Println("Error parsing form")
+			http.Redirect(w, r, "/ui/users", http.StatusSeeOther)
+			return
+		}
+		for _, v := range r.Form["Groups"] {
 			g := groupmodel.Group{}
-			err := client.Rester("groups/getbyname/"+string(v), "GET", &g, r)
+			err := client.Rester("groups/getbyname/"+v, "GET", &g, r)
 			if err != nil {
 				log.Println("error getting group: ", err)
 			} else {
