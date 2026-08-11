@@ -99,13 +99,18 @@ func New() *http.ServeMux {
 		s.Username = r.FormValue("Username")
 		s.Password = r.FormValue("Password")
 		fid := r.FormValue("ID")
-		rid, err := strconv.Atoi(fid)
-		if err != nil {
-			log.Println("error converting ID to string: ", rid)
-			http.Redirect(w, r, "/ui/users", http.StatusSeeOther)
-			return
+		if fid != "" {
+			rid, err := strconv.Atoi(fid)
+			if err != nil {
+				log.Println("error converting ID to string: ", rid)
+				http.Redirect(w, r, "/ui/users", http.StatusSeeOther)
+				return
+			}
+			s.ID = uint(rid)
+		} else {
+			s.ID = 0
 		}
-		s.ID = uint(rid)
+
 		if err := r.ParseForm(); err != nil {
 			log.Println("Error parsing form")
 			http.Redirect(w, r, "/ui/users", http.StatusSeeOther)
@@ -133,7 +138,7 @@ func New() *http.ServeMux {
 			http.Redirect(w, r, "/ui/users", http.StatusSeeOther)
 			return
 		}
-		err = client.Rester("users/create", "POST", &s, r)
+		err := client.Rester("users/create", "POST", &s, r)
 		if err != nil {
 			log.Println(err)
 		}
