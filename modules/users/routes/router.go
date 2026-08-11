@@ -9,7 +9,6 @@ import (
 	"os"
 	"strconv"
 
-	"github.com/go-chi/render"
 	"github.com/gorilla/sessions"
 	"github.com/rbaylon/srvcman/database"
 	groupmodel "github.com/rbaylon/srvcman/modules/groups/model"
@@ -94,11 +93,21 @@ func New() *http.ServeMux {
 
 	Router.HandleFunc("POST /addorupdate", func(w http.ResponseWriter, r *http.Request) {
 		s := &usermodel.User{}
-		if err := render.Bind(r, s); err != nil {
-			log.Println(err)
-			http.Redirect(w, r, "/ui/users", http.StatusSeeOther)
-			return
+		groups := []groupmodel.Group{}
+		s.Firstname = r.FormValue("Firstname")
+		s.Lastname = r.FormValue("Lastname")
+		s.Username = r.FormValue("Username")
+		s.Password = r.FormValue("Password")
+		for _, v := range r.FormValue("Groups") {
+			g := groupmodel.Group{}
+			err := client.Rester("groups/getbyname/"+string(v), "GET", &g, r)
+			if err != nil {
+				log.Println("error getting group: ", err)
+			} else {
+				groups = append(groups, g)
+			}
 		}
+		s.Groups = groups
 		id := s.ID
 		if id > 0 {
 			s.ID = uint(id)
