@@ -98,9 +98,10 @@ func New() *http.ServeMux {
 		s.Lastname = r.FormValue("Lastname")
 		s.Username = r.FormValue("Username")
 		s.Password = r.FormValue("Password")
-		rid, err := strconv.Atoi(r.FormValue("ID"))
+		fid := r.FormValue("ID")
+		rid, err := strconv.Atoi(fid)
 		if err != nil {
-			log.Println("error converting ID to string")
+			log.Println("error converting ID to string: ", rid)
 			http.Redirect(w, r, "/ui/users", http.StatusSeeOther)
 			return
 		}
