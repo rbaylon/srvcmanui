@@ -98,6 +98,13 @@ func New() *http.ServeMux {
 		s.Lastname = r.FormValue("Lastname")
 		s.Username = r.FormValue("Username")
 		s.Password = r.FormValue("Password")
+		rid, err := strconv.Atoi(r.FormValue("ID"))
+		if err != nil {
+			log.Println("error converting ID to string")
+			http.Redirect(w, r, "/ui/users", http.StatusSeeOther)
+			return
+		}
+		s.ID = uint(rid)
 		for _, v := range r.FormValue("Groups") {
 			g := groupmodel.Group{}
 			err := client.Rester("groups/getbyname/"+string(v), "GET", &g, r)
@@ -120,7 +127,7 @@ func New() *http.ServeMux {
 			http.Redirect(w, r, "/ui/users", http.StatusSeeOther)
 			return
 		}
-		err := client.Rester("users/create", "POST", &s, r)
+		err = client.Rester("users/create", "POST", &s, r)
 		if err != nil {
 			log.Println(err)
 		}
