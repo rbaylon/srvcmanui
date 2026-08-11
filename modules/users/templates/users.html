@@ -27,9 +27,7 @@
           <td class="align-middle lastname">{{.Lastname}}</td>
           <td class="align-middle username">{{.Username}}</td>
           <td class="align-middle groups">{{range .Groups}}{{.Groupname}}|{{end}}</td>
-          {{if ne .Username "admin" }}
-          <td><a href="{{.ID}}"><span data-feather="edit"></span>edit</a> | <a onclick="confirmDelete('/ui/users/delete/{{.ID}}')" href="#"><span data-feather="x-square"></span>delete</a></td>
-          {{end}}
+          <td>{{if ne .Username "admin" }}<a href="{{.ID}}"><span data-feather="edit"></span>edit</a> | <a onclick="confirmDelete('/ui/users/delete/{{.ID}}')" href="#"><span data-feather="x-square"></span>delete</a>{{end}}</td>
         </tr>
         {{end}}
       </tbody>
