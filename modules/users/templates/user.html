@@ -3,7 +3,7 @@
 {{define "content"}}
  <form method="POST" action="/ui/users/addorupdate">
    <div class="mb-3">
-     <input class="form-control" id="basic-form-created" type="hidden" name="CreatedAt"/>
+     <input class="form-control" id="basic-form-created" type="hidden" name="CreatedAt" value="{{.User.CreatedAt}}"/>
      <input type="hidden" name="ID" value="{{.User.ID}}"/>
    </div>
    <div class="mb-3">
