@@ -1,0 +1,19 @@
+{{define "title"}}Group Form{{end}}
+{{define "head_script"}}{{end}}
+{{define "content"}}
+ <form method="POST" action="/ui/groups/addorupdate">
+   <div class="mb-3">
+     <input class="form-control" id="basic-form-created" type="hidden" name="CreatedAt"/>
+     <input type="hidden" name="ID"/>
+   </div>
+   <div class="mb-3">
+     <input class="form-control" id="basic-form-updated" type="hidden"  name="UpdatedAt"/>
+   </div>
+   <div class="mb-3">
+     <label class="form-label" for="basic-form-group">Group Name</label>
+     <input class="form-control" id="basic-form-group" type="text" placeholder="Group Name" name="Groupname"/>
+   </div>
+   <button class="btn btn-primary" type="submit">Submit</button>
+ </form>
+{{end}}
+{{define "tail_script"}}{{end}}
