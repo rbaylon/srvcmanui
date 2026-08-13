@@ -28,6 +28,17 @@
           font-size: 3.5rem;
         }
       }
+      nav details {
+        margin-bottom: 1rem;
+      }
+
+      nav summary {
+        cursor: pointer;
+        font-weight: bold;
+        padding: 0.5rem;
+        background: #34495e;
+        border-radius: 4px;
+      }
     </style>
 
     
@@ -123,7 +134,7 @@
           <li class="nav-item">
             <details>
               <summary>Administration</summary>
-              <ul>
+              <ul class="nav flex-column">
                 <li class="nav-item">
                   <a class="nav-link" href="/ui/users">
                     <span data-feather="layers"></span>
