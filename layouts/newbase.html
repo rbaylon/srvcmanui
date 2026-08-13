@@ -36,7 +36,6 @@
         cursor: pointer;
         font-weight: bold;
         padding: 0.5rem;
-        background: #34495e;
         border-radius: 4px;
       }
     </style>
@@ -78,58 +77,92 @@
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="/ui/subs">
-              <span data-feather="users"></span>
-              Subscribers
-            </a>
+            <details>
+              <summary>Internet Provider</summary>
+              <ul class="nav flex-column">
+                <li class="nav-item">
+                  <a class="nav-link" href="/ui/subs">
+                    <span data-feather="users"></span>
+                    Subscribers
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="/ui/vouchers">
+                    <span data-feather="shopping-cart"></span>
+                    Vouchers
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="/ui/collections">
+                    <span data-feather="file"></span>
+                    Collections
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="/ui/plans">
+                    <span data-feather="bar-chart-2"></span>
+                    Plans
+                  </a>
+                </li>
+              </ul>
+            </details>  
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="/ui/vouchers">
-              <span data-feather="shopping-cart"></span>
-              Vouchers
-            </a>
+            <details>
+              <summary>Security</summary>
+              <ul class="nav flex-column">
+                <li class="nav-item">
+                  <a class="nav-link" href="/ui/firewall">
+                    <span data-feather="layers"></span>
+                    Firewall
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="/ui/policies">
+                    <span data-feather="layers"></span>
+                    Access Policy
+                  </a>
+                </li>
+              </ul>
+            </details>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="/ui/collections">
-              <span data-feather="file"></span>
-              Collections
-            </a>
+            <details>
+              <summary>Network</summary>
+              <ul class="nav flex-column">
+                <li class="nav-item">
+                  <a class="nav-link" href="/ui/instances">
+                    <span data-feather="layers"></span>
+                    Self
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="/ui/pfifaces">
+                    <span data-feather="layers"></span>
+                    Network Interfaces
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="/ui/vlan">
+                    <span data-feather="layers"></span>
+                    VLAN
+                  </a>
+                </li>
+              </ul>
+            </details>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="/ui/plans">
-              <span data-feather="bar-chart-2"></span>
-              Plans
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/ui/firewall">
-              <span data-feather="layers"></span>
-              Firewall
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/ui/pppoes">
-              <span data-feather="layers"></span>
-              PPPoE Server
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/ui/instances">
-              <span data-feather="layers"></span>
-              Firewall instaces
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/ui/pfifaces">
-              <span data-feather="layers"></span>
-              Network Interfaces
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/ui/vlan">
-              <span data-feather="layers"></span>
-              VLAN
-            </a>
+            <details>
+              <summary>Services</summary>
+              <ul class="nav flex-column">
+                <li class="nav-item">
+                  <a class="nav-link" href="/ui/pppoes">
+                    <span data-feather="layers"></span>
+                    PPPoE Server
+                  </a>
+                </li>
+              </ul>
+            </details>
           </li>
           <li class="nav-item">
             <details>
@@ -148,7 +181,7 @@
                   </a>
                 </li>
               </ul>
-              </details>
+            </details>
           </li>
         </ul>
       </div>
