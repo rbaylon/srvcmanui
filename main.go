@@ -14,6 +14,7 @@ import (
 	instancerouter "github.com/rbaylon/srvcmanui/modules/instances/routes"
 	pfifacerouter "github.com/rbaylon/srvcmanui/modules/pfifaces/routes"
 	planrouter "github.com/rbaylon/srvcmanui/modules/plans/routes"
+	policyrouter "github.com/rbaylon/srvcmanui/modules/policies/routes"
 	pppoerouter "github.com/rbaylon/srvcmanui/modules/pppoes/routes"
 	subrouter "github.com/rbaylon/srvcmanui/modules/subs/routes"
 	userrouter "github.com/rbaylon/srvcmanui/modules/users/routes"
@@ -35,6 +36,7 @@ func main() {
 	ifacesrouter := pfifacerouter.New()
 	vlanrouter := vlanrouter.New()
 	grouprouter := grouprouter.New()
+	policyrouter := policyrouter.New()
 
 	mainrouter := http.NewServeMux()
 	fs := http.FileServer(http.Dir("./static"))
@@ -51,6 +53,7 @@ func main() {
 	mainrouter.Handle("/ui/pfifaces/", http.StripPrefix("/ui/pfifaces", ifacesrouter))
 	mainrouter.Handle("/ui/vlan/", http.StripPrefix("/ui/vlan", vlanrouter))
 	mainrouter.Handle("/ui/groups/", http.StripPrefix("/ui/groups", grouprouter))
+	mainrouter.Handle("/ui/policies/", http.StripPrefix("/ui/policies", policyrouter))
 	finalrouter := accessvalidator.Check(accesslogger.Log(mainrouter))
 
 	log.Println("Go app listening on port", port)

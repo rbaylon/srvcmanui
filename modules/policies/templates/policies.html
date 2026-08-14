@@ -1,0 +1,41 @@
+{{define "title"}}policys List{{end}}
+{{define "head_script"}}{{end}}
+{{define "content"}}
+<div class="d-flex align-items-center justify-content-end my-3">
+  <div id="bulk-select-replace-element">
+    <a href="/ui/policies/create" ><button class="btn btn-phoenix-success btn-sm" type="button"><span data-feather="plus">New</span></button></a>
+  </div>
+</div>
+<div id="tableExample" data-list='{"valueNames":["id","name","type","permission","groups"],"page":200,"pagination":false}'>
+  <div class="table-responsive mx-n1 px-1">
+    <table class="table table-striped table-sm" id="records">
+      <thead>
+        <tr>
+          <th class="sort align-middle" data-sort="id">ID</th>
+          <th class="sort align-middle" data-sort="name">Name</th>
+          <th class="sort align-middle" data-sort="module">Module</th>
+          <th class="sort align-middle" data-sort="resource">Resource</th>
+          <th class="sort align-middle" data-sort="action">Permission</th>
+          <th class="sort align-middle" data-sort="groups">Groups</th>
+          <th class="sort text-end align-middle pe-0" scope="col">ACTION</th>
+        </tr>
+      </thead>
+      <tbody class="list" id="bulk-select-body">
+        {{ range .}}
+        <tr>
+          <td class="align-middle id">{{.ID}}</td>
+          <td class="align-middle name">{{.Name}} </td>
+          <td class="align-middle module">{{.Type}} </td>
+          <td class="align-middle resource">{{.Resource}}</td>
+          <td class="align-middle action">{{.Action}} </td>
+          <td class="align-middle groups">{{range .Groups}}{{.Groupname}}&nbsp;{{end}}</td>
+          <td><a href="{{.ID}}"><span data-feather="edit"></span>edit</a> | <a onclick="confirmDelete('/ui/policies/delete/{{.ID}}')" href="#"><span data-feather="x-square"></span>delete</a></td>
+        </tr>
+        {{end}}
+      </tbody>
+    </table>
+  </div>
+</div>
+<script src="/ui/static/local/listutils.js"></script>
+{{end}}
+{{define "tail_script"}}{{end}} 
