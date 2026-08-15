@@ -64,6 +64,12 @@ func New() *http.ServeMux {
 		s.Name = r.FormValue("Name")
 		s.Type = r.FormValue("Module")
 		s.Action = r.FormValue("Action")
+		s.Resource = r.FormValue("Resource")
+		if err := r.ParseForm(); err != nil {
+			fmt.Println("Error parsing form")
+			utils.RenderErrorPage(w, 501, "Error parsing form: "+err.Error())
+			return
+		}
 		groups := []groupmodel.Group{}
 		for _, v := range r.Form["Groups"] {
 			g := groupmodel.Group{}
@@ -80,7 +86,7 @@ func New() *http.ServeMux {
 			rid, err := strconv.Atoi(fid)
 			if err != nil {
 				fmt.Println("error converting ID to string: ", rid)
-				http.Redirect(w, r, "/ui/policies", http.StatusSeeOther)
+				utils.RenderErrorPage(w, 501, "error converting ID to string: "+err.Error())
 				return
 			}
 			s.ID = uint(rid)

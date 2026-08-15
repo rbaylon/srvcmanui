@@ -105,7 +105,7 @@ func New() *http.ServeMux {
 			rid, err := strconv.Atoi(fid)
 			if err != nil {
 				log.Println("error converting ID to string: ", rid)
-				http.Redirect(w, r, "/ui/users", http.StatusSeeOther)
+				utils.RenderErrorPage(w, 501, "error converting ID to string: "+err.Error())
 				return
 			}
 			s.ID = uint(rid)
@@ -114,8 +114,8 @@ func New() *http.ServeMux {
 		}
 
 		if err := r.ParseForm(); err != nil {
-			log.Println("Error parsing form")
-			http.Redirect(w, r, "/ui/users", http.StatusSeeOther)
+			fmt.Println("Error parsing form")
+			utils.RenderErrorPage(w, 501, "Error parsing form: "+err.Error())
 			return
 		}
 		for _, v := range r.Form["Groups"] {
