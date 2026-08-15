@@ -62,7 +62,7 @@ func New() *http.ServeMux {
 	Router.HandleFunc("POST /addorupdate", func(w http.ResponseWriter, r *http.Request) {
 		s := &policymodel.Policy{}
 		s.Name = r.FormValue("Name")
-		s.Type = r.FormValue("Module")
+		s.Type = r.FormValue("Type")
 		s.Action = r.FormValue("Action")
 		s.Resource = r.FormValue("Resource")
 		if err := r.ParseForm(); err != nil {
