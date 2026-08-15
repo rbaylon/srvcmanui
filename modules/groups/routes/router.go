@@ -9,6 +9,7 @@ import (
 
 	groupmodel "github.com/rbaylon/srvcman/modules/groups/model"
 	"github.com/rbaylon/srvcmanui/client"
+	"github.com/rbaylon/srvcmanui/utils"
 )
 
 func New() *http.ServeMux {
@@ -16,9 +17,11 @@ func New() *http.ServeMux {
 
 	Router.HandleFunc("GET /", func(w http.ResponseWriter, r *http.Request) {
 		records := []groupmodel.Group{}
-		err := client.Rester("groups", "GET", &records, r)
+		err, status := client.Rester("groups", "GET", &records, r)
 		if err != nil {
 			fmt.Println(err)
+			utils.RenderErrorPage(w, status, err.Error())
+			return
 		}
 		pwd, _ := os.Getwd()
 		files := []string{
@@ -62,35 +65,41 @@ func New() *http.ServeMux {
 		id := s.ID
 		if id > 0 {
 			s.ID = uint(id)
-			err := client.Rester("groups/"+strconv.FormatUint(uint64(id), 10), "PUT", &s, r)
+			err, status := client.Rester("groups/"+strconv.FormatUint(uint64(id), 10), "PUT", &s, r)
 			if err != nil {
 				fmt.Println(err)
-				http.Redirect(w, r, "/ui/groups", http.StatusSeeOther)
+				utils.RenderErrorPage(w, status, err.Error())
 				return
 			}
 			http.Redirect(w, r, "/ui/groups", http.StatusSeeOther)
 			return
 		}
-		err := client.Rester("groups/create", "POST", &s, r)
+		err, status := client.Rester("groups/create", "POST", &s, r)
 		if err != nil {
 			fmt.Println(err)
+			utils.RenderErrorPage(w, status, err.Error())
+			return
 		}
 		http.Redirect(w, r, "/ui/groups", http.StatusSeeOther)
 	})
 
 	Router.HandleFunc("GET /delete/{id}", func(w http.ResponseWriter, r *http.Request) {
-		err := client.Rester("groups/"+r.PathValue("id"), "DELETE", nil, r)
+		err, status := client.Rester("groups/"+r.PathValue("id"), "DELETE", nil, r)
 		if err != nil {
 			fmt.Println(err)
+			utils.RenderErrorPage(w, status, err.Error())
+			return
 		}
 		http.Redirect(w, r, "/ui/groups", http.StatusSeeOther)
 	})
 
 	Router.HandleFunc("GET /{id}", func(w http.ResponseWriter, r *http.Request) {
 		var record groupmodel.Group
-		err := client.Rester("groups/"+r.PathValue("id"), "GET", &record, r)
+		err, status := client.Rester("groups/"+r.PathValue("id"), "GET", &record, r)
 		if err != nil {
 			fmt.Println(err)
+			utils.RenderErrorPage(w, status, err.Error())
+			return
 		}
 		pwd, _ := os.Getwd()
 		files := []string{

@@ -10,6 +10,7 @@ import (
 	groupmodel "github.com/rbaylon/srvcman/modules/groups/model"
 	policymodel "github.com/rbaylon/srvcman/modules/policies/model"
 	"github.com/rbaylon/srvcmanui/client"
+	"github.com/rbaylon/srvcmanui/utils"
 )
 
 func New() *http.ServeMux {
@@ -22,9 +23,11 @@ func New() *http.ServeMux {
 
 	Router.HandleFunc("GET /", func(w http.ResponseWriter, r *http.Request) {
 		records := []policymodel.Policy{}
-		err := client.Rester("policies", "GET", &records, r)
+		err, status := client.Rester("policies", "GET", &records, r)
 		if err != nil {
 			fmt.Println(err)
+			utils.RenderErrorPage(w, status, err.Error())
+			return
 		}
 		pwd, _ := os.Getwd()
 		files := []string{
@@ -38,9 +41,11 @@ func New() *http.ServeMux {
 	Router.HandleFunc("GET /create", func(w http.ResponseWriter, r *http.Request) {
 		pwd, _ := os.Getwd()
 		groups := []groupmodel.Group{}
-		err := client.Rester("groups", "GET", &groups, r)
+		err, status := client.Rester("groups", "GET", &groups, r)
 		if err != nil {
 			fmt.Println(err)
+			utils.RenderErrorPage(w, status, err.Error())
+			return
 		}
 		fd := formdata{nil, groups}
 		files := []string{
@@ -62,7 +67,7 @@ func New() *http.ServeMux {
 		groups := []groupmodel.Group{}
 		for _, v := range r.Form["Groups"] {
 			g := groupmodel.Group{}
-			err := client.Rester("groups/getbyname/"+v, "GET", &g, r)
+			err, _ := client.Rester("groups/getbyname/"+v, "GET", &g, r)
 			if err != nil {
 				fmt.Println("error getting group: ", err)
 			} else {
@@ -86,40 +91,48 @@ func New() *http.ServeMux {
 		id := s.ID
 		if id > 0 {
 			s.ID = uint(id)
-			err := client.Rester("policies/"+strconv.FormatUint(uint64(id), 10), "PUT", &s, r)
+			err, status := client.Rester("policies/"+strconv.FormatUint(uint64(id), 10), "PUT", &s, r)
 			if err != nil {
 				fmt.Println(err)
-				http.Redirect(w, r, "/ui/policies", http.StatusSeeOther)
+				utils.RenderErrorPage(w, status, err.Error())
 				return
 			}
 			http.Redirect(w, r, "/ui/policies", http.StatusSeeOther)
 			return
 		}
-		err := client.Rester("policies/create", "POST", &s, r)
+		err, status := client.Rester("policies/create", "POST", &s, r)
 		if err != nil {
 			fmt.Println(err)
+			utils.RenderErrorPage(w, status, err.Error())
+			return
 		}
 		http.Redirect(w, r, "/ui/policies", http.StatusSeeOther)
 	})
 
 	Router.HandleFunc("GET /delete/{id}", func(w http.ResponseWriter, r *http.Request) {
-		err := client.Rester("policies/"+r.PathValue("id"), "DELETE", nil, r)
+		err, status := client.Rester("policies/"+r.PathValue("id"), "DELETE", nil, r)
 		if err != nil {
 			fmt.Println(err)
+			utils.RenderErrorPage(w, status, err.Error())
+			return
 		}
 		http.Redirect(w, r, "/ui/policies", http.StatusSeeOther)
 	})
 
 	Router.HandleFunc("GET /{id}", func(w http.ResponseWriter, r *http.Request) {
 		var record policymodel.Policy
-		err := client.Rester("policies/"+r.PathValue("id"), "GET", &record, r)
+		err, status := client.Rester("policies/"+r.PathValue("id"), "GET", &record, r)
 		if err != nil {
 			fmt.Println(err)
+			utils.RenderErrorPage(w, status, err.Error())
+			return
 		}
 		groups := []groupmodel.Group{}
-		err = client.Rester("groups", "GET", &groups, r)
+		err, status = client.Rester("groups", "GET", &groups, r)
 		if err != nil {
 			fmt.Println(err)
+			utils.RenderErrorPage(w, status, err.Error())
+			return
 		}
 		fd := formdata{&record, groups}
 		pwd, _ := os.Getwd()

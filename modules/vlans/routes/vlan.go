@@ -1,6 +1,7 @@
 package vlanrouter
 
 import (
+	"fmt"
 	"html/template"
 	"log"
 	"net/http"
@@ -12,6 +13,7 @@ import (
 	pfifacemodel "github.com/rbaylon/srvcman/modules/pfifaces/model"
 	vlanmodel "github.com/rbaylon/srvcman/modules/vlans/model"
 	"github.com/rbaylon/srvcmanui/client"
+	"github.com/rbaylon/srvcmanui/utils"
 )
 
 func New() *http.ServeMux {
@@ -19,9 +21,11 @@ func New() *http.ServeMux {
 
 	Router.HandleFunc("GET /", func(w http.ResponseWriter, r *http.Request) {
 		var records []vlanmodel.Vlan
-		err := client.Rester("vlans", "GET", &records, r)
+		err, status := client.Rester("vlans", "GET", &records, r)
 		if err != nil {
-			log.Println(err)
+			fmt.Println(err)
+			utils.RenderErrorPage(w, status, err.Error())
+			return
 		}
 		pwd, _ := os.Getwd()
 		files := []string{
@@ -39,9 +43,11 @@ func New() *http.ServeMux {
 	}
 	Router.HandleFunc("GET /{id}", func(w http.ResponseWriter, r *http.Request) {
 		var record vlanmodel.Vlan
-		err := client.Rester("vlans/"+r.PathValue("id"), "GET", &record, r)
+		err, status := client.Rester("vlans/"+r.PathValue("id"), "GET", &record, r)
 		if err != nil {
-			log.Println(err)
+			fmt.Println(err)
+			utils.RenderErrorPage(w, status, err.Error())
+			return
 		}
 		pwd, _ := os.Getwd()
 		files := []string{
@@ -49,14 +55,18 @@ func New() *http.ServeMux {
 			pwd + "/modules/vlans/templates/vlan.html",
 		}
 		ifs := []pfifacemodel.Pfiface{}
-		err = client.Rester("pfiface", "GET", &ifs, r)
+		err, status = client.Rester("pfiface", "GET", &ifs, r)
 		if err != nil {
-			log.Println(err)
+			fmt.Println(err)
+			utils.RenderErrorPage(w, status, err.Error())
+			return
 		}
 		pfconfigs := []pfconfigmodel.Pfconfig{}
-		err = client.Rester("pfconfig", "GET", &pfconfigs, r)
+		err, status = client.Rester("pfconfig", "GET", &pfconfigs, r)
 		if err != nil {
-			log.Println(err)
+			fmt.Println(err)
+			utils.RenderErrorPage(w, status, err.Error())
+			return
 		}
 		formdata := subFormData{&record, ifs, pfconfigs}
 		tmpl := template.Must(template.ParseFiles(files...))
@@ -73,14 +83,16 @@ func New() *http.ServeMux {
 			pwd + "/modules/vlans/templates/vlannew.html",
 		}
 		ifs := []pfifacemodel.Pfiface{}
-		err := client.Rester("pfiface", "GET", &ifs, r)
+		err, status := client.Rester("pfiface", "GET", &ifs, r)
 		if err != nil {
-			log.Println(err)
+			fmt.Println(err)
+			utils.RenderErrorPage(w, status, err.Error())
+			return
 		}
 		pfconfigs := []pfconfigmodel.Pfconfig{}
-		err = client.Rester("pfconfig", "GET", &pfconfigs, r)
+		err, status = client.Rester("pfconfig", "GET", &pfconfigs, r)
 		if err != nil {
-			log.Println(err)
+			fmt.Println(err)
 		}
 		formdata := subFormData{nil, ifs, pfconfigs}
 		tmpl := template.Must(template.ParseFiles(files...))
@@ -100,26 +112,30 @@ func New() *http.ServeMux {
 		id := s.ID
 		if id > 0 {
 			s.ID = uint(id)
-			err := client.Rester("vlans/"+strconv.FormatUint(uint64(id), 10), "PUT", s, r)
+			err, status := client.Rester("vlans/"+strconv.FormatUint(uint64(id), 10), "PUT", s, r)
 			if err != nil {
 				log.Println(err)
-				http.Redirect(w, r, "/ui/vlan", http.StatusSeeOther)
+				utils.RenderErrorPage(w, status, err.Error())
 				return
 			}
 			http.Redirect(w, r, "/ui/vlan", http.StatusSeeOther)
 			return
 		}
-		err := client.Rester("vlans/create", "POST", s, r)
+		err, status := client.Rester("vlans/create", "POST", s, r)
 		if err != nil {
-			log.Println(err)
+			fmt.Println(err)
+			utils.RenderErrorPage(w, status, err.Error())
+			return
 		}
 		http.Redirect(w, r, "/ui/vlan", http.StatusSeeOther)
 	})
 
 	Router.HandleFunc("GET /delete/{id}", func(w http.ResponseWriter, r *http.Request) {
-		err := client.Rester("vlans/"+r.PathValue("id"), "DELETE", nil, r)
+		err, status := client.Rester("vlans/"+r.PathValue("id"), "DELETE", nil, r)
 		if err != nil {
-			log.Println(err)
+			fmt.Println(err)
+			utils.RenderErrorPage(w, status, err.Error())
+			return
 		}
 		http.Redirect(w, r, "/ui/vlan", http.StatusSeeOther)
 	})

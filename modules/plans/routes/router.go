@@ -1,6 +1,7 @@
 package planrouter
 
 import (
+	"fmt"
 	"html/template"
 	"log"
 	"net/http"
@@ -10,6 +11,7 @@ import (
 	"github.com/go-chi/render"
 	planmodel "github.com/rbaylon/srvcman/modules/plans/model"
 	"github.com/rbaylon/srvcmanui/client"
+	"github.com/rbaylon/srvcmanui/utils"
 )
 
 func New() *http.ServeMux {
@@ -17,9 +19,11 @@ func New() *http.ServeMux {
 
 	Router.HandleFunc("GET /", func(w http.ResponseWriter, r *http.Request) {
 		var records []planmodel.Plan
-		err := client.Rester("plans", "GET", &records, r)
+		err, status := client.Rester("plans", "GET", &records, r)
 		if err != nil {
-			log.Println(err)
+			fmt.Println(err)
+			utils.RenderErrorPage(w, status, err.Error())
+			return
 		}
 		pwd, _ := os.Getwd()
 		files := []string{
@@ -34,9 +38,11 @@ func New() *http.ServeMux {
 
 	Router.HandleFunc("GET /{id}", func(w http.ResponseWriter, r *http.Request) {
 		var record planmodel.Plan
-		err := client.Rester("plans/"+r.PathValue("id"), "GET", &record, r)
+		err, status := client.Rester("plans/"+r.PathValue("id"), "GET", &record, r)
 		if err != nil {
-			log.Println(err)
+			fmt.Println(err)
+			utils.RenderErrorPage(w, status, err.Error())
+			return
 		}
 		pwd, _ := os.Getwd()
 		files := []string{
@@ -73,26 +79,30 @@ func New() *http.ServeMux {
 		id := s.ID
 		if id > 0 {
 			s.ID = uint(id)
-			err := client.Rester("plans/"+strconv.FormatUint(uint64(id), 10), "PUT", &s, r)
+			err, status := client.Rester("plans/"+strconv.FormatUint(uint64(id), 10), "PUT", &s, r)
 			if err != nil {
-				log.Println(err)
-				http.Redirect(w, r, "/ui/plans", http.StatusSeeOther)
+				fmt.Println(err)
+				utils.RenderErrorPage(w, status, err.Error())
 				return
 			}
 			http.Redirect(w, r, "/ui/plans", http.StatusSeeOther)
 			return
 		}
-		err := client.Rester("plans/create", "POST", &s, r)
+		err, status := client.Rester("plans/create", "POST", &s, r)
 		if err != nil {
-			log.Println(err)
+			fmt.Println(err)
+			utils.RenderErrorPage(w, status, err.Error())
+			return
 		}
 		http.Redirect(w, r, "/ui/plans", http.StatusSeeOther)
 	})
 
 	Router.HandleFunc("GET /delete/{id}", func(w http.ResponseWriter, r *http.Request) {
-		err := client.Rester("plans/"+r.PathValue("id"), "DELETE", nil, r)
+		err, status := client.Rester("plans/"+r.PathValue("id"), "DELETE", nil, r)
 		if err != nil {
-			log.Println(err)
+			fmt.Println(err)
+			utils.RenderErrorPage(w, status, err.Error())
+			return
 		}
 		http.Redirect(w, r, "/ui/plans", http.StatusSeeOther)
 	})

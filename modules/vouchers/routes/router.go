@@ -1,6 +1,7 @@
 package voucherrouter
 
 import (
+	"fmt"
 	"html/template"
 	"log"
 	"math/rand/v2"
@@ -10,6 +11,7 @@ import (
 
 	vouchermodel "github.com/rbaylon/srvcman/modules/vouchers/model"
 	"github.com/rbaylon/srvcmanui/client"
+	"github.com/rbaylon/srvcmanui/utils"
 )
 
 var letters = []byte("abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789")
@@ -19,9 +21,11 @@ func New() *http.ServeMux {
 
 	Router.HandleFunc("GET /", func(w http.ResponseWriter, r *http.Request) {
 		var records []vouchermodel.Voucher
-		err := client.Rester("vouchers", "GET", &records, r)
+		err, status := client.Rester("vouchers", "GET", &records, r)
 		if err != nil {
-			log.Println(err)
+			fmt.Println(err)
+			utils.RenderErrorPage(w, status, err.Error())
+			return
 		}
 		pwd, _ := os.Getwd()
 		files := []string{
@@ -37,9 +41,11 @@ func New() *http.ServeMux {
 
 	Router.HandleFunc("GET /{id}", func(w http.ResponseWriter, r *http.Request) {
 		var record vouchermodel.Voucher
-		err := client.Rester("vouchers/"+r.PathValue("id"), "GET", &record, r)
+		err, status := client.Rester("vouchers/"+r.PathValue("id"), "GET", &record, r)
 		if err != nil {
-			log.Println(err)
+			fmt.Println(err)
+			utils.RenderErrorPage(w, status, err.Error())
+			return
 		}
 		pwd, _ := os.Getwd()
 		files := []string{
@@ -99,9 +105,11 @@ func New() *http.ServeMux {
 			vcs.Vouchers = append(vcs.Vouchers, *v)
 		}
 
-		err = client.Rester("vouchers/createBulk", "POST", &vcs, r)
+		err, status := client.Rester("vouchers/createBulk", "POST", &vcs, r)
 		if err != nil {
-			log.Println(err)
+			fmt.Println(err)
+			utils.RenderErrorPage(w, status, err.Error())
+			return
 		}
 		http.Redirect(w, r, "/ui/vouchers", http.StatusSeeOther)
 	})

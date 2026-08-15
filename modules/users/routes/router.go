@@ -39,7 +39,7 @@ func login() http.HandlerFunc {
 			session.Save(r, w)
 			prevurl := r.PostFormValue("prevurl")
 			if prevurl == "" {
-				prevurl = "/ui/subs"
+				prevurl = "/ui/dashboard"
 			}
 			http.Redirect(w, r, prevurl, http.StatusSeeOther)
 			return
@@ -65,9 +65,11 @@ func New() *http.ServeMux {
 
 	Router.HandleFunc("GET /", func(w http.ResponseWriter, r *http.Request) {
 		records := []usermodel.User{}
-		err := client.Rester("users", "GET", &records, r)
+		err, status := client.Rester("users", "GET", &records, r)
 		if err != nil {
-			log.Println(err)
+			fmt.Println(err)
+			utils.RenderErrorPage(w, status, err.Error())
+			return
 		}
 		pwd, _ := os.Getwd()
 		files := []string{
@@ -118,7 +120,7 @@ func New() *http.ServeMux {
 		}
 		for _, v := range r.Form["Groups"] {
 			g := groupmodel.Group{}
-			err := client.Rester("groups/getbyname/"+v, "GET", &g, r)
+			err, _ := client.Rester("groups/getbyname/"+v, "GET", &g, r)
 			if err != nil {
 				log.Println("error getting group: ", err)
 			} else {
@@ -129,26 +131,30 @@ func New() *http.ServeMux {
 		id := s.ID
 		if id > 0 {
 			s.ID = uint(id)
-			err := client.Rester("users/"+strconv.FormatUint(uint64(id), 10), "PUT", &s, r)
+			err, status := client.Rester("users/"+strconv.FormatUint(uint64(id), 10), "PUT", &s, r)
 			if err != nil {
-				log.Println(err)
-				http.Redirect(w, r, "/ui/users", http.StatusSeeOther)
+				fmt.Println(err)
+				utils.RenderErrorPage(w, status, err.Error())
 				return
 			}
 			http.Redirect(w, r, "/ui/users", http.StatusSeeOther)
 			return
 		}
-		err := client.Rester("users/create", "POST", &s, r)
+		err, status := client.Rester("users/create", "POST", &s, r)
 		if err != nil {
-			log.Println(err)
+			fmt.Println(err)
+			utils.RenderErrorPage(w, status, err.Error())
+			return
 		}
 		http.Redirect(w, r, "/ui/users", http.StatusSeeOther)
 	})
 
 	Router.HandleFunc("GET /delete/{id}", func(w http.ResponseWriter, r *http.Request) {
-		err := client.Rester("users/"+r.PathValue("id"), "DELETE", nil, r)
+		err, status := client.Rester("users/"+r.PathValue("id"), "DELETE", nil, r)
 		if err != nil {
-			log.Println(err)
+			fmt.Println(err)
+			utils.RenderErrorPage(w, status, err.Error())
+			return
 		}
 		http.Redirect(w, r, "/ui/users", http.StatusSeeOther)
 	})
@@ -160,13 +166,17 @@ func New() *http.ServeMux {
 	Router.HandleFunc("GET /{id}", func(w http.ResponseWriter, r *http.Request) {
 		var record usermodel.User
 		groups := []groupmodel.Group{}
-		err := client.Rester("groups", "GET", &groups, r)
+		err, status := client.Rester("groups", "GET", &groups, r)
 		if err != nil {
-			log.Println(err)
+			fmt.Println(err)
+			utils.RenderErrorPage(w, status, err.Error())
+			return
 		}
-		err = client.Rester("users/"+r.PathValue("id"), "GET", &record, r)
+		err, status = client.Rester("users/"+r.PathValue("id"), "GET", &record, r)
 		if err != nil {
-			log.Println(err)
+			fmt.Println(err)
+			utils.RenderErrorPage(w, status, err.Error())
+			return
 		}
 		formdata := userdata{record, groups}
 		pwd, _ := os.Getwd()

@@ -13,6 +13,7 @@ import (
 	planmodel "github.com/rbaylon/srvcman/modules/plans/model"
 	pppoemodel "github.com/rbaylon/srvcman/modules/pppoes/model"
 	"github.com/rbaylon/srvcmanui/client"
+	"github.com/rbaylon/srvcmanui/utils"
 )
 
 func New() *http.ServeMux {
@@ -20,9 +21,11 @@ func New() *http.ServeMux {
 
 	Router.HandleFunc("GET /", func(w http.ResponseWriter, r *http.Request) {
 		var records []pppoemodel.Pppoe
-		err := client.Rester("pppoe", "GET", &records, r)
+		err, status := client.Rester("pppoe", "GET", &records, r)
 		if err != nil {
-			log.Println(err)
+			fmt.Println(err)
+			utils.RenderErrorPage(w, status, err.Error())
+			return
 		}
 		pwd, _ := os.Getwd()
 		files := []string{
@@ -45,9 +48,11 @@ func New() *http.ServeMux {
 	}
 	Router.HandleFunc("GET /{id}", func(w http.ResponseWriter, r *http.Request) {
 		var record pppoemodel.Pppoe
-		err := client.Rester("pppoe/"+r.PathValue("id"), "GET", &record, r)
+		err, status := client.Rester("pppoe/"+r.PathValue("id"), "GET", &record, r)
 		if err != nil {
-			log.Println(err)
+			fmt.Println(err)
+			utils.RenderErrorPage(w, status, err.Error())
+			return
 		}
 		pwd, _ := os.Getwd()
 		files := []string{
@@ -56,13 +61,17 @@ func New() *http.ServeMux {
 		}
 		plans := []planmodel.Plan{}
 		pfconfig := pfconfigmodel.Pfconfig{}
-		err = client.Rester("plans", "GET", &plans, r)
+		err, status = client.Rester("plans", "GET", &plans, r)
 		if err != nil {
-			log.Println(err)
+			fmt.Println(err)
+			utils.RenderErrorPage(w, status, err.Error())
+			return
 		}
-		err = client.Rester(fmt.Sprintf("pfconfig/%d", record.PfconfigID), "GET", &pfconfig, r)
+		err, status = client.Rester(fmt.Sprintf("pfconfig/%d", record.PfconfigID), "GET", &pfconfig, r)
 		if err != nil {
-			log.Println(err)
+			fmt.Println(err)
+			utils.RenderErrorPage(w, status, err.Error())
+			return
 		}
 		formdata := subFormData{&record, plans, pfconfig}
 		tmpl := template.Must(template.ParseFiles(files...))
@@ -76,13 +85,17 @@ func New() *http.ServeMux {
 		pwd, _ := os.Getwd()
 		plans := []planmodel.Plan{}
 		pfconfigs := []pfconfigmodel.Pfconfig{}
-		err := client.Rester("plans", "GET", &plans, r)
+		err, status := client.Rester("plans", "GET", &plans, r)
 		if err != nil {
-			log.Println(err)
+			fmt.Println(err)
+			utils.RenderErrorPage(w, status, err.Error())
+			return
 		}
-		err = client.Rester("pfconfig", "GET", &pfconfigs, r)
+		err, status = client.Rester("pfconfig", "GET", &pfconfigs, r)
 		if err != nil {
-			log.Println(err)
+			fmt.Println(err)
+			utils.RenderErrorPage(w, status, err.Error())
+			return
 		}
 		formdata := pppoeFormData{nil, plans, pfconfigs}
 		files := []string{
@@ -106,26 +119,30 @@ func New() *http.ServeMux {
 		id := s.ID
 		if id > 0 {
 			s.ID = uint(id)
-			err := client.Rester("pppoe/"+strconv.FormatUint(uint64(id), 10), "PUT", s, r)
+			err, status := client.Rester("pppoe/"+strconv.FormatUint(uint64(id), 10), "PUT", s, r)
 			if err != nil {
-				log.Println(err)
-				http.Redirect(w, r, "/ui/pppoes", http.StatusSeeOther)
+				fmt.Println(err)
+				utils.RenderErrorPage(w, status, err.Error())
 				return
 			}
 			http.Redirect(w, r, "/ui/pppoes", http.StatusSeeOther)
 			return
 		}
-		err := client.Rester("pppoe/create", "POST", s, r)
+		err, status := client.Rester("pppoe/create", "POST", s, r)
 		if err != nil {
-			log.Println(err)
+			fmt.Println(err)
+			utils.RenderErrorPage(w, status, err.Error())
+			return
 		}
 		http.Redirect(w, r, "/ui/pppoes", http.StatusSeeOther)
 	})
 
 	Router.HandleFunc("GET /delete/{id}", func(w http.ResponseWriter, r *http.Request) {
-		err := client.Rester("pppoe/"+r.PathValue("id"), "DELETE", nil, r)
+		err, status := client.Rester("pppoe/"+r.PathValue("id"), "DELETE", nil, r)
 		if err != nil {
-			log.Println(err)
+			fmt.Println(err)
+			utils.RenderErrorPage(w, status, err.Error())
+			return
 		}
 		http.Redirect(w, r, "/ui/pppoes", http.StatusSeeOther)
 	})

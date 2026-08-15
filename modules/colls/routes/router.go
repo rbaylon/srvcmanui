@@ -1,6 +1,7 @@
 package collectionrouter
 
 import (
+	"fmt"
 	"html/template"
 	"log"
 	"net/http"
@@ -11,6 +12,7 @@ import (
 	collectionmodel "github.com/rbaylon/srvcman/modules/collections/model"
 	submodel "github.com/rbaylon/srvcman/modules/subs/model"
 	"github.com/rbaylon/srvcmanui/client"
+	"github.com/rbaylon/srvcmanui/utils"
 )
 
 func New() *http.ServeMux {
@@ -19,9 +21,11 @@ func New() *http.ServeMux {
 	Router.HandleFunc("GET /{year}", func(w http.ResponseWriter, r *http.Request) {
 		y := r.PathValue("year")
 		records := []collectionmodel.Collection{}
-		err := client.Rester("collections/year/"+y, "GET", &records, r)
+		err, status := client.Rester("collections/year/"+y, "GET", &records, r)
 		if err != nil {
-			log.Println(err)
+			fmt.Println(err)
+			utils.RenderErrorPage(w, status, err.Error())
+			return
 		}
 		pwd, _ := os.Getwd()
 		files := []string{
@@ -38,9 +42,11 @@ func New() *http.ServeMux {
 	Router.HandleFunc("GET /{year}/{id}", func(w http.ResponseWriter, r *http.Request) {
 		collectionid := r.PathValue("id")
 		record := collectionmodel.Collection{}
-		err := client.Rester("collections/"+collectionid, "GET", &record, r)
+		err, status := client.Rester("collections/"+collectionid, "GET", &record, r)
 		if err != nil {
-			log.Println(err)
+			fmt.Println(err)
+			utils.RenderErrorPage(w, status, err.Error())
+			return
 		}
 		pwd, _ := os.Getwd()
 		files := []string{
@@ -75,9 +81,11 @@ func New() *http.ServeMux {
 			return
 		}
 		sub := submodel.Sub{}
-		err := client.Rester("subs/"+strconv.FormatUint(uint64(s.SubID), 10), "GET", &sub, r)
+		err, status := client.Rester("subs/"+strconv.FormatUint(uint64(s.SubID), 10), "GET", &sub, r)
 		if err != nil {
-			log.Println(err)
+			fmt.Println(err)
+			utils.RenderErrorPage(w, status, err.Error())
+			return
 		}
 		id := s.ID
 		if id > 0 {
@@ -85,18 +93,22 @@ func New() *http.ServeMux {
 			s.SubName = sub.FirstName + " " + sub.LastName
 			s.SubDue = sub.DueDay
 			s.SubPlan = sub.Plan
-			err = client.Rester("collections/"+strconv.FormatUint(uint64(s.ID), 10), "PUT", s, r)
+			err, status = client.Rester("collections/"+strconv.FormatUint(uint64(s.ID), 10), "PUT", s, r)
 			if err != nil {
-				log.Println(err)
+				fmt.Println(err)
+				utils.RenderErrorPage(w, status, err.Error())
+				return
 			}
 			http.Redirect(w, r, "/ui/collections/"+s.Year, http.StatusSeeOther)
 			return
 		}
 		s.SubName = sub.FirstName + " " + sub.LastName
 		s.SubDue = sub.DueDay
-		err = client.Rester("collections/create", "POST", s, r)
+		err, status = client.Rester("collections/create", "POST", s, r)
 		if err != nil {
-			log.Println(err)
+			fmt.Println(err)
+			utils.RenderErrorPage(w, status, err.Error())
+			return
 		}
 		http.Redirect(w, r, "/ui/collections/"+s.Year, http.StatusSeeOther)
 	})

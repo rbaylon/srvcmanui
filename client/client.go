@@ -42,7 +42,7 @@ func GetToken(username string, password string) (*string, error) {
 	return &t.Jwt, nil
 }
 
-func Rester(module_uri string, method string, data any, r *http.Request) error {
+func Rester(module_uri string, method string, data any, r *http.Request) (error, int) {
 	var (
 		api_url = database.GetEnvVariable("API_URL")
 		key     = []byte(database.GetEnvVariable("APP_SESSION_KEY"))
@@ -54,7 +54,7 @@ func Rester(module_uri string, method string, data any, r *http.Request) error {
 	if method == "POST" || method == "PUT" || method == "DELETE" {
 		jsondata, jderr := json.Marshal(data)
 		if jderr != nil {
-			return jderr
+			return jderr, 501
 		}
 		preq, _ := http.NewRequest(method, api_url+module_uri, bytes.NewBuffer(jsondata))
 		req = preq
@@ -62,19 +62,19 @@ func Rester(module_uri string, method string, data any, r *http.Request) error {
 	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", session.Values["jwt"]))
 	res, rerror := client.Do(req)
 	if rerror != nil {
-		return rerror
+		return rerror, 501
 	}
 	defer res.Body.Close()
 	if res.StatusCode == 200 || res.StatusCode == 201 {
 		responseData, ioerr := io.ReadAll(res.Body)
 		if ioerr != nil {
-			return ioerr
+			return ioerr, 501
 		}
 		jerr := json.Unmarshal(responseData, data)
 		if jerr != nil {
-			return jerr
+			return jerr, 501
 		}
-		return nil
+		return nil, res.StatusCode
 	}
-	return fmt.Errorf("API error")
+	return fmt.Errorf("API error: %s", res.Status), res.StatusCode
 }

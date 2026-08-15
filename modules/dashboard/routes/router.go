@@ -2,6 +2,7 @@ package dashrouter
 
 import (
 	"encoding/json"
+	"fmt"
 	"html/template"
 	"log"
 	"net/http"
@@ -13,6 +14,7 @@ import (
 	planmodel "github.com/rbaylon/srvcman/modules/plans/model"
 	submodel "github.com/rbaylon/srvcman/modules/subs/model"
 	"github.com/rbaylon/srvcmanui/client"
+	"github.com/rbaylon/srvcmanui/utils"
 	"github.com/shirou/gopsutil/v3/cpu"
 	"github.com/shirou/gopsutil/v4/disk"
 	"github.com/shirou/gopsutil/v4/host"
@@ -69,9 +71,11 @@ func New() *http.ServeMux {
 	}
 	Router.HandleFunc("GET /changes", func(w http.ResponseWriter, r *http.Request) {
 		var records []Changemodel.Change
-		err := client.Rester("changes/pending", "GET", &records, r)
+		err, status := client.Rester("changes/pending", "GET", &records, r)
 		if err != nil {
-			log.Println(err)
+			fmt.Println(err)
+			utils.RenderErrorPage(w, status, err.Error())
+			return
 		}
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(records)
@@ -79,9 +83,11 @@ func New() *http.ServeMux {
 
 	Router.HandleFunc("GET /changes/apply", func(w http.ResponseWriter, r *http.Request) {
 		var errors []Changemodel.Change
-		err := client.Rester("changes/pending", "PUT", &errors, r)
+		err, status := client.Rester("changes/pending", "PUT", &errors, r)
 		if err != nil {
-			log.Println(err)
+			fmt.Println(err)
+			utils.RenderErrorPage(w, status, err.Error())
+			return
 		}
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(errors)
@@ -89,19 +95,25 @@ func New() *http.ServeMux {
 	Router.HandleFunc("GET /stats", func(w http.ResponseWriter, r *http.Request) {
 		subdata := viewdata{}
 		ifs := []pfifacemodel.Pfiface{}
-		err := client.Rester("pfiface", "GET", &ifs, r)
+		err, status := client.Rester("pfiface", "GET", &ifs, r)
 		if err != nil {
-			log.Println(err)
+			fmt.Println(err)
+			utils.RenderErrorPage(w, status, err.Error())
+			return
 		}
 		subs := []submodel.Sub{}
-		err = client.Rester("subs", "GET", &subs, r)
+		err, status = client.Rester("subs", "GET", &subs, r)
 		if err != nil {
-			log.Println(err)
+			fmt.Println(err)
+			utils.RenderErrorPage(w, status, err.Error())
+			return
 		}
 		plans := []planmodel.Plan{}
-		err = client.Rester("plans", "GET", &plans, r)
+		err, status = client.Rester("plans", "GET", &plans, r)
 		if err != nil {
-			log.Println(err)
+			fmt.Println(err)
+			utils.RenderErrorPage(w, status, err.Error())
+			return
 		}
 		gws := []string{}
 		sgws := []int{}
