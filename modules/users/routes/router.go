@@ -128,6 +128,10 @@ func New() *http.ServeMux {
 			}
 		}
 		s.Groups = groups
+		if err := s.Bind(r); err != nil {
+			utils.RenderErrorPage(w, http.StatusBadRequest, err.Error())
+			return
+		}
 		id := s.ID
 		if id > 0 {
 			s.ID = uint(id)

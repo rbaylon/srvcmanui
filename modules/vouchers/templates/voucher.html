@@ -13,15 +13,15 @@
    </div>
    <div class="mb-3">
      <label class="form-label" for="basic-form-count">Count</label>
-     <input class="form-control" id="basic-form-count" type="text" placeholder="100" name="count"/>
+     <input class="form-control" id="basic-form-count" type="number" placeholder="100" name="count" required min="1" max="1000"/>
    </div>
    <div class="mb-3">
      <label class="form-label" for="basic-form-hours">Hours</label>
-     <input class="form-control" id="basic-form-hours" type="text" placeholder="24" name="hours"/>
+     <input class="form-control" id="basic-form-hours" type="number" placeholder="24" name="hours" required/>
    </div>
    <div class="mb-3">
      <label class="form-label" for="basic-form-storetype">Store</label>
-     <input class="form-control" id="basic-form-storetype" type="text" placeholder="SarisariStore" name="storetype"/>
+     <input class="form-control" id="basic-form-storetype" type="text" placeholder="SarisariStore" name="storetype" pattern="[A-Za-z0-9]*" maxlength="100"/>
    </div>
    <button class="btn btn-primary" type="submit">Submit</button>
  </form>

@@ -112,8 +112,7 @@ func New() *http.ServeMux {
 	Router.HandleFunc("POST /addorupdate", func(w http.ResponseWriter, r *http.Request) {
 		s := &pppoemodel.Pppoe{}
 		if err := render.Bind(r, s); err != nil {
-			log.Println(err)
-			http.Redirect(w, r, "/ui/pppoes", http.StatusSeeOther)
+			utils.RenderErrorPage(w, http.StatusBadRequest, err.Error())
 			return
 		}
 		id := s.ID

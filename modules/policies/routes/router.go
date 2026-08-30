@@ -81,6 +81,10 @@ func New() *http.ServeMux {
 			}
 		}
 		s.Groups = groups
+		if err := s.Bind(r); err != nil {
+			utils.RenderErrorPage(w, http.StatusBadRequest, err.Error())
+			return
+		}
 		fid := r.FormValue("ID")
 		if fid != "" {
 			rid, err := strconv.Atoi(fid)

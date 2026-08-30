@@ -21,27 +21,27 @@
    </div>
    <div class="mb-3">
      <label class="form-label" for="basic-form-fname">First Name</label>
-     <input class="form-control" id="basic-form-fname" type="text" placeholder="First Name" name="FirstName" value="{{.Record.FirstName}}"/>
+     <input class="form-control" id="basic-form-fname" type="text" placeholder="First Name" name="FirstName" value="{{.Record.FirstName}}" pattern="[A-Za-z0-9]*" maxlength="100"/>
    </div>
    <div class="mb-3">
      <label class="form-label" for="basic-form-lname">Last Name</label>
-     <input class="form-control" id="basic-form-lname" type="text" placeholder="Last Name" name="LastName" value="{{.Record.LastName}}"/>
+     <input class="form-control" id="basic-form-lname" type="text" placeholder="Last Name" name="LastName" value="{{.Record.LastName}}" pattern="[A-Za-z0-9]*" maxlength="100"/>
    </div>
    <div class="mb-3">
      <label class="form-label" for="basic-form-loc">Address</label>
-     <input class="form-control" id="basic-form-loc" type="text" placeholder="Address" name="Loc" value="{{.Record.Loc}}">
+     <input class="form-control" id="basic-form-loc" type="text" placeholder="Address" name="Loc" value="{{.Record.Loc}}" pattern="[A-Za-z0-9]*" maxlength="100">
    </div>
    <div class="mb-3">
      <label class="form-label" for="basic-form-ip">IP address</label>
-     <input class="form-control" id="basic-form-ip" type="text" placeholder="192.0.2.100" name="FramedIp" value="{{.Record.FramedIp}}"/>
+     <input class="form-control" id="basic-form-ip" type="text" placeholder="192.0.2.100" name="FramedIp" value="{{.Record.FramedIp}}" pattern="(\d{1,3}\.){3}\d{1,3}|[0-9a-fA-F:]+"/>
    </div>
    <div class="mb-3">
      <label class="form-label" for="basic-form-pppuname">PPPoE Username</label>
-     <input class="form-control" id="basic-form-ppppw" type="text" placeholder="Leave blank for non pppoe user" name="Pppusername" value="{{.Record.Pppusername}}"/>
+     <input class="form-control" id="basic-form-ppppw" type="text" placeholder="Leave blank for non pppoe user" name="Pppusername" value="{{.Record.Pppusername}}" pattern="[A-Za-z0-9]*" maxlength="100"/>
    </div>
    <div class="mb-3">
      <label class="form-label" for="basic-form-lname">PPPoE Password</label>
-     <input class="form-control" id="basic-form-lname" type="password" placeholder="" name="Ppppassword" value="{{.Record.Ppppassword}}"/>
+     <input class="form-control" id="basic-form-lname" type="password" placeholder="" name="Ppppassword" value="{{.Record.Ppppassword}}" maxlength="100"/>
    </div>
    <div class="mb-3">
      <label class="form-label" for="basic-form-mac">Rule ID</label>
@@ -100,11 +100,11 @@
    </div>
    <div class="mb-3">
      <label class="form-label" for="basic-form-due_day">Due day</label>
-     <input class="form-control" id="basic-form-due_day" type="text" placeholder="15" name="DueDay" value="{{.Record.DueDay}}"/>
+     <input class="form-control" id="basic-form-due_day" type="number" placeholder="15" name="DueDay" value="{{.Record.DueDay}}"/>
    </div>
    <div class="mb-3">
      <label class="form-label" for="basic-form-later_count">Pay later count</label>
-     <input class="form-control" id="basic-form-later_count" type="text" placeholder="0" name="LaterCount" value="{{.Record.LaterCount}}"/>
+     <input class="form-control" id="basic-form-later_count" type="number" placeholder="0" name="LaterCount" value="{{.Record.LaterCount}}"/>
    </div>
    <div class="mb-3 form-check">
      <input class="form-check-input" id="basic-form-checkbox" type="checkbox" name="OverDue" value="{{.Record.OverDue}}"/>

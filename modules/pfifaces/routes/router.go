@@ -93,8 +93,7 @@ func New() *http.ServeMux {
 	Router.HandleFunc("POST /addorupdate", func(w http.ResponseWriter, r *http.Request) {
 		s := &pfifacemodel.Pfiface{}
 		if err := render.Bind(r, s); err != nil {
-			log.Println(err)
-			http.Redirect(w, r, "/ui/pfifaces", http.StatusSeeOther)
+			utils.RenderErrorPage(w, http.StatusBadRequest, err.Error())
 			return
 		}
 		id := s.ID

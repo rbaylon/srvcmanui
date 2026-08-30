@@ -11,31 +11,31 @@
    </div>
    <div class="mb-3">
      <label class="form-label" for="basic-form-router">Router</label>
-     <input class="form-control" id="basic-form-router" type="text" placeholder="instance name" name="Router" value="{{ .Router }}"/>
+     <input class="form-control" id="basic-form-router" type="text" placeholder="instance name" name="Router" value="{{ .Router }}" pattern="[A-Za-z0-9]*" maxlength="100"/>
    </div>
    <div class="mb-3">
      <label class="form-label" for="basic-form-worker">Worker Name</label>
-     <input class="form-control" id="basic-form-worker" type="text" placeholder="Worker name" name="Workername" value="{{ .Workername }}"/>
-   </div>
-   <div class="mb-3">  
-     <label class="form-label" for="basic-form-wifilist">WifiIpList</label>
-     <input class="form-control" id="basic-form-source" type="text" placeholder="path to wifi clients list" name="WifiIpList" value="{{ .WifiIpList }}">
-   </div>
-   <div class="mb-3">  
-     <label class="form-label" for="basic-form-subslist">SubsIpList</label>
-     <input class="form-control" id="basic-form-subslist" type="text" placeholder="path to subscribers list" name="SubsIpList" value="{{ .SubsIpList }}">
+     <input class="form-control" id="basic-form-worker" type="text" placeholder="Worker name" name="Workername" value="{{ .Workername }}" pattern="[A-Za-z0-9]*" maxlength="100"/>
    </div>
    <div class="mb-3">
-     <label class="form-label" for="basic-form-dns">DNS servers</label>
-     <input class="form-control" id="basic-form-dns" type="text" placeholder="space separated dns server ip addresses" name="Dns" value="{{ .Dns }}"/>
+     <label class="form-label" for="basic-form-wifilist">WifiIpList</label>
+     <input class="form-control" id="basic-form-source" type="text" placeholder="path to wifi clients list" name="WifiIpList" value="{{ .WifiIpList }}" pattern="[0-9a-fA-F:.,\s]*">
+   </div>
+   <div class="mb-3">
+     <label class="form-label" for="basic-form-subslist">SubsIpList</label>
+     <input class="form-control" id="basic-form-subslist" type="text" placeholder="path to subscribers list" name="SubsIpList" value="{{ .SubsIpList }}" pattern="[0-9a-fA-F:.,\s]*">
+   </div>
+   <div class="mb-3">
+     <label class="form-label" for="basic-form-dns">DNS server</label>
+     <input class="form-control" id="basic-form-dns" type="text" placeholder="dns server ip address" name="Dns" value="{{ .Dns }}" pattern="(\d{1,3}\.){3}\d{1,3}|[0-9a-fA-F:]+"/>
    </div>
    <div class="mb-3">
      <label class="form-label" for="basic-form-captiveportal">Captive Portal Port</label>
-     <input class="form-control" id="basic-form-captiveportal" type="text" placeholder="captive portal port" name="CaptivePortalPort" value="{{ .CaptivePortalPort }}"/>
+     <input class="form-control" id="basic-form-captiveportal" type="number" placeholder="captive portal port" name="CaptivePortalPort" value="{{ .CaptivePortalPort }}" min="0" max="65535"/>
    </div>
    <div class="mb-3">
      <label class="form-label" for="basic-form-subsportal">Subscribers Portal Port</label>
-     <input class="form-control" id="basic-form-subsportal" type="text" placeholder="subscribers portal port" name="SubsPortalPort" value="{{ .SubsPortalPort }}"/>
+     <input class="form-control" id="basic-form-subsportal" type="number" placeholder="subscribers portal port" name="SubsPortalPort" value="{{ .SubsPortalPort }}" min="0" max="65535"/>
    </div>
    <div class="mb-3 form-check">
      <input class="form-check-input" id="basic-form-lb" type="checkbox" name="LoadBalance" value="true" {{ if .LoadBalance }}checked{{ end }} />

@@ -76,8 +76,7 @@ func New() *http.ServeMux {
 	Router.HandleFunc("POST /addorupdate", func(w http.ResponseWriter, r *http.Request) {
 		s := &collectionmodel.Collection{}
 		if err := render.Bind(r, s); err != nil {
-			log.Println(err)
-			http.Redirect(w, r, "/ui/collection/"+s.Year, http.StatusSeeOther)
+			utils.RenderErrorPage(w, http.StatusBadRequest, err.Error())
 			return
 		}
 		sub := submodel.Sub{}

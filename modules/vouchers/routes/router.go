@@ -10,6 +10,7 @@ import (
 	"strconv"
 
 	vouchermodel "github.com/rbaylon/srvcman/modules/vouchers/model"
+	"github.com/rbaylon/srvcman/utils/validate"
 	"github.com/rbaylon/srvcmanui/client"
 	"github.com/rbaylon/srvcmanui/utils"
 )
@@ -75,14 +76,28 @@ func New() *http.ServeMux {
 	Router.HandleFunc("POST /addorupdate", func(w http.ResponseWriter, r *http.Request) {
 		count, err := strconv.Atoi(r.FormValue("count"))
 		if err != nil {
-			log.Println("return html error atoi issue")
+			utils.RenderErrorPage(w, http.StatusBadRequest, "count must be a number")
+			return
+		}
+		if err := validate.IntRange("count", count, 1, 1000); err != nil {
+			utils.RenderErrorPage(w, http.StatusBadRequest, err.Error())
+			return
 		}
 
-		hours, err1 := strconv.Atoi(r.FormValue("hours"))
-		if err1 != nil {
-			log.Println("return html error atoi issue", hours)
+		hours, err := strconv.Atoi(r.FormValue("hours"))
+		if err != nil {
+			utils.RenderErrorPage(w, http.StatusBadRequest, "hours must be a number")
+			return
+		}
+		if err := validate.Int("hours", hours); err != nil {
+			utils.RenderErrorPage(w, http.StatusBadRequest, err.Error())
+			return
 		}
 		storetype := r.FormValue("storetype")
+		if err := validate.Alnum("type", storetype, 100); err != nil {
+			utils.RenderErrorPage(w, http.StatusBadRequest, err.Error())
+			return
+		}
 
 		code := []byte("00000000")
 		maxlen := len(letters) - 1

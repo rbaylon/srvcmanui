@@ -11,7 +11,7 @@
    </div>
    <div class="mb-3">
      <label class="form-label" for="basic-form-group">Group Name</label>
-     <input class="form-control" id="basic-form-group" type="text" placeholder="Group Name" name="Groupname" value="{{.Groupname}}"/>
+     <input class="form-control" id="basic-form-group" type="text" placeholder="Group Name" name="Groupname" value="{{.Groupname}}" required pattern="[A-Za-z0-9]+" maxlength="100"/>
    </div>
    <button class="btn btn-primary" type="submit">Submit</button>
  </form>

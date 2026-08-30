@@ -11,15 +11,15 @@
    </div>
    <div class="mb-3">
      <label class="form-label" for="basic-form-name">Policy Name</label>
-     <input class="form-control" id="basic-form-name" type="text" placeholder="Policy Name" name="Name" value="{{.Policy.Name}}"/>
+     <input class="form-control" id="basic-form-name" type="text" placeholder="Policy Name" name="Name" value="{{.Policy.Name}}" required pattern="[A-Za-z0-9]+" maxlength="100"/>
    </div>
    <div class="mb-3">
      <label class="form-label" for="basic-form-module">Module</label>
-     <input class="form-control" id="basic-form-module" type="text" placeholder="Module name" name="Type" value="{{.Policy.Type}}"/>
+     <input class="form-control" id="basic-form-module" type="text" placeholder="Module name" name="Type" value="{{.Policy.Type}}" pattern="[A-Za-z0-9]*" maxlength="100"/>
    </div>
    <div class="mb-3">
      <label class="form-label" for="basic-form-resource">Resource</label>
-     <input class="form-control" id="basic-form-resource" type="text" placeholder="Resource" name="Resource" value="{{.Policy.Resource}}"/>
+     <input class="form-control" id="basic-form-resource" type="text" placeholder="Resource" name="Resource" value="{{.Policy.Resource}}" pattern="[A-Za-z0-9./:_,* -]*" maxlength="100"/>
    </div>
    <div class="mb-3">
      <label class="form-label" for="basic-form-permission">Permission</label>
