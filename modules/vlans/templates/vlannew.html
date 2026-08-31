@@ -11,10 +11,12 @@
    <div class="mb-3">
      <label class="form-label" for="basic-form-name">Name</label>
      <input class="form-control" id="basic-form-name" type="text" placeholder="interface name" name="Name" pattern="[A-Za-z0-9]*" maxlength="100"/>
+     <div class="form-text">Letters and numbers only, no spaces, up to 100 characters.</div>
    </div>
    <div class="mb-3">
      <label class="form-label" for="basic-form-vlantag">VLAN ID</label>
      <input class="form-control" id="basic-form-vlantag" type="number" placeholder="1-4094" name="VlanTag" min="1" max="4094">
+     <div class="form-text">A whole number between 1 and 4094.</div>
    </div>
    <div class="mb-3">
      <label class="form-label" for="basic-form-pfifaces">Parent Device</label>

@@ -73,22 +73,27 @@
    <div class="mb-3">
      <label class="form-label" for="basic-form-protocol">Protocol</label>
      <input class="form-control" id="basic-form-protocol" type="text" placeholder="tcp" name="Proto" value="{{.Record.Proto}}" pattern="[A-Za-z0-9./:_,* -]*" maxlength="100"/>
+     <div class="form-text">Letters, numbers, and . / : _ , * - and spaces, up to 100 characters. No quotes or semicolons.</div>
    </div>
    <div class="mb-3">
      <label class="form-label" for="basic-form-source">Source</label>
      <input class="form-control" id="basic-form-source" type="text" placeholder="ip or network block" name="Source" value="{{.Record.Source}}" pattern="[A-Za-z0-9./:_,* -]*" maxlength="100">
+     <div class="form-text">Letters, numbers, and . / : _ , * - and spaces, up to 100 characters. No quotes or semicolons.</div>
    </div>
    <div class="mb-3">
      <label class="form-label" for="basic-form-srcport">Source Port</label>
      <input class="form-control" id="basic-form-srcport" type="text" placeholder="empty or port number" name="SrcPort" value="{{.Record.SrcPort}}" pattern="[A-Za-z0-9./:_,* -]*" maxlength="100"/>
+     <div class="form-text">Letters, numbers, and . / : _ , * - and spaces, up to 100 characters. No quotes or semicolons.</div>
    </div>
    <div class="mb-3">
      <label class="form-label" for="basic-form-destination">Destination</label>
      <input class="form-control" id="basic-form-destination" type="text" placeholder="ip or network block" name="Destination" value="{{.Record.Destination}}" pattern="[A-Za-z0-9./:_,* -]*" maxlength="100">
+     <div class="form-text">Letters, numbers, and . / : _ , * - and spaces, up to 100 characters. No quotes or semicolons.</div>
    </div>
    <div class="mb-3">
      <label class="form-label" for="basic-form-dstport">Destination Port</label>
      <input class="form-control" id="basic-form-dstport" type="text" placeholder="empty or port number" name="DstPort" value="{{.Record.DstPort}}" pattern="[A-Za-z0-9./:_,* -]*" maxlength="100"/>
+     <div class="form-text">Letters, numbers, and . / : _ , * - and spaces, up to 100 characters. No quotes or semicolons.</div>
    </div>
    <br>
    <hr>
@@ -131,6 +136,7 @@
    <div class="mb-3">
      <label class="form-label" for="basic-form-advance">Advance options</label>
      <input class="form-control" id="basic-form-advance" type="text" placeholder="" name="AdvanceOpts" value="{{.Record.AdvanceOpts}}" pattern="[A-Za-z0-9./:_,* -]*" maxlength="100"/>
+     <div class="form-text">Letters, numbers, and . / : _ , * - and spaces, up to 100 characters. No quotes or semicolons.</div>
    </div>
    <button class="btn btn-primary" type="submit">Submit</button>
  </form>

@@ -15,26 +15,32 @@
    <div class="mb-3">
      <label class="form-label" for="basic-form-downspeed">Name</label>
      <input class="form-control" id="basic-form-downspeed" type="text" placeholder="" name="Name" {{ if .Record }} value="{{.Record.Name}}" {{end}} pattern="[A-Za-z0-9]*" maxlength="100"/>
+     <div class="form-text">Letters and numbers only, no spaces, up to 100 characters.</div>
    </div>
    <div class="mb-3">
      <label class="form-label" for="basic-form-device">Device</label>
      <input class="form-control" id="basic-form-device" type="text" placeholder="" name="Device" {{ if .Record }} value="{{.Record.Device}}" {{end}} pattern="[A-Za-z0-9]*" maxlength="100">
+     <div class="form-text">Letters and numbers only, no spaces, up to 100 characters.</div>
    </div>
    <div class="mb-3">
      <label class="form-label" for="basic-form-speed">Link Speed</label>
      <input class="form-control" id="basic-form-speed" type="text" placeholder="900M" name="Speed" {{ if .Record }} value="{{.Record.Speed}}" {{end}} pattern="[A-Za-z0-9]*" maxlength="100">
+     <div class="form-text">Letters and numbers only, no spaces, up to 100 characters.</div>
    </div>
    <div class="mb-3">
      <label class="form-label" for="basic-form-ip">IP Address</label>
      <input class="form-control" id="basic-form-ip" type="text" placeholder="" name="Ip" {{ if .Record }} value="{{.Record.Ip}}" {{end}} pattern="(\d{1,3}\.){3}\d{1,3}|[0-9a-fA-F:]+"/>
+     <div class="form-text">A valid IPv4 or IPv6 address, e.g. 192.0.2.1. Leave blank if none.</div>
    </div>
    <div class="mb-3">
      <label class="form-label" for="basic-form-netmask">Netmask</label>
      <input class="form-control" id="basic-form-netmask" type="text" placeholder="" name="Netmask" {{ if .Record }} value="{{.Record.Netmask}}" {{end}} pattern="(\d{1,3}\.){3}\d{1,3}|[0-9a-fA-F:]+"/>
+     <div class="form-text">A valid IPv4 netmask, e.g. 255.255.255.0. Leave blank if none.</div>
    </div>
    <div class="mb-3">
      <label class="form-label" for="basic-form-gw">Gateway</label>
      <input class="form-control" id="basic-form-gw" type="text" placeholder="" name="Gateway" {{ if .Record }} value="{{.Record.Gateway}}" {{end}} pattern="(\d{1,3}\.){3}\d{1,3}|[0-9a-fA-F:]+">
+     <div class="form-text">A valid IPv4 or IPv6 address, e.g. 192.0.2.1. Leave blank if none.</div>
    </div>
    <div class="mb-3">
      <label class="form-label" for="basic-form-type">Type</label>
@@ -47,6 +53,7 @@
    <div class="mb-3">
      <label class="form-label" for="basic-form-lb">Load Balance Percentage</label>
      <input class="form-control" id="basic-form-lb" type="number" placeholder="" name="LbPercentage" {{ if .Record }} value="{{.Record.LbPercentage}}" {{end}} min="0" max="100"/>
+     <div class="form-text">A whole number between 0 and 100.</div>
    </div>
    <div class="mb-3">
      <input class="form-check-input" id="basic-form-default" type="checkbox" name="Default" value="true" {{ if .Record }} {{ if .Record.Default }}checked{{ end }} {{end}}/>

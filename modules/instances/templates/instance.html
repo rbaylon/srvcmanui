@@ -12,30 +12,37 @@
    <div class="mb-3">
      <label class="form-label" for="basic-form-router">Router</label>
      <input class="form-control" id="basic-form-router" type="text" placeholder="instance name" name="Router" value="{{ .Router }}" pattern="[A-Za-z0-9]*" maxlength="100"/>
+     <div class="form-text">Letters and numbers only, no spaces, up to 100 characters.</div>
    </div>
    <div class="mb-3">
      <label class="form-label" for="basic-form-worker">Worker Name</label>
      <input class="form-control" id="basic-form-worker" type="text" placeholder="Worker name" name="Workername" value="{{ .Workername }}" pattern="[A-Za-z0-9]*" maxlength="100"/>
+     <div class="form-text">Letters and numbers only, no spaces, up to 100 characters.</div>
    </div>
    <div class="mb-3">
      <label class="form-label" for="basic-form-wifilist">WifiIpList</label>
      <input class="form-control" id="basic-form-source" type="text" placeholder="path to wifi clients list" name="WifiIpList" value="{{ .WifiIpList }}" pattern="[0-9a-fA-F:.,\s]*">
+     <div class="form-text">One or more IP addresses separated by commas or spaces.</div>
    </div>
    <div class="mb-3">
      <label class="form-label" for="basic-form-subslist">SubsIpList</label>
      <input class="form-control" id="basic-form-subslist" type="text" placeholder="path to subscribers list" name="SubsIpList" value="{{ .SubsIpList }}" pattern="[0-9a-fA-F:.,\s]*">
+     <div class="form-text">One or more IP addresses separated by commas or spaces.</div>
    </div>
    <div class="mb-3">
      <label class="form-label" for="basic-form-dns">DNS server</label>
      <input class="form-control" id="basic-form-dns" type="text" placeholder="dns server ip address" name="Dns" value="{{ .Dns }}" pattern="(\d{1,3}\.){3}\d{1,3}|[0-9a-fA-F:]+"/>
+     <div class="form-text">A single valid IPv4 or IPv6 address, e.g. 8.8.8.8.</div>
    </div>
    <div class="mb-3">
      <label class="form-label" for="basic-form-captiveportal">Captive Portal Port</label>
      <input class="form-control" id="basic-form-captiveportal" type="number" placeholder="captive portal port" name="CaptivePortalPort" value="{{ .CaptivePortalPort }}" min="0" max="65535"/>
+     <div class="form-text">A whole number between 0 and 65535.</div>
    </div>
    <div class="mb-3">
      <label class="form-label" for="basic-form-subsportal">Subscribers Portal Port</label>
      <input class="form-control" id="basic-form-subsportal" type="number" placeholder="subscribers portal port" name="SubsPortalPort" value="{{ .SubsPortalPort }}" min="0" max="65535"/>
+     <div class="form-text">A whole number between 0 and 65535.</div>
    </div>
    <div class="mb-3 form-check">
      <input class="form-check-input" id="basic-form-lb" type="checkbox" name="LoadBalance" value="true" {{ if .LoadBalance }}checked{{ end }} />

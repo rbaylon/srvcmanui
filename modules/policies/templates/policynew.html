@@ -12,14 +12,17 @@
    <div class="mb-3">
      <label class="form-label" for="basic-form-name">Policy Name</label>
      <input class="form-control" id="basic-form-name" type="text" placeholder="Policy Name" name="Name" required pattern="[A-Za-z0-9]+" maxlength="100"/>
+     <div class="form-text">Required. Letters and numbers only, no spaces, up to 100 characters.</div>
    </div>
    <div class="mb-3">
      <label class="form-label" for="basic-form-module">Module</label>
      <input class="form-control" id="basic-form-module" type="text" placeholder="Module name" name="Type" pattern="[A-Za-z0-9]*" maxlength="100"/>
+     <div class="form-text">Letters and numbers only, no spaces, up to 100 characters.</div>
    </div>
    <div class="mb-3">
      <label class="form-label" for="basic-form-resource">Resource</label>
      <input class="form-control" id="basic-form-resource" type="text" placeholder="Resource" name="Resource" pattern="[A-Za-z0-9./:_,* -]*" maxlength="100"/>
+     <div class="form-text">"any", or a URL path like /api/v1/users/5. Letters, numbers, and . / : _ , * - and spaces, up to 100 characters.</div>
    </div>
    <div class="mb-3">
      <label class="form-label" for="basic-form-permission">Permission</label>

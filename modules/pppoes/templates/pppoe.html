@@ -28,18 +28,22 @@
    <div class="mb-3">
      <label class="form-label" for="basic-form-protocol">Name</label>
      <input class="form-control" id="basic-form-protocol" type="text" placeholder="" name="Name" value="{{ .Record.Name }}" pattern="[A-Za-z0-9]*" maxlength="100" />
+     <div class="form-text">Letters and numbers only, no spaces, up to 100 characters.</div>
    </div>
    <div class="mb-3">
      <label class="form-label" for="basic-form-source">IP</label>
      <input class="form-control" id="basic-form-source" type="text" placeholder="IP address from device not currently assigned" name="Ip" value="{{ .Record.Ip }}" pattern="(\d{1,3}\.){3}\d{1,3}|[0-9a-fA-F:]+"/>
+     <div class="form-text">A valid IPv4 or IPv6 address, e.g. 192.0.2.1. Leave blank if none.</div>
    </div>
    <div class="mb-3">
      <label class="form-label" for="basic-form-destination">Pool range</label>
      <input class="form-control" id="basic-form-destination" type="text" placeholder="ip range in format x.x.x.x-y.y.y.y" name="PoolAddress" value="{{ .Record.PoolAddress }}" pattern="[A-Za-z0-9./:_,* -]*" maxlength="100"/>
+     <div class="form-text">Letters, numbers, and . / : _ , * - and spaces, up to 100 characters. No quotes or semicolons.</div>
    </div>
    <div class="mb-3">
      <label class="form-label" for="basic-form-dstport">DNS servers</label>
      <input class="form-control" id="basic-form-dstport" type="text" placeholder="space separated dns server ip addresses" name="DnsAddress" value="{{ .Record.DnsAddress }}" pattern="[0-9a-fA-F:.,\s]*"/>
+     <div class="form-text">One or more IP addresses separated by commas or spaces.</div>
    </div>
    <button class="btn btn-primary" type="submit">Submit</button>
  </form>
