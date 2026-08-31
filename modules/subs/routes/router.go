@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"os"
 	"strconv"
+	"strings"
 
 	"github.com/go-chi/render"
 	pfconfigmodel "github.com/rbaylon/srvcman/modules/pfconfig/model"
@@ -123,6 +124,15 @@ func New() *http.ServeMux {
 		id := s.ID
 		if id > 0 {
 			s.ID = uint(id)
+			if !strings.Contains(s.Mac, "subid") {
+				code := []byte("000000000000")
+				maxlen := len(letters) - 1
+				for j := 0; j < 12; j++ {
+					c := letters[rand.IntN(maxlen)]
+					code[j] = c
+				}
+				s.Mac = "subid" + string(code)
+			}
 			err, status := client.Rester("subs/"+strconv.FormatUint(uint64(id), 10), "PUT", s, r)
 			if err != nil {
 				fmt.Println(err)
