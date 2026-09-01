@@ -11,6 +11,31 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 });
 
+document.addEventListener('DOMContentLoaded', function () {
+  const path = window.location.pathname;
+  let bestLink = null;
+  let bestLen = 0;
+  document.querySelectorAll('#sidebarMenu a.nav-link[href]').forEach(function (link) {
+    const href = link.getAttribute('href');
+    if (!href || href.charAt(0) === '#') {
+      return;
+    }
+    if ((path === href || path.startsWith(href + '/')) && href.length > bestLen) {
+      bestLen = href.length;
+      bestLink = link;
+    }
+  });
+  if (!bestLink) {
+    return;
+  }
+  bestLink.classList.add('active');
+  bestLink.setAttribute('aria-current', 'page');
+  const parentCollapse = bestLink.closest('.collapse');
+  if (parentCollapse && typeof bootstrap !== 'undefined') {
+    new bootstrap.Collapse(parentCollapse, { toggle: false }).show();
+  }
+});
+
 document.addEventListener('DOMContentLoaded', function getPfconfig(id){
   fetch(`/ui/dashboard/changes`)
     .then(response => response.json())

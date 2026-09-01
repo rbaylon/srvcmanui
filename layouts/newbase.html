@@ -28,15 +28,48 @@
           font-size: 3.5rem;
         }
       }
-      nav details {
-        margin-bottom: 1rem;
+      .sidebar-nav-toggle {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-weight: 600;
+        font-size: .8125rem;
+        text-transform: uppercase;
+        letter-spacing: .03em;
+        border-radius: .375rem;
       }
 
-      nav summary {
-        cursor: pointer;
-        font-weight: bold;
-        padding: 0.5rem;
-        border-radius: 4px;
+      .sidebar-nav-toggle:hover {
+        background-color: rgba(0, 0, 0, .04);
+      }
+
+      .sidebar-nav-toggle .chevron {
+        width: 14px;
+        height: 14px;
+        color: #999;
+        transition: transform .2s ease;
+      }
+
+      .sidebar-nav-toggle:not(.collapsed) .chevron {
+        transform: rotate(180deg);
+      }
+
+      .sidebar-subnav {
+        border-left: 2px solid #eee;
+        margin-left: 1.35rem;
+        padding-left: .5rem;
+      }
+
+      .sidebar-subnav .nav-link {
+        padding-top: .35rem;
+        padding-bottom: .35rem;
+        font-weight: 400;
+        font-size: .875rem;
+      }
+
+      .sidebar hr {
+        margin: .5rem .75rem;
+        opacity: .1;
       }
     </style>
 
@@ -71,15 +104,21 @@
       <div class="position-sticky pt-3">
         <ul class="nav flex-column">
           <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="/ui/dashboard">
+            <a class="nav-link" href="/ui/dashboard">
               <span data-feather="home"></span>
               Dashboard
             </a>
           </li>
+        </ul>
+        <hr>
+        <ul class="nav flex-column">
           <li class="nav-item">
-            <details>
-              <summary>Internet Provider</summary>
-              <ul class="nav flex-column">
+            <a class="nav-link sidebar-nav-toggle collapsed" data-bs-toggle="collapse" href="#navIsp" role="button" aria-expanded="false" aria-controls="navIsp">
+              <span><span data-feather="wifi" class="me-2"></span>Internet Provider</span>
+              <span data-feather="chevron-down" class="chevron"></span>
+            </a>
+            <div class="collapse" id="navIsp">
+              <ul class="nav flex-column sidebar-subnav">
                 <li class="nav-item">
                   <a class="nav-link" href="/ui/subs">
                     <span data-feather="users"></span>
@@ -105,40 +144,46 @@
                   </a>
                 </li>
               </ul>
-            </details>  
+            </div>
           </li>
           <li class="nav-item">
-            <details>
-              <summary>Security</summary>
-              <ul class="nav flex-column">
+            <a class="nav-link sidebar-nav-toggle collapsed" data-bs-toggle="collapse" href="#navSecurity" role="button" aria-expanded="false" aria-controls="navSecurity">
+              <span><span data-feather="shield" class="me-2"></span>Security</span>
+              <span data-feather="chevron-down" class="chevron"></span>
+            </a>
+            <div class="collapse" id="navSecurity">
+              <ul class="nav flex-column sidebar-subnav">
                 <li class="nav-item">
                   <a class="nav-link" href="/ui/firewall">
-                    <span data-feather="layers"></span>
+                    <span data-feather="shield"></span>
                     Firewall
                   </a>
                 </li>
                 <li class="nav-item">
                   <a class="nav-link" href="/ui/policies">
-                    <span data-feather="layers"></span>
+                    <span data-feather="key"></span>
                     Access Policy
                   </a>
                 </li>
               </ul>
-            </details>
+            </div>
           </li>
           <li class="nav-item">
-            <details>
-              <summary>Network</summary>
-              <ul class="nav flex-column">
+            <a class="nav-link sidebar-nav-toggle collapsed" data-bs-toggle="collapse" href="#navNetwork" role="button" aria-expanded="false" aria-controls="navNetwork">
+              <span><span data-feather="share-2" class="me-2"></span>Network</span>
+              <span data-feather="chevron-down" class="chevron"></span>
+            </a>
+            <div class="collapse" id="navNetwork">
+              <ul class="nav flex-column sidebar-subnav">
                 <li class="nav-item">
                   <a class="nav-link" href="/ui/instances">
-                    <span data-feather="layers"></span>
+                    <span data-feather="cpu"></span>
                     System
                   </a>
                 </li>
                 <li class="nav-item">
                   <a class="nav-link" href="/ui/pfifaces">
-                    <span data-feather="layers"></span>
+                    <span data-feather="link"></span>
                     Network Interfaces
                   </a>
                 </li>
@@ -149,39 +194,45 @@
                   </a>
                 </li>
               </ul>
-            </details>
+            </div>
           </li>
           <li class="nav-item">
-            <details>
-              <summary>Services</summary>
-              <ul class="nav flex-column">
+            <a class="nav-link sidebar-nav-toggle collapsed" data-bs-toggle="collapse" href="#navServices" role="button" aria-expanded="false" aria-controls="navServices">
+              <span><span data-feather="server" class="me-2"></span>Services</span>
+              <span data-feather="chevron-down" class="chevron"></span>
+            </a>
+            <div class="collapse" id="navServices">
+              <ul class="nav flex-column sidebar-subnav">
                 <li class="nav-item">
                   <a class="nav-link" href="/ui/pppoes">
-                    <span data-feather="layers"></span>
+                    <span data-feather="server"></span>
                     PPPoE Server
                   </a>
                 </li>
               </ul>
-            </details>
+            </div>
           </li>
           <li class="nav-item">
-            <details>
-              <summary>Administration</summary>
-              <ul class="nav flex-column">
+            <a class="nav-link sidebar-nav-toggle collapsed" data-bs-toggle="collapse" href="#navAdmin" role="button" aria-expanded="false" aria-controls="navAdmin">
+              <span><span data-feather="settings" class="me-2"></span>Administration</span>
+              <span data-feather="chevron-down" class="chevron"></span>
+            </a>
+            <div class="collapse" id="navAdmin">
+              <ul class="nav flex-column sidebar-subnav">
                 <li class="nav-item">
                   <a class="nav-link" href="/ui/users">
-                    <span data-feather="layers"></span>
+                    <span data-feather="user"></span>
                     Users
                   </a>
                 </li>
                 <li class="nav-item">
                   <a class="nav-link" href="/ui/groups">
-                    <span data-feather="layers"></span>
+                    <span data-feather="users"></span>
                     Groups
                   </a>
                 </li>
               </ul>
-            </details>
+            </div>
           </li>
         </ul>
       </div>
