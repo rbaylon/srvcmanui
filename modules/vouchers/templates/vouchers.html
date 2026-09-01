@@ -1,21 +1,16 @@
-{{define "title"}}Voucher List{{end}}
+{{define "title"}}Vouchers{{end}}
 {{define "head_script"}}{{end}}
 {{define "content"}}
-<div class="d-flex align-items-center justify-content-end my-3">
-  <div id="bulk-select-replace-element">
-    <a href="/ui/vouchers/create" ><button class="btn btn-phoenix-success btn-sm" type="button"><span data-feather="plus">New</span></button></a>
+<div class="card shadow-sm my-3">
+  <div class="card-header d-flex align-items-center justify-content-between">
+    <h5 class="mb-0">Vouchers</h5>
+    <a href="/ui/vouchers/create" class="btn btn-success btn-sm"><span data-feather="plus"></span> New</a>
   </div>
-</div>
-<div id="tableExample" data-list='{"valueNames":["id","fname","address","ip","dueday","status","plan"],"page":200,"pagination":false}'>
-  <div class="table-responsive mx-n1 px-1">
-    <table class="table table-striped table-sm" id="records">
+  <div class="card-body p-0">
+    <div class="table-responsive">
+      <table class="table table-striped table-hover table-sm align-middle mb-0" id="records">
       <thead>
         <tr>
-          <th class="white-space-nowrap fs-9 align-middle ps-0" style="max-width:20px; width:18px;">
-            <div class="form-check mb-0 fs-8">
-              <input class="form-check-input" id="bulk-select-example" type="checkbox" data-bulk-select='{"body":"bulk-select-body","actions":"bulk-select-actions","replacedElement":"bulk-select-replace-element"}' />
-            </div>
-          </th>
           <th class="sort align-middle" data-sort="id">ID</th>
           <th class="sort align-middle" data-sort="value">Code</th>
           <th class="sort align-middle" data-sort="iface">Iface</th>
@@ -35,11 +30,6 @@
       <tbody class="list" id="bulk-select-body">
         {{ range .}}
         <tr>
-          <td class="fs-9 align-middle">
-            <div class="form-check mb-0 fs-8">
-              <input class="form-check-input" type="checkbox" data-bulk-select-row="{&quot;value&quot;:&quot;{{.Value}}&quot;,&quot;iface&quot;:&quot;{{.Type}}&quot;,&quot;status&quot;:{{.Status}} }" />
-            </div>
-          </td>
           <td class="align-middle id">{{.ID}}</td>
           <td class="align-middle value">{{.Value}}</td>
           <td class="align-middle iface">{{.Type}}</td>
@@ -53,11 +43,15 @@
           <td class="align-middle datestart">{{.DateStarted}}</td>
           <td class="align-middle dateend">{{.DateEnd}}</td>
           <td class="align-middle dateexpire">{{.DateExpires}}</td>
-          <td><a href="#"><span data-feather="edit"></span>edit</a> | <a href="#"><span data-feather="x-square"></span>delete</a></td>
+          <td class="text-end">
+            <a href="{{.ID}}" class="btn btn-sm btn-outline-secondary" title="Edit"><span data-feather="edit"></span></a>
+            <a href="#" onclick="confirmDelete('/ui/vouchers/delete/{{.ID}}')" class="btn btn-sm btn-outline-danger" title="Delete"><span data-feather="x-square"></span></a>
+          </td>
         </tr>
         {{end}}
       </tbody>
-    </table>
+      </table>
+    </div>
   </div>
 </div>
 <script src="/ui/static/local/listutils.js"></script>

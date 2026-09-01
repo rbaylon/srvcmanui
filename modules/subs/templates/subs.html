@@ -1,14 +1,14 @@
 {{define "title"}}Subscribers List{{end}}
 {{define "head_script"}}{{end}}
 {{define "content"}}
-<div class="d-flex align-items-center justify-content-end my-3">
-  <div id="bulk-select-replace-element">
-    <a href="/ui/subs/create" ><button class="btn btn-phoenix-success btn-sm" type="button"><span data-feather="plus">New</span></button></a>
+<div class="card shadow-sm my-3">
+  <div class="card-header d-flex align-items-center justify-content-between">
+    <h5 class="mb-0">Subscribers</h5>
+    <a href="/ui/subs/create" class="btn btn-success btn-sm"><span data-feather="plus"></span> New</a>
   </div>
-</div>
-<div id="tableExample" data-list='{"valueNames":["id","fname","address","ip","dueday","status","plan"],"page":200,"pagination":false}'>
-  <div class="table-responsive mx-n1 px-1">
-    <table class="table table-striped table-sm" id="records">
+  <div class="card-body p-0">
+    <div class="table-responsive">
+      <table class="table table-striped table-hover table-sm align-middle mb-0" id="records">
       <thead>
         <tr>
           <th class="sort align-middle" data-sort="id">ID</th>
@@ -33,11 +33,15 @@
           <td class="align-middle dueday">{{.DueDay}}</td>
           <td class="align-middle status">{{.Status}}</td>
           <td class="align-middle plan">{{.Plan}}</td>
-          <td><a href="{{.ID}}"><span data-feather="edit"></span>edit</a> | <a onclick="confirmDelete('/ui/subs/delete/{{.ID}}')" href="#"><span data-feather="x-square"></span>delete</a></td>
+          <td class="text-end">
+            <a href="{{.ID}}" class="btn btn-sm btn-outline-secondary" title="Edit"><span data-feather="edit"></span></a>
+            <a href="#" onclick="confirmDelete('/ui/subs/delete/{{.ID}}')" class="btn btn-sm btn-outline-danger" title="Delete"><span data-feather="x-square"></span></a>
+          </td>
         </tr>
         {{end}}
       </tbody>
-    </table>
+      </table>
+    </div>
   </div>
 </div>
 <script src="/ui/static/local/listutils.js"></script>

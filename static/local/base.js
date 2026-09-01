@@ -1,3 +1,9 @@
+document.addEventListener('DOMContentLoaded', function () {
+  if (typeof feather !== 'undefined') {
+    feather.replace();
+  }
+});
+
 document.addEventListener('DOMContentLoaded', function getPfconfig(id){
   fetch(`/ui/dashboard/changes`)
     .then(response => response.json())
