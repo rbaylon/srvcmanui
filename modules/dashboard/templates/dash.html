@@ -44,6 +44,27 @@
             </div>
         </div>
     </div>
+    <div class="row py-1">
+        <div class="col-lg-12">
+            <div class="card mb-6">
+                <div class="card-header">
+                    <span data-feather="activity" class="me-1"></span>
+                    Realtime Interface Traffic
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        {{ range .Pfifaces }}
+                        <div class="col-lg-6 col-xl-4 mb-4">
+                            <div class="small text-muted mb-1">{{.Name}} ({{.Device}})</div>
+                            <canvas class="traffic-chart" data-device="{{.Device}}" id="traffic-chart-{{.ID}}" height="150"></canvas>
+                        </div>
+                        {{ end }}
+                    </div>
+                </div>
+                <div class="card-footer small text-muted">Updates every 2 seconds</div>
+            </div>
+        </div>
+    </div>
 </div>
 {{end}}
 {{define "tail_script"}}
@@ -149,6 +170,109 @@ function renderBarChart(glabels, gdataValues) {
     });
 }
 window.addEventListener('DOMContentLoaded', fetchChartData);
+
+const trafficCharts = {};
+const trafficHistory = {};
+const TRAFFIC_MAX_POINTS = 30;
+const TRAFFIC_POLL_MS = 2000;
+
+function initTrafficCharts() {
+    document.querySelectorAll('.traffic-chart').forEach(canvas => {
+        const device = canvas.dataset.device;
+        const ctx = canvas.getContext('2d');
+        trafficCharts[device] = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [
+                    {
+                        label: 'Download (Kbps)',
+                        data: [],
+                        borderColor: 'rgba(2,117,216,1)',
+                        backgroundColor: 'rgba(2,117,216,0.1)',
+                        borderWidth: 2,
+                        pointRadius: 0,
+                        fill: true
+                    },
+                    {
+                        label: 'Upload (Kbps)',
+                        data: [],
+                        borderColor: 'rgba(220,53,69,1)',
+                        backgroundColor: 'rgba(220,53,69,0.1)',
+                        borderWidth: 2,
+                        pointRadius: 0,
+                        fill: true
+                    }
+                ]
+            },
+            options: {
+                animation: false,
+                responsive: true,
+                legend: {
+                    display: true,
+                    position: 'bottom'
+                },
+                scales: {
+                    xAxes: [{
+                        ticks: { maxTicksLimit: 6 }
+                    }],
+                    yAxes: [{
+                        ticks: { beginAtZero: true }
+                    }]
+                }
+            }
+        });
+    });
+}
+
+async function pollTraffic() {
+    try {
+        const response = await fetch('/ui/dashboard/traffic');
+        const stats = await response.json();
+        const now = Date.now();
+        const label = new Date(now).toLocaleTimeString();
+
+        stats.forEach(stat => {
+            const chart = trafficCharts[stat.device];
+            const prev = trafficHistory[stat.device];
+            trafficHistory[stat.device] = { ibytes: stat.ibytes, obytes: stat.obytes, time: now };
+
+            if (!chart || !prev) {
+                return;
+            }
+
+            const deltaSeconds = (now - prev.time) / 1000;
+            if (deltaSeconds <= 0) {
+                return;
+            }
+
+            const deltaIn = stat.ibytes - prev.ibytes;
+            const deltaOut = stat.obytes - prev.obytes;
+            // A negative delta means the counter reset (interface flap/reboot); plot 0 rather than a bogus spike.
+            const kbpsIn = deltaIn >= 0 ? (deltaIn * 8 / deltaSeconds / 1000) : 0;
+            const kbpsOut = deltaOut >= 0 ? (deltaOut * 8 / deltaSeconds / 1000) : 0;
+
+            chart.data.labels.push(label);
+            chart.data.datasets[0].data.push(kbpsIn.toFixed(1));
+            chart.data.datasets[1].data.push(kbpsOut.toFixed(1));
+
+            if (chart.data.labels.length > TRAFFIC_MAX_POINTS) {
+                chart.data.labels.shift();
+                chart.data.datasets[0].data.shift();
+                chart.data.datasets[1].data.shift();
+            }
+            chart.update();
+        });
+    } catch (error) {
+        console.error('Error fetching traffic data:', error);
+    }
+}
+
+window.addEventListener('DOMContentLoaded', function () {
+    initTrafficCharts();
+    pollTraffic();
+    setInterval(pollTraffic, TRAFFIC_POLL_MS);
+});
 
 </script>
 {{end}}

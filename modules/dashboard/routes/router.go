@@ -68,6 +68,12 @@ func New() *http.ServeMux {
 		SysInfo   map[string]string
 		GwToSub   subgw
 		PlanTosub subplan
+		Pfifaces  []pfifacemodel.Pfiface
+	}
+	type trafficStat struct {
+		Device string `json:"device"`
+		Ibytes uint64 `json:"ibytes"`
+		Obytes uint64 `json:"obytes"`
 	}
 	Router.HandleFunc("GET /changes", func(w http.ResponseWriter, r *http.Request) {
 		var records []Changemodel.Change
@@ -153,10 +159,29 @@ func New() *http.ServeMux {
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(subdata)
 	})
+	Router.HandleFunc("GET /traffic", func(w http.ResponseWriter, r *http.Request) {
+		var stats []trafficStat
+		err, status := client.Rester("pfiface/traffic", "GET", &stats, r)
+		if err != nil {
+			fmt.Println(err)
+			utils.RenderErrorPage(w, status, err.Error())
+			return
+		}
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(stats)
+	})
 	Router.HandleFunc("GET /", func(w http.ResponseWriter, r *http.Request) {
 		info := _sysinfo()
 		dashdata := viewdata{}
 		dashdata.SysInfo = info
+		ifs := []pfifacemodel.Pfiface{}
+		err, status := client.Rester("pfiface", "GET", &ifs, r)
+		if err != nil {
+			fmt.Println(err)
+			utils.RenderErrorPage(w, status, err.Error())
+			return
+		}
+		dashdata.Pfifaces = ifs
 		pwd, _ := os.Getwd()
 		files := []string{
 			pwd + "/layouts/newbase.html",
