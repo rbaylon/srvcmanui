@@ -1,7 +1,11 @@
 {{define "title"}}Firewall Form{{end}}
 {{define "head_script"}}{{end}}
 {{define "content"}}
- <form method="POST" action="/ui/firewall/addorupdate">
+ <div class="row justify-content-center">
+  <div class="col-12 col-xl-8">
+   <div class="card shadow-sm my-4">
+    <div class="card-body p-4">
+     <form method="POST" action="/ui/firewall/addorupdate">
    <div class="mb-3">
      <input class="form-control" id="basic-form-created" type="hidden" name="CreatedAt" value="{{.Record.CreatedAt.Format "2006-01-02T15:04:05"}}"/>
      <input type="hidden" name="ID" value="{{.Record.ID}}" />  
@@ -138,8 +142,14 @@
      <input class="form-control" id="basic-form-advance" type="text" placeholder="" name="AdvanceOpts" value="{{.Record.AdvanceOpts}}" pattern="[A-Za-z0-9./:_,* -]*" maxlength="100"/>
      <div class="form-text">Letters, numbers, and . / : _ , * - and spaces, up to 100 characters. No quotes or semicolons.</div>
    </div>
-   <button class="btn btn-primary" type="submit">Submit</button>
- </form>
+     <div class="d-grid d-sm-flex justify-content-sm-end mt-4">
+       <button class="btn btn-primary" type="submit">Submit</button>
+     </div>
+    </form>
+   </div>
+  </div>
+ </div>
+</div>
  <script src="/ui/static/local/fwonchange.js"></script>
 {{end}}
 {{define "tail_script"}}{{end}}

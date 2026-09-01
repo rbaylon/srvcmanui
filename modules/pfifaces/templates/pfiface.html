@@ -2,7 +2,11 @@
 {{define "head_script"}}{{end}}
 {{define "content"}}
 <br>
- <form method="POST" action="/ui/pfifaces/addorupdate">
+ <div class="row justify-content-center">
+  <div class="col-12 col-xl-8">
+   <div class="card shadow-sm my-4">
+    <div class="card-body p-4">
+     <form method="POST" action="/ui/pfifaces/addorupdate">
   {{ if .Record }}
    <div class="mb-3">
      <input class="form-control" id="basic-form-created" type="hidden" name="CreatedAt" value="{{.Record.CreatedAt.Format "2006-01-02T15:04:05"}}"/>
@@ -60,11 +64,11 @@
      <input class="form-control" id="basic-form-lb" type="number" placeholder="" name="LbPercentage" {{ if .Record }} value="{{.Record.LbPercentage}}" {{end}} min="0" max="100"/>
      <div class="form-text">A whole number between 0 and 100.</div>
    </div>
-   <div class="mb-3">
+   <div class="mb-3 form-check">
      <input class="form-check-input" id="basic-form-default" type="checkbox" name="Default" value="true" {{ if .Record }} {{ if .Record.Default }}checked{{ end }} {{end}}/>
      <label class="form-check-label" for="basic-form-default">Default Gateway</label>
    </div>
-   <div class="mb-3">
+   <div class="mb-3 form-check">
      <input class="form-check-input" id="basic-form-physical" type="checkbox" name="Physical" value="true" {{ if .Record }} {{ if .Record.Physical }}checked{{ end }} {{ else }}checked{{ end }}/>
      <label class="form-check-label" for="basic-form-physical">Physical Interface</label>
    </div>
@@ -76,7 +80,13 @@
      {{ end }}
      </select>
    </div>
-   <button class="btn btn-primary" type="submit">Submit</button>
- </form>
+     <div class="d-grid d-sm-flex justify-content-sm-end mt-4">
+       <button class="btn btn-primary" type="submit">Submit</button>
+     </div>
+    </form>
+   </div>
+  </div>
+ </div>
+</div>
 {{end}}
 {{define "tail_script"}}{{end}}

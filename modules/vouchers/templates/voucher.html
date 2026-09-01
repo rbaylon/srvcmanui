@@ -1,7 +1,11 @@
 {{define "title"}}Subscriber Form{{end}}
 {{define "head_script"}}{{end}}
 {{define "content"}}
- <form method="POST" action="/ui/vouchers/addorupdate">
+ <div class="row justify-content-center">
+  <div class="col-12 col-xl-8">
+   <div class="card shadow-sm my-4">
+    <div class="card-body p-4">
+     <form method="POST" action="/ui/vouchers/addorupdate">
    <div class="mb-3">
      <label class="form-label" for="basic-form-created">Date Created</label>
      <input class="form-control" id="basic-form-created" type="datetime-local" name="CreatedAt" value="{{.CreatedAt.Format "2006-01-02T15:04:05"}}"/>
@@ -26,7 +30,13 @@
      <input class="form-control" id="basic-form-storetype" type="text" placeholder="SarisariStore" name="storetype" pattern="[A-Za-z0-9]*" maxlength="100"/>
      <div class="form-text">Letters and numbers only, no spaces, up to 100 characters.</div>
    </div>
-   <button class="btn btn-primary" type="submit">Submit</button>
- </form>
+     <div class="d-grid d-sm-flex justify-content-sm-end mt-4">
+       <button class="btn btn-primary" type="submit">Submit</button>
+     </div>
+    </form>
+   </div>
+  </div>
+ </div>
+</div>
 {{end}}
 {{define "tail_script"}}{{end}}

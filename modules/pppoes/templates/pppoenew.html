@@ -1,7 +1,11 @@
 {{define "title"}}PPPOE Form{{end}}
 {{define "head_script"}}{{end}}
 {{define "content"}}
- <form method="POST" action="/ui/pppoes/addorupdate">
+ <div class="row justify-content-center">
+  <div class="col-12 col-xl-8">
+   <div class="card shadow-sm my-4">
+    <div class="card-body p-4">
+     <form method="POST" action="/ui/pppoes/addorupdate">
    <div class="mb-3">
      <input class="form-control" id="basic-form-created" type="hidden" name="CreatedAt"/>
    </div>
@@ -41,8 +45,14 @@
      <input class="form-control" id="basic-form-dstport" type="text" placeholder="space separated dns server ip addresses" name="DnsAddress" pattern="[0-9a-fA-F:.,\s]*"/>
      <div class="form-text">One or more IP addresses separated by commas or spaces.</div>
    </div>
-   <button class="btn btn-primary" type="submit">Submit</button>
- </form>
+     <div class="d-grid d-sm-flex justify-content-sm-end mt-4">
+       <button class="btn btn-primary" type="submit">Submit</button>
+     </div>
+    </form>
+   </div>
+  </div>
+ </div>
+</div>
  <script src="/ui/static/local/pppoe.js"></script>
  <script src="/ui/static/local/fwonload.js"></script>
 {{end}}

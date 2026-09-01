@@ -1,7 +1,11 @@
 {{define "title"}}Group Form{{end}}
 {{define "head_script"}}{{end}}
 {{define "content"}}
- <form method="POST" action="/ui/policies/addorupdate">
+ <div class="row justify-content-center">
+  <div class="col-12 col-xl-8">
+   <div class="card shadow-sm my-4">
+    <div class="card-body p-4">
+     <form method="POST" action="/ui/policies/addorupdate">
    <div class="mb-3">
      <input class="form-control" id="basic-form-created" type="hidden" name="CreatedAt" value="{{.Policy.CreatedAt}}"/>
      <input type="hidden" name="ID" value="{{.Policy.ID}}"/>
@@ -41,7 +45,13 @@
     {{end}}><label for="Groups">{{$y.Groupname}}</label>&nbsp;
     {{ end }}
     <hr>
-   <button class="btn btn-primary" type="submit">Submit</button>
- </form>
+     <div class="d-grid d-sm-flex justify-content-sm-end mt-4">
+       <button class="btn btn-primary" type="submit">Submit</button>
+     </div>
+    </form>
+   </div>
+  </div>
+ </div>
+</div>
 {{end}}
 {{define "tail_script"}}{{end}}

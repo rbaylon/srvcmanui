@@ -1,7 +1,11 @@
 {{define "title"}}Firewall Form{{end}}
 {{define "head_script"}}{{end}}
 {{define "content"}}
- <form method="POST" action="/ui/vlan/addorupdate">
+ <div class="row justify-content-center">
+  <div class="col-12 col-xl-8">
+   <div class="card shadow-sm my-4">
+    <div class="card-body p-4">
+     <form method="POST" action="/ui/vlan/addorupdate">
    <div class="mb-3">
      <input class="form-control" id="basic-form-created" type="hidden" name="CreatedAt"/>
    </div>
@@ -61,7 +65,13 @@
       <option value="{{ .Record.PfconfigID }}" selected="selected">{{ .Record.PfconfigID }}</option>
      </select>
    </div>
-   <button class="btn btn-primary" type="submit">Submit</button>
- </form>
+     <div class="d-grid d-sm-flex justify-content-sm-end mt-4">
+       <button class="btn btn-primary" type="submit">Submit</button>
+     </div>
+    </form>
+   </div>
+  </div>
+ </div>
+</div>
 {{end}}
 {{define "tail_script"}}{{end}}
