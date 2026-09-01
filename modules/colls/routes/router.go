@@ -15,6 +15,11 @@ import (
 	"github.com/rbaylon/srvcmanui/utils"
 )
 
+type Formdata struct {
+	Record *collectionmodel.Collection
+	Subs   []submodel.Sub
+}
+
 func New() *http.ServeMux {
 	Router := http.NewServeMux() // 3
 
@@ -48,26 +53,42 @@ func New() *http.ServeMux {
 			utils.RenderErrorPage(w, status, err.Error())
 			return
 		}
+		subs := []submodel.Sub{}
+		err, status = client.Rester("subs", "GET", &subs, r)
+		if err != nil {
+			fmt.Println(err)
+			utils.RenderErrorPage(w, status, err.Error())
+			return
+		}
 		pwd, _ := os.Getwd()
 		files := []string{
 			pwd + "/layouts/newbase.html",
 			pwd + "/modules/colls/templates/coll.html",
 		}
+		data := Formdata{Record: &record, Subs: subs}
 		tmpl := template.Must(template.ParseFiles(files...))
-		err = tmpl.ExecuteTemplate(w, "htmx", record)
+		err = tmpl.ExecuteTemplate(w, "htmx", data)
 		if err != nil {
 			log.Println(err)
 		}
 	})
 
 	Router.HandleFunc("GET /create", func(w http.ResponseWriter, r *http.Request) {
+		subs := []submodel.Sub{}
+		err, status := client.Rester("subs", "GET", &subs, r)
+		if err != nil {
+			fmt.Println(err)
+			utils.RenderErrorPage(w, status, err.Error())
+			return
+		}
 		pwd, _ := os.Getwd()
 		files := []string{
 			pwd + "/layouts/newbase.html",
 			pwd + "/modules/colls/templates/coll.html",
 		}
+		data := Formdata{Record: nil, Subs: subs}
 		tmpl := template.Must(template.ParseFiles(files...))
-		err := tmpl.ExecuteTemplate(w, "htmx", nil)
+		err = tmpl.ExecuteTemplate(w, "htmx", data)
 		if err != nil {
 			log.Println(err)
 		}
@@ -79,20 +100,13 @@ func New() *http.ServeMux {
 			utils.RenderErrorPage(w, http.StatusBadRequest, err.Error())
 			return
 		}
-		sub := submodel.Sub{}
-		err, status := client.Rester("subs/"+strconv.FormatUint(uint64(s.SubID), 10), "GET", &sub, r)
-		if err != nil {
-			fmt.Println(err)
-			utils.RenderErrorPage(w, status, err.Error())
-			return
-		}
+		// SubName/SubDue/SubPlan are derived server-side from the Sub
+		// relationship on every read, so there's no need to look the sub up
+		// here just to stamp them onto the request body.
 		id := s.ID
 		if id > 0 {
 			s.ID = uint(id)
-			s.SubName = sub.FirstName + " " + sub.LastName
-			s.SubDue = sub.DueDay
-			s.SubPlan = sub.Plan
-			err, status = client.Rester("collections/"+strconv.FormatUint(uint64(s.ID), 10), "PUT", s, r)
+			err, status := client.Rester("collections/"+strconv.FormatUint(uint64(s.ID), 10), "PUT", s, r)
 			if err != nil {
 				fmt.Println(err)
 				utils.RenderErrorPage(w, status, err.Error())
@@ -101,9 +115,7 @@ func New() *http.ServeMux {
 			http.Redirect(w, r, "/ui/collections/"+s.Year, http.StatusSeeOther)
 			return
 		}
-		s.SubName = sub.FirstName + " " + sub.LastName
-		s.SubDue = sub.DueDay
-		err, status = client.Rester("collections/create", "POST", s, r)
+		err, status := client.Rester("collections/create", "POST", s, r)
 		if err != nil {
 			fmt.Println(err)
 			utils.RenderErrorPage(w, status, err.Error())

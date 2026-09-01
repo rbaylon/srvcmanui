@@ -6,86 +6,90 @@
    <div class="card shadow-sm my-4">
     <div class="card-body p-4">
      <form method="POST" action="/ui/collections/addorupdate">
+   {{ if .Record }}
    <div class="mb-3">
      <label class="form-label" for="basic-form-created">Date Created</label>
-     <input class="form-control" id="basic-form-created" type="datetime-local" name="CreatedAt" value="{{.CreatedAt.Format "2006-01-02T15:04:05"}}"/>
-     <input type="hidden" name="ID" value="{{.ID}}" />
-     <input type="hidden" name="SubName" value="{{.SubName}}" />
-     <input type="hidden" name="SubDue" value="{{.SubDue}}" />
+     <input class="form-control" id="basic-form-created" type="datetime-local" name="CreatedAt" value="{{.Record.CreatedAt.Format "2006-01-02T15:04:05"}}"/>
+     <input type="hidden" name="ID" value="{{.Record.ID}}" />
    </div>
    <div class="mb-3">
      <label class="form-label" for="basic-form-updated">Date updated</label>
-     <input class="form-control" id="basic-form-updated" type="datetime-local" name="UpdatedAt" value="{{.UpdatedAt.Format "2006-01-02T15:04:05"}}"/>
+     <input class="form-control" id="basic-form-updated" type="datetime-local" name="UpdatedAt" value="{{.Record.UpdatedAt.Format "2006-01-02T15:04:05"}}"/>
    </div>
+   {{ end }}
    <div class="mb-3">
      <label class="form-label" for="basic-form-year">Year</label>
-     <input class="form-control" id="basic-form-year" type="text" placeholder="Year" name="Year" value="{{.Year}}" pattern="[A-Za-z0-9]*" maxlength="100"/>
+     <input class="form-control" id="basic-form-year" type="text" placeholder="Year" name="Year" {{ if .Record }} value="{{.Record.Year}}" {{ end }} pattern="[A-Za-z0-9]*" maxlength="100"/>
      <div class="form-text">Letters and numbers only, no spaces, up to 100 characters.</div>
    </div>
    <div class="mb-3">
      <label class="form-label" for="basic-form-jan">Jan</label>
-     <input class="form-control" id="basic-form-jan" type="number" placeholder="0" name="Jan" value="{{.Jan}}"/>
+     <input class="form-control" id="basic-form-jan" type="number" placeholder="0" name="Jan" value="{{ if .Record }}{{.Record.Jan}}{{ else }}0{{ end }}"/>
      <div class="form-text">A whole number (amount collected).</div>
    </div>
    <div class="mb-3">
      <label class="form-label" for="basic-form-feb">Feb</label>
-     <input class="form-control" id="basic-form-feb" type="number" placeholder="0" name="Feb" value="{{.Feb}}"/>
+     <input class="form-control" id="basic-form-feb" type="number" placeholder="0" name="Feb" value="{{ if .Record }}{{.Record.Feb}}{{ else }}0{{ end }}"/>
      <div class="form-text">A whole number (amount collected).</div>
    </div>
       <div class="mb-3">
      <label class="form-label" for="basic-form-mar">Mar</label>
-     <input class="form-control" id="basic-form-mar" type="number" placeholder="0" name="Mar" value="{{.Mar}}"/>
+     <input class="form-control" id="basic-form-mar" type="number" placeholder="0" name="Mar" value="{{ if .Record }}{{.Record.Mar}}{{ else }}0{{ end }}"/>
      <div class="form-text">A whole number (amount collected).</div>
    </div>
       <div class="mb-3">
      <label class="form-label" for="basic-form-apr">Apr</label>
-     <input class="form-control" id="basic-form-apr" type="number" placeholder="0" name="Apr" value="{{.Apr}}"/>
+     <input class="form-control" id="basic-form-apr" type="number" placeholder="0" name="Apr" value="{{ if .Record }}{{.Record.Apr}}{{ else }}0{{ end }}"/>
      <div class="form-text">A whole number (amount collected).</div>
    </div>
       <div class="mb-3">
      <label class="form-label" for="basic-form-may">May</label>
-     <input class="form-control" id="basic-form-may" type="number" placeholder="0" name="May" value="{{.May}}"/>
+     <input class="form-control" id="basic-form-may" type="number" placeholder="0" name="May" value="{{ if .Record }}{{.Record.May}}{{ else }}0{{ end }}"/>
      <div class="form-text">A whole number (amount collected).</div>
    </div>
       <div class="mb-3">
      <label class="form-label" for="basic-form-jun">Jun</label>
-     <input class="form-control" id="basic-form-jun" type="number" placeholder="0" name="Jun" value="{{.Jun}}"/>
+     <input class="form-control" id="basic-form-jun" type="number" placeholder="0" name="Jun" value="{{ if .Record }}{{.Record.Jun}}{{ else }}0{{ end }}"/>
      <div class="form-text">A whole number (amount collected).</div>
    </div>
       <div class="mb-3">
      <label class="form-label" for="basic-form-jul">Jul</label>
-     <input class="form-control" id="basic-form-jul" type="number" placeholder="0" name="Jul" value="{{.Jul}}"/>
+     <input class="form-control" id="basic-form-jul" type="number" placeholder="0" name="Jul" value="{{ if .Record }}{{.Record.Jul}}{{ else }}0{{ end }}"/>
      <div class="form-text">A whole number (amount collected).</div>
    </div>
       <div class="mb-3">
      <label class="form-label" for="basic-form-aug">Aug</label>
-     <input class="form-control" id="basic-form-aug" type="number" placeholder="0" name="Aug" value="{{.Aug}}"/>
+     <input class="form-control" id="basic-form-aug" type="number" placeholder="0" name="Aug" value="{{ if .Record }}{{.Record.Aug}}{{ else }}0{{ end }}"/>
      <div class="form-text">A whole number (amount collected).</div>
    </div>
       <div class="mb-3">
      <label class="form-label" for="basic-form-sep">Sep</label>
-     <input class="form-control" id="basic-form-sep" type="number" placeholder="0" name="Sep" value="{{.Sep}}"/>
+     <input class="form-control" id="basic-form-sep" type="number" placeholder="0" name="Sep" value="{{ if .Record }}{{.Record.Sep}}{{ else }}0{{ end }}"/>
      <div class="form-text">A whole number (amount collected).</div>
    </div>
       <div class="mb-3">
      <label class="form-label" for="basic-form-oct">Oct</label>
-     <input class="form-control" id="basic-form-oct" type="number" placeholder="0" name="Oct" value="{{.Oct}}"/>
+     <input class="form-control" id="basic-form-oct" type="number" placeholder="0" name="Oct" value="{{ if .Record }}{{.Record.Oct}}{{ else }}0{{ end }}"/>
      <div class="form-text">A whole number (amount collected).</div>
    </div>
       <div class="mb-3">
      <label class="form-label" for="basic-form-nov">Nov</label>
-     <input class="form-control" id="basic-form-nov" type="number" placeholder="0" name="Nov" value="{{.Nov}}"/>
+     <input class="form-control" id="basic-form-nov" type="number" placeholder="0" name="Nov" value="{{ if .Record }}{{.Record.Nov}}{{ else }}0{{ end }}"/>
      <div class="form-text">A whole number (amount collected).</div>
    </div>
       <div class="mb-3">
      <label class="form-label" for="basic-form-dec">Dec</label>
-     <input class="form-control" id="basic-form-dec" type="number" placeholder="0" name="Dec" value="{{.Dec}}"/>
+     <input class="form-control" id="basic-form-dec" type="number" placeholder="0" name="Dec" value="{{ if .Record }}{{.Record.Dec}}{{ else }}0{{ end }}"/>
      <div class="form-text">A whole number (amount collected).</div>
    </div>
    <div class="mb-3">
-     <label class="form-label" for="basic-form-subid">SubID</label>
-     <input class="form-control" id="basic-form-subid" type="text" placeholder="0" name="SubID" value="{{.SubID}}"/>
-     <div class="form-text">The numeric ID of the subscriber this collection belongs to.</div>
+     <label class="form-label" for="basic-form-subid">Subscriber</label>
+     <select class="form-select" id="basic-form-subid" aria-label="Select Subscriber" name="SubID">
+     {{ range .Subs }}
+       <option value="{{ .ID }}" {{ if $.Record }}{{ if eq $.Record.SubID .ID }} selected="selected" {{ end }}{{ end }}>{{ .FirstName }} {{ .LastName }}</option>
+     {{ end }}
+     </select>
+     <div class="form-text">The subscriber this collection belongs to.</div>
    </div>
      <div class="d-grid d-sm-flex justify-content-sm-end mt-4">
        <button class="btn btn-primary" type="submit">Submit</button>
