@@ -1,9 +1,18 @@
-new DataTable('#records-speed', {
+function reloadFeatherIcons() {
+    if (typeof feather !== 'undefined') {
+        feather.replace();
+    }
+}
+
+const speedTable = new DataTable('#records-speed', {
     pageLength: -1
 });
-new DataTable('#records', {
+speedTable.on('draw', reloadFeatherIcons);
+
+const recordsTable = new DataTable('#records', {
     pageLength: 100
 });
+recordsTable.on('draw', reloadFeatherIcons);
 async function getData(path) {
     try {
         const response = await fetch(path);
