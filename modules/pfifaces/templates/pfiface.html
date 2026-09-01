@@ -19,8 +19,13 @@
    </div>
    <div class="mb-3">
      <label class="form-label" for="basic-form-device">Device</label>
-     <input class="form-control" id="basic-form-device" type="text" placeholder="" name="Device" {{ if .Record }} value="{{.Record.Device}}" {{end}} pattern="[A-Za-z0-9]*" maxlength="100">
-     <div class="form-text">Letters and numbers only, no spaces, up to 100 characters.</div>
+     <select class="form-select" id="basic-form-device" aria-label="Select Device" name="Device"/>
+       {{ if .Record }} <option selected="selected" value="{{.Record.Device}}">{{.Record.Device}}</option> {{end}}
+       {{ range .Devices }}
+         <option value="{{ . }}">{{ . }}</option>
+       {{ end }}
+     </select>
+     <div class="form-text">Physical interface, or a configured VLAN device.</div>
    </div>
    <div class="mb-3">
      <label class="form-label" for="basic-form-speed">Link Speed</label>

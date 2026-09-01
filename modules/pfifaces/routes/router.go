@@ -40,6 +40,7 @@ func New() *http.ServeMux {
 	type Formdata struct {
 		Record    *pfifacemodel.Pfiface
 		Pfconfigs []pfconfigmodel.Pfconfig
+		Devices   []string
 	}
 	Router.HandleFunc("GET /{id}", func(w http.ResponseWriter, r *http.Request) {
 		var record pfifacemodel.Pfiface
@@ -56,8 +57,15 @@ func New() *http.ServeMux {
 			utils.RenderErrorPage(w, status, err.Error())
 			return
 		}
+		devices := []string{}
+		err, status = client.Rester("pfiface/devices", "GET", &devices, r)
+		if err != nil {
+			fmt.Println(err)
+			utils.RenderErrorPage(w, status, err.Error())
+			return
+		}
 		pwd, _ := os.Getwd()
-		data := Formdata{Record: &record, Pfconfigs: pfconfigs}
+		data := Formdata{Record: &record, Pfconfigs: pfconfigs, Devices: devices}
 		files := []string{
 			pwd + "/layouts/newbase.html",
 			pwd + "/modules/pfifaces/templates/pfiface.html",
@@ -78,11 +86,18 @@ func New() *http.ServeMux {
 			utils.RenderErrorPage(w, status, err.Error())
 			return
 		}
+		devices := []string{}
+		err, status = client.Rester("pfiface/devices", "GET", &devices, r)
+		if err != nil {
+			fmt.Println(err)
+			utils.RenderErrorPage(w, status, err.Error())
+			return
+		}
 		files := []string{
 			pwd + "/layouts/newbase.html",
 			pwd + "/modules/pfifaces/templates/pfiface.html",
 		}
-		data := Formdata{nil, pfconfigs}
+		data := Formdata{Record: nil, Pfconfigs: pfconfigs, Devices: devices}
 		tmpl := template.Must(template.ParseFiles(files...))
 		err = tmpl.ExecuteTemplate(w, "htmx", data)
 		if err != nil {
