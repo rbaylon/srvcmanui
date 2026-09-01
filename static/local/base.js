@@ -4,6 +4,13 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 });
 
+document.addEventListener('DOMContentLoaded', function () {
+  const collectionsLink = document.getElementById('nav-collections');
+  if (collectionsLink) {
+    collectionsLink.href = '/ui/collections/' + new Date().getFullYear();
+  }
+});
+
 document.addEventListener('DOMContentLoaded', function getPfconfig(id){
   fetch(`/ui/dashboard/changes`)
     .then(response => response.json())
