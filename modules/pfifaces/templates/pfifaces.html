@@ -20,6 +20,7 @@
           <th class="sort align-middle" data-sort="stup">Type</th>
           <th class="sort align-middle" data-sort="stup">Load Balance Percentage</th>
           <th class="sort align-middle" data-sort="stup">Default Gateway</th>
+          <th class="sort align-middle" data-sort="stup">Physical</th>
           <th class="sort align-middle" data-sort="pfconfigid">PfconfigID</th>
           <th class="sort text-end align-middle pe-0" scope="col">ACTION</th>
         </tr>
@@ -37,6 +38,7 @@
           <td class="align-middle stup">{{.Type}}</td>
           <td class="align-middle stup">{{.LbPercentage}}</td>
           <td class="align-middle stup">{{.Default}}</td>
+          <td class="align-middle stup">{{.Physical}}</td>
           <td class="align-middle pfconfigid">{{.PfconfigID}}</td>
           <td><a href="{{.ID}}"><span data-feather="edit"></span>edit</a> | <a onclick="confirmDelete('/ui/pfifaces/delete/{{.ID}}')" href="#"><span data-feather="x-square"></span>delete</a></td>
         </tr>
