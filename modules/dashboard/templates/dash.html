@@ -150,7 +150,9 @@ function renderBarChart(glabels, gdataValues) {
             display: false
             },
             ticks: {
-            maxTicksLimit: 6
+            autoSkip: false,
+            maxRotation: 60,
+            minRotation: 0
             }
         }],
         yAxes: [{
