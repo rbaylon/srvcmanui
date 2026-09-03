@@ -40,8 +40,8 @@ github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZb
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
 github.com/power-devops/perfstat v0.0.0-20240221224432-82ca36839d55 h1:o4JXh1EVt9k/+g42oCprj/FisM4qX9L3sZB3upGN2ZU=
 github.com/power-devops/perfstat v0.0.0-20240221224432-82ca36839d55/go.mod h1:OmDBASR4679mdNQnz2pUhc2G8CO2JrUAVFDRBDP/hJE=
-github.com/rbaylon/srvcman v1.1.38 h1:qk0jwZEodQNMKUCJB/O+QQ8IrXrSjtqnZKu81ChxcV0=
-github.com/rbaylon/srvcman v1.1.38/go.mod h1:+9DmEa/EW6bwOnpqKlwrw7Dg4JXApBW3Z9z+sWaPhSg=
+github.com/rbaylon/srvcman v1.1.39 h1:LLMiLh1AjcwjJmWzXxnqpz12uiW42nDdAOUeqU3FZ40=
+github.com/rbaylon/srvcman v1.1.39/go.mod h1:+9DmEa/EW6bwOnpqKlwrw7Dg4JXApBW3Z9z+sWaPhSg=
 github.com/shirou/gopsutil/v3 v3.24.5 h1:i0t8kL+kQTvpAYToeuiVk3TgDeKOFioZO3Ztz/iZ9pI=
 github.com/shirou/gopsutil/v3 v3.24.5/go.mod h1:bsoOS1aStSs9ErQ1WWfxllSeS1K5D+U30r2NfcubMVk=
 github.com/shirou/gopsutil/v4 v4.26.7 h1:IXzpHz/dkMRYAhKkOXr1HB6SuzWU3eoyyeWe7g3bNZc=
