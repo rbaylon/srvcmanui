@@ -135,6 +135,14 @@ func New() *http.ServeMux {
 				sgws = append(sgws, scount)
 			}
 		}
+		defaultCount := 0
+		for _, s := range subs {
+			if s.Gateway == "" && s.Status == "active" {
+				defaultCount += 1
+			}
+		}
+		gws = append(gws, "Default")
+		sgws = append(sgws, defaultCount)
 		sgw := subgw{}
 		sgw.Gws = gws
 		sgw.Subs = sgws
