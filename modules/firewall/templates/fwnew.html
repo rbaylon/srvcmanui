@@ -94,8 +94,8 @@
    </div>
    <div class="mb-3">
      <label class="form-label" for="basic-form-srcport">Source Port</label>
-     <input class="form-control" id="basic-form-srcport" type="text" placeholder="any or port number" name="SrcPort" pattern="[A-Za-z0-9./:_,*!=&lt;&gt; -]*" maxlength="100"/>
-     <div class="form-text">Digits, letters, and . / : _ , * ! = &lt; &gt; - and spaces, up to 100 characters. Supports pf port operators: =, !=, &lt;, &lt;=, &gt;, &gt;=, : (range), &gt;&lt; (exclusive range), &lt;&gt; (except range) - e.g. "2000:2004" or "2000 &gt;&lt; 2004". No quotes or semicolons.</div>
+     <input class="form-control" id="basic-form-srcport" type="text" placeholder="any or port number" name="SrcPort" pattern="[A-Za-z0-9./:_,*!=&lt;&gt;{} -]*" maxlength="100"/>
+     <div class="form-text">Digits, letters, and . / : _ , * ! = &lt; &gt; {} - and spaces, up to 100 characters. Supports pf port operators: =, !=, &lt;, &lt;=, &gt;, &gt;=, : (range), &gt;&lt; (exclusive range), &lt;&gt; (except range), and { } port lists - e.g. "2000:2004", "2000 &gt;&lt; 2004" or "{ 22, 80, 443 }". No quotes or semicolons.</div>
    </div>
    <div class="mb-3">
      <label class="form-label" for="basic-form-destination">Destination</label>
@@ -104,8 +104,8 @@
    </div>
    <div class="mb-3">
      <label class="form-label" for="basic-form-dstport">Destination Port</label>
-     <input class="form-control" id="basic-form-dstport" type="text" placeholder="any or port number" name="DstPort" pattern="[A-Za-z0-9./:_,*!=&lt;&gt; -]*" maxlength="100"/>
-     <div class="form-text">Digits, letters, and . / : _ , * ! = &lt; &gt; - and spaces, up to 100 characters. Supports pf port operators: =, !=, &lt;, &lt;=, &gt;, &gt;=, : (range), &gt;&lt; (exclusive range), &lt;&gt; (except range) - e.g. "2000:2004" or "2000 &gt;&lt; 2004". No quotes or semicolons.</div>
+     <input class="form-control" id="basic-form-dstport" type="text" placeholder="any or port number" name="DstPort" pattern="[A-Za-z0-9./:_,*!=&lt;&gt;{} -]*" maxlength="100"/>
+     <div class="form-text">Digits, letters, and . / : _ , * ! = &lt; &gt; {} - and spaces, up to 100 characters. Supports pf port operators: =, !=, &lt;, &lt;=, &gt;, &gt;=, : (range), &gt;&lt; (exclusive range), &lt;&gt; (except range), and { } port lists - e.g. "2000:2004", "2000 &gt;&lt; 2004" or "{ 22, 80, 443 }". No quotes or semicolons.</div>
    </div>
    <br>
    <hr>
