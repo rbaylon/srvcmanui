@@ -10,6 +10,7 @@ import (
 	"strconv"
 
 	Changemodel "github.com/rbaylon/srvcman/modules/changes/model"
+	gatewaymonitormodel "github.com/rbaylon/srvcman/modules/gatewaymonitor/model"
 	pfifacemodel "github.com/rbaylon/srvcman/modules/pfifaces/model"
 	planmodel "github.com/rbaylon/srvcman/modules/plans/model"
 	submodel "github.com/rbaylon/srvcman/modules/subs/model"
@@ -65,10 +66,11 @@ func New() *http.ServeMux {
 		Subs  []int
 	}
 	type viewdata struct {
-		SysInfo   map[string]string
-		GwToSub   subgw
-		PlanTosub subplan
-		Pfifaces  []pfifacemodel.Pfiface
+		SysInfo         map[string]string
+		GwToSub         subgw
+		PlanTosub       subplan
+		Pfifaces        []pfifacemodel.Pfiface
+		GatewayMonitors []gatewaymonitormodel.GatewayMonitor
 	}
 	type trafficStat struct {
 		Device string `json:"device"`
@@ -178,6 +180,17 @@ func New() *http.ServeMux {
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(stats)
 	})
+	Router.HandleFunc("GET /gatewaystatus", func(w http.ResponseWriter, r *http.Request) {
+		gateways := []gatewaymonitormodel.GatewayMonitor{}
+		// gatewaymonitor is an optional module - a fetch failure (e.g. not
+		// enabled on this deployment) shouldn't break the poll, just report
+		// nothing.
+		if err, _ := client.Rester("gatewaymonitor", "GET", &gateways, r); err != nil {
+			log.Println("gatewaystatus:", err)
+		}
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(gateways)
+	})
 	Router.HandleFunc("GET /", func(w http.ResponseWriter, r *http.Request) {
 		info := _sysinfo()
 		dashdata := viewdata{}
@@ -190,6 +203,13 @@ func New() *http.ServeMux {
 			return
 		}
 		dashdata.Pfifaces = ifs
+		gateways := []gatewaymonitormodel.GatewayMonitor{}
+		// gatewaymonitor is an optional module - don't fail the whole
+		// dashboard if it isn't enabled on this deployment.
+		if gwerr, _ := client.Rester("gatewaymonitor", "GET", &gateways, r); gwerr != nil {
+			log.Println("dashboard: gatewaymonitor fetch failed:", gwerr)
+		}
+		dashdata.GatewayMonitors = gateways
 		pwd, _ := os.Getwd()
 		files := []string{
 			pwd + "/layouts/newbase.html",
