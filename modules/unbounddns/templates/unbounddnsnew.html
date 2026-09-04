@@ -1,0 +1,88 @@
+{{define "title"}}Unbound DNS Form{{end}}
+{{define "head_script"}}{{end}}
+{{define "content"}}
+ <div class="row justify-content-center">
+  <div class="col-12 col-xl-8">
+   <div class="card shadow-sm my-4">
+    <div class="card-body p-4">
+     <form method="POST" action="/ui/unbounddns/addorupdate">
+   <div class="mb-3">
+     <label class="form-label" for="basic-form-name">Name</label>
+     <input class="form-control" id="basic-form-name" type="text" placeholder="" name="Name" pattern="[A-Za-z0-9]*" maxlength="100"/>
+     <div class="form-text">Letters and numbers only, no spaces, up to 100 characters.</div>
+   </div>
+   <div class="mb-3">
+     <label class="form-label" for="basic-form-interface">Interface</label>
+     <select class="form-select" id="basic-form-interface" aria-label="Select Interface" name="Interface"/>
+       <option value="0.0.0.0">0.0.0.0 (All Interfaces)</option>
+     {{ range .Pfifaces }}
+       {{ if and (eq .Type "internal") (ne .Ip "") }}
+         <option value="{{ .Ip }}">{{ .Ip }} ({{ .Name }})</option>
+       {{ end }}
+     {{ end }}
+     </select>
+     <div class="form-text">The IP unbound listens on.</div>
+   </div>
+   <div class="mb-3">
+     <label class="form-label" for="basic-form-tlscertbundle">TLS Cert Bundle</label>
+     <input class="form-control" id="basic-form-tlscertbundle" type="text" placeholder="/etc/ssl/cert.pem" name="TlsCertBundle" pattern="[A-Za-z0-9./:_,\* -]*" maxlength="100"/>
+     <div class="form-text">Path to the CA bundle used to verify DNS-over-TLS upstreams.</div>
+   </div>
+   <div class="mb-3">
+     <label class="form-label" for="basic-form-accesscontrol">Access Control</label>
+     <textarea class="form-control" id="basic-form-accesscontrol" name="AccessControl" maxlength="300" rows="2" placeholder="172.16.0.0/12 allow, 10.2.2.0/24 allow"></textarea>
+     <div class="form-text">One or more "network action" entries, comma separated, e.g. "172.16.0.0/12 allow, 10.2.2.0/24 allow".</div>
+   </div>
+   <div class="mb-3 form-check">
+     <input class="form-check-input" id="basic-form-donotquerylocalhost" type="checkbox" name="DoNotQueryLocalhost" value="true"/>
+     <label class="form-check-label" for="basic-form-donotquerylocalhost">Do Not Query Localhost</label>
+   </div>
+   <div class="mb-3 form-check">
+     <input class="form-check-input" id="basic-form-hideidentity" type="checkbox" name="HideIdentity" value="true"/>
+     <label class="form-check-label" for="basic-form-hideidentity">Hide Identity</label>
+   </div>
+   <div class="mb-3 form-check">
+     <input class="form-check-input" id="basic-form-hideversion" type="checkbox" name="HideVersion" value="true"/>
+     <label class="form-check-label" for="basic-form-hideversion">Hide Version</label>
+   </div>
+   <div class="mb-3 form-check">
+     <input class="form-check-input" id="basic-form-prefetch" type="checkbox" name="Prefetch" value="true"/>
+     <label class="form-check-label" for="basic-form-prefetch">Prefetch</label>
+   </div>
+   <div class="mb-3">
+     <label class="form-label" for="basic-form-localdata">Local Data</label>
+     <textarea class="form-control" id="basic-form-localdata" name="LocalData" maxlength="300" rows="2" placeholder="arkgate2.specz.net. IN A 172.16.0.1"></textarea>
+     <div class="form-text">One or more "hostname. IN A ip" entries, comma separated, e.g. "arkgate2.specz.net. IN A 172.16.0.1".</div>
+   </div>
+   <div class="mb-3">
+     <label class="form-label" for="basic-form-forwardzonename">Forward Zone Name</label>
+     <input class="form-control" id="basic-form-forwardzonename" type="text" placeholder="." name="ForwardZoneName" pattern="[A-Za-z0-9./:_,\* -]*" maxlength="100"/>
+     <div class="form-text">The zone to forward, e.g. "." for all queries.</div>
+   </div>
+   <div class="mb-3 form-check">
+     <input class="form-check-input" id="basic-form-forwardtlsupstream" type="checkbox" name="ForwardTlsUpstream" value="true"/>
+     <label class="form-check-label" for="basic-form-forwardtlsupstream">Forward TLS Upstream</label>
+   </div>
+   <div class="mb-3">
+     <label class="form-label" for="basic-form-forwardaddr">Forward Addr</label>
+     <textarea class="form-control" id="basic-form-forwardaddr" name="ForwardAddr" maxlength="300" rows="2" placeholder="1.1.1.1@853, 1.0.0.1@853, 8.8.8.8"></textarea>
+     <div class="form-text">One or more upstream resolvers, comma separated. Append "@853" for DNS-over-TLS, e.g. "1.1.1.1@853, 8.8.8.8".</div>
+   </div>
+   <div class="mb-3">
+     <label class="form-label" for="basic-form-pfconfig">Router</label>
+     <select class="form-select" id="basic-form-pfconfig" aria-label="Select Router" name="PfconfigID"/>
+     {{ range .Pfconfigs }}
+       <option value="{{ .ID }}">{{ .Router }}</option>
+     {{ end }}
+     </select>
+   </div>
+     <div class="d-grid d-sm-flex justify-content-sm-end mt-4">
+       <button class="btn btn-primary" type="submit">Submit</button>
+     </div>
+    </form>
+   </div>
+  </div>
+ </div>
+</div>
+{{end}}
+{{define "tail_script"}}{{end}}

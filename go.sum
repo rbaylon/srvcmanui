@@ -40,10 +40,10 @@ github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZb
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
 github.com/power-devops/perfstat v0.0.0-20240221224432-82ca36839d55 h1:o4JXh1EVt9k/+g42oCprj/FisM4qX9L3sZB3upGN2ZU=
 github.com/power-devops/perfstat v0.0.0-20240221224432-82ca36839d55/go.mod h1:OmDBASR4679mdNQnz2pUhc2G8CO2JrUAVFDRBDP/hJE=
-github.com/rbaylon/arkgatecmd v1.1.2 h1:/uS5R1iHbP8bGN0YWPE3l72GX8KwRtRWIolU1QvJejg=
-github.com/rbaylon/arkgatecmd v1.1.2/go.mod h1:2+cGMUWHrOzsCoFVGwqrJmgB1qgoCmm+87ZAdMqlT+Y=
-github.com/rbaylon/srvcman v1.1.49 h1:BtWReVLdAPuJGQMqk/+kwLxE8p4jvkuTXMsuNkgLe6c=
-github.com/rbaylon/srvcman v1.1.49/go.mod h1:+9DmEa/EW6bwOnpqKlwrw7Dg4JXApBW3Z9z+sWaPhSg=
+github.com/rbaylon/arkgatecmd v1.1.3 h1:VebfcA+YWjNGZYjBTX83oNEspQlSgZ582lInqRuTXWA=
+github.com/rbaylon/arkgatecmd v1.1.3/go.mod h1:2+cGMUWHrOzsCoFVGwqrJmgB1qgoCmm+87ZAdMqlT+Y=
+github.com/rbaylon/srvcman v1.1.51 h1:8yyyxCSE6nrNsQQwu3G479b0RwVXQFpkDAExksh9qDo=
+github.com/rbaylon/srvcman v1.1.51/go.mod h1:WfZOcTZ9ZKwMSC5/dvXTOhJUR5j4SL408bu5YEfNs6I=
 github.com/shirou/gopsutil/v3 v3.24.5 h1:i0t8kL+kQTvpAYToeuiVk3TgDeKOFioZO3Ztz/iZ9pI=
 github.com/shirou/gopsutil/v3 v3.24.5/go.mod h1:bsoOS1aStSs9ErQ1WWfxllSeS1K5D+U30r2NfcubMVk=
 github.com/shirou/gopsutil/v4 v4.26.7 h1:IXzpHz/dkMRYAhKkOXr1HB6SuzWU3eoyyeWe7g3bNZc=
