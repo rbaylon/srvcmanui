@@ -1,11 +1,11 @@
-{{define "title"}}Gateway Form{{end}}
+{{define "title"}}Gateway Monitor Form{{end}}
 {{define "head_script"}}{{end}}
 {{define "content"}}
  <div class="row justify-content-center">
   <div class="col-12 col-xl-8">
    <div class="card shadow-sm my-4">
     <div class="card-body p-4">
-     <form method="POST" action="/ui/gateways/addorupdate">
+     <form method="POST" action="/ui/gatewaymonitor/addorupdate">
    <div class="mb-3">
      <label class="form-label" for="basic-form-name">Name</label>
      <input class="form-control" id="basic-form-name" type="text" placeholder="" name="Name" pattern="[A-Za-z0-9]*" maxlength="100"/>
@@ -13,17 +13,19 @@
    </div>
    <div class="mb-3">
      <label class="form-label" for="basic-form-ip">IP Address</label>
-     <input class="form-control" id="basic-form-ip" type="text" placeholder="" name="Ip" pattern="(\d{1,3}\.){3}\d{1,3}|[0-9a-fA-F:]+"/>
-     <div class="form-text">A valid IPv4 or IPv6 address, e.g. 192.0.2.1.</div>
+     <select class="form-select" id="basic-form-ip" aria-label="Select Gateway IP" name="Ip"/>
+     {{ range .Pfifaces }}
+       {{ if and (eq .Type "external") (ne .Gateway "") }}
+         <option value="{{ .Gateway }}">{{ .Gateway }} ({{ .Name }})</option>
+       {{ end }}
+     {{ end }}
+     </select>
+     <div class="form-text">Gateway IPs configured on external network interfaces.</div>
    </div>
    <div class="mb-3">
      <label class="form-label" for="basic-form-monitorip">Monitor IP</label>
      <input class="form-control" id="basic-form-monitorip" type="text" placeholder="" name="MonitorIp" pattern="(\d{1,3}\.){3}\d{1,3}|[0-9a-fA-F:]+"/>
      <div class="form-text">A valid IPv4 or IPv6 address to ping for link-health monitoring, e.g. 8.8.8.8.</div>
-   </div>
-   <div class="mb-3">
-     <input class="form-check-input" id="basic-form-default" type="checkbox" name="Default" value="true"/>
-     <label class="form-check-label" for="basic-form-default">Default Gateway</label>
    </div>
    <div class="mb-3">
      <label class="form-label" for="basic-form-pfconfig">Router</label>

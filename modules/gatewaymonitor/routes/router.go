@@ -1,4 +1,4 @@
-package gatewayrouter
+package gatewaymonitorrouter
 
 import (
 	"fmt"
@@ -9,8 +9,9 @@ import (
 	"strconv"
 
 	"github.com/go-chi/render"
-	gatewaymodel "github.com/rbaylon/srvcman/modules/gateways/model"
+	gatewaymonitormodel "github.com/rbaylon/srvcman/modules/gatewaymonitor/model"
 	pfconfigmodel "github.com/rbaylon/srvcman/modules/pfconfig/model"
+	pfifacemodel "github.com/rbaylon/srvcman/modules/pfifaces/model"
 	"github.com/rbaylon/srvcmanui/client"
 	"github.com/rbaylon/srvcmanui/utils"
 )
@@ -19,8 +20,8 @@ func New() *http.ServeMux {
 	Router := http.NewServeMux() // 3
 
 	Router.HandleFunc("GET /", func(w http.ResponseWriter, r *http.Request) {
-		var records []gatewaymodel.Gateway
-		err, status := client.Rester("gateways", "GET", &records, r)
+		var records []gatewaymonitormodel.GatewayMonitor
+		err, status := client.Rester("gatewaymonitor", "GET", &records, r)
 		if err != nil {
 			fmt.Println(err)
 			utils.RenderErrorPage(w, status, err.Error())
@@ -29,19 +30,27 @@ func New() *http.ServeMux {
 		pwd, _ := os.Getwd()
 		files := []string{
 			pwd + "/layouts/newbase.html",
-			pwd + "/modules/gateways/templates/gateways.html",
+			pwd + "/modules/gatewaymonitor/templates/gatewaymonitors.html",
 		}
 		tmpl := template.Must(template.ParseFiles(files...))
 		tmpl.ExecuteTemplate(w, "htmx", records)
 	})
 
 	type formData struct {
-		Record    *gatewaymodel.Gateway
+		Record    *gatewaymonitormodel.GatewayMonitor
+		Pfifaces  []pfifacemodel.Pfiface
 		Pfconfigs []pfconfigmodel.Pfconfig
 	}
 	Router.HandleFunc("GET /{id}", func(w http.ResponseWriter, r *http.Request) {
-		var record gatewaymodel.Gateway
-		err, status := client.Rester("gateways/"+r.PathValue("id"), "GET", &record, r)
+		var record gatewaymonitormodel.GatewayMonitor
+		err, status := client.Rester("gatewaymonitor/"+r.PathValue("id"), "GET", &record, r)
+		if err != nil {
+			fmt.Println(err)
+			utils.RenderErrorPage(w, status, err.Error())
+			return
+		}
+		ifs := []pfifacemodel.Pfiface{}
+		err, status = client.Rester("pfiface", "GET", &ifs, r)
 		if err != nil {
 			fmt.Println(err)
 			utils.RenderErrorPage(w, status, err.Error())
@@ -57,9 +66,9 @@ func New() *http.ServeMux {
 		pwd, _ := os.Getwd()
 		files := []string{
 			pwd + "/layouts/newbase.html",
-			pwd + "/modules/gateways/templates/gateway.html",
+			pwd + "/modules/gatewaymonitor/templates/gatewaymonitor.html",
 		}
-		formdata := formData{&record, pfconfigs}
+		formdata := formData{&record, ifs, pfconfigs}
 		tmpl := template.Must(template.ParseFiles(files...))
 		err = tmpl.ExecuteTemplate(w, "htmx", formdata)
 		if err != nil {
@@ -69,8 +78,15 @@ func New() *http.ServeMux {
 
 	Router.HandleFunc("GET /create", func(w http.ResponseWriter, r *http.Request) {
 		pwd, _ := os.Getwd()
+		ifs := []pfifacemodel.Pfiface{}
+		err, status := client.Rester("pfiface", "GET", &ifs, r)
+		if err != nil {
+			fmt.Println(err)
+			utils.RenderErrorPage(w, status, err.Error())
+			return
+		}
 		pfconfigs := []pfconfigmodel.Pfconfig{}
-		err, status := client.Rester("pfconfig", "GET", &pfconfigs, r)
+		err, status = client.Rester("pfconfig", "GET", &pfconfigs, r)
 		if err != nil {
 			fmt.Println(err)
 			utils.RenderErrorPage(w, status, err.Error())
@@ -78,9 +94,9 @@ func New() *http.ServeMux {
 		}
 		files := []string{
 			pwd + "/layouts/newbase.html",
-			pwd + "/modules/gateways/templates/gatewaynew.html",
+			pwd + "/modules/gatewaymonitor/templates/gatewaymonitornew.html",
 		}
-		formdata := formData{nil, pfconfigs}
+		formdata := formData{nil, ifs, pfconfigs}
 		tmpl := template.Must(template.ParseFiles(files...))
 		err = tmpl.ExecuteTemplate(w, "htmx", formdata)
 		if err != nil {
@@ -89,7 +105,7 @@ func New() *http.ServeMux {
 	})
 
 	Router.HandleFunc("POST /addorupdate", func(w http.ResponseWriter, r *http.Request) {
-		s := &gatewaymodel.Gateway{}
+		s := &gatewaymonitormodel.GatewayMonitor{}
 		if err := render.Bind(r, s); err != nil {
 			utils.RenderErrorPage(w, http.StatusBadRequest, err.Error())
 			return
@@ -97,32 +113,32 @@ func New() *http.ServeMux {
 		id := s.ID
 		if id > 0 {
 			s.ID = uint(id)
-			err, status := client.Rester("gateways/"+strconv.FormatUint(uint64(id), 10), "PUT", s, r)
+			err, status := client.Rester("gatewaymonitor/"+strconv.FormatUint(uint64(id), 10), "PUT", s, r)
 			if err != nil {
 				log.Println(err)
 				utils.RenderErrorPage(w, status, err.Error())
 				return
 			}
-			http.Redirect(w, r, "/ui/gateways", http.StatusSeeOther)
+			http.Redirect(w, r, "/ui/gatewaymonitor", http.StatusSeeOther)
 			return
 		}
-		err, status := client.Rester("gateways/create", "POST", s, r)
+		err, status := client.Rester("gatewaymonitor/create", "POST", s, r)
 		if err != nil {
 			fmt.Println(err)
 			utils.RenderErrorPage(w, status, err.Error())
 			return
 		}
-		http.Redirect(w, r, "/ui/gateways", http.StatusSeeOther)
+		http.Redirect(w, r, "/ui/gatewaymonitor", http.StatusSeeOther)
 	})
 
 	Router.HandleFunc("GET /delete/{id}", func(w http.ResponseWriter, r *http.Request) {
-		err, status := client.Rester("gateways/"+r.PathValue("id"), "DELETE", nil, r)
+		err, status := client.Rester("gatewaymonitor/"+r.PathValue("id"), "DELETE", nil, r)
 		if err != nil {
 			fmt.Println(err)
 			utils.RenderErrorPage(w, status, err.Error())
 			return
 		}
-		http.Redirect(w, r, "/ui/gateways", http.StatusSeeOther)
+		http.Redirect(w, r, "/ui/gatewaymonitor", http.StatusSeeOther)
 	})
 
 	return Router

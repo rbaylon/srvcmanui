@@ -1,10 +1,10 @@
-{{define "title"}}Gateways{{end}}
+{{define "title"}}Gateway Monitor{{end}}
 {{define "head_script"}}{{end}}
 {{define "content"}}
 <div class="card shadow-sm my-3">
   <div class="card-header d-flex align-items-center justify-content-between">
-    <h5 class="mb-0">Gateways</h5>
-    <a href="/ui/gateways/create" class="btn btn-success btn-sm"><span data-feather="plus"></span> New</a>
+    <h5 class="mb-0">Gateway Monitor</h5>
+    <a href="/ui/gatewaymonitor/create" class="btn btn-success btn-sm"><span data-feather="plus"></span> New</a>
   </div>
   <div class="card-body p-0">
     <div class="table-responsive">
@@ -15,7 +15,6 @@
             <th scope="col">Name</th>
             <th scope="col">IP</th>
             <th scope="col">Monitor IP</th>
-            <th scope="col">Default</th>
             <th scope="col">Router</th>
             <th scope="col" class="text-end">Action</th>
           </tr>
@@ -27,11 +26,10 @@
             <td>{{ .Name }}</td>
             <td>{{ .Ip }}</td>
             <td>{{ .MonitorIp }}</td>
-            <td>{{ .Default }}</td>
             <td>{{ .PfconfigID }}</td>
             <td class="text-end">
               <a href="{{.ID}}" class="btn btn-sm btn-outline-secondary" title="Edit"><span data-feather="edit"></span></a>
-              <a href="#" onclick="confirmDelete('/ui/gateways/delete/{{.ID}}')" class="btn btn-sm btn-outline-danger" title="Delete"><span data-feather="x-square"></span></a>
+              <a href="#" onclick="confirmDelete('/ui/gatewaymonitor/delete/{{.ID}}')" class="btn btn-sm btn-outline-danger" title="Delete"><span data-feather="x-square"></span></a>
             </td>
           </tr>
           {{ end }}
