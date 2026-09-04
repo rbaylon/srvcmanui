@@ -36,6 +36,28 @@ func New() *http.ServeMux {
 		tmpl.ExecuteTemplate(w, "htmx", records)
 	})
 
+	Router.HandleFunc("GET /conf", func(w http.ResponseWriter, r *http.Request) {
+		var data struct {
+			Conf string `json:"conf"`
+		}
+		err, status := client.Rester("dhcpserver/conf", "GET", &data, r)
+		if err != nil {
+			fmt.Println(err)
+			utils.RenderErrorPage(w, status, err.Error())
+			return
+		}
+		pwd, _ := os.Getwd()
+		files := []string{
+			pwd + "/layouts/newbase.html",
+			pwd + "/modules/dhcpserver/templates/dhcpserverconf.html",
+		}
+		tmpl := template.Must(template.ParseFiles(files...))
+		err = tmpl.ExecuteTemplate(w, "htmx", data.Conf)
+		if err != nil {
+			log.Println(err)
+		}
+	})
+
 	type formData struct {
 		Record    *dhcpservermodel.DhcpServer
 		Pfifaces  []pfifacemodel.Pfiface
