@@ -9,6 +9,7 @@ import (
 	accessvalidator "github.com/rbaylon/srvcmanui/middlewares/access/validator"
 	collectionrouter "github.com/rbaylon/srvcmanui/modules/colls/routes"
 	dashrouter "github.com/rbaylon/srvcmanui/modules/dashboard/routes"
+	dhcpserverrouter "github.com/rbaylon/srvcmanui/modules/dhcpserver/routes"
 	fwrouter "github.com/rbaylon/srvcmanui/modules/firewall/routes"
 	gatewaymonitorrouter "github.com/rbaylon/srvcmanui/modules/gatewaymonitor/routes"
 	grouprouter "github.com/rbaylon/srvcmanui/modules/groups/routes"
@@ -28,6 +29,7 @@ func main() {
 	subsrouter := subrouter.New()
 	usersrouter := userrouter.New()
 	collsrouter := collectionrouter.New()
+	dhcpserversrouter := dhcpserverrouter.New()
 	vouchersrouter := voucherrouter.New()
 	plansrouter := planrouter.New()
 	fwsrouter := fwrouter.New()
@@ -46,6 +48,7 @@ func main() {
 	mainrouter.Handle("/ui/subs/", http.StripPrefix("/ui/subs", subsrouter))
 	mainrouter.Handle("/ui/users/", http.StripPrefix("/ui/users", usersrouter))
 	mainrouter.Handle("/ui/collections/", http.StripPrefix("/ui/collections", collsrouter))
+	mainrouter.Handle("/ui/dhcpserver/", http.StripPrefix("/ui/dhcpserver", dhcpserversrouter))
 	mainrouter.Handle("/ui/vouchers/", http.StripPrefix("/ui/vouchers", vouchersrouter))
 	mainrouter.Handle("/ui/plans/", http.StripPrefix("/ui/plans", plansrouter))
 	mainrouter.Handle("/ui/firewall/", http.StripPrefix("/ui/firewall", fwsrouter))

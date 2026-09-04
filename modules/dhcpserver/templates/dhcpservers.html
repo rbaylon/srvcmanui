@@ -1,0 +1,51 @@
+{{define "title"}}DHCP Server{{end}}
+{{define "head_script"}}{{end}}
+{{define "content"}}
+<div class="card shadow-sm my-3">
+  <div class="card-header d-flex align-items-center justify-content-between">
+    <h5 class="mb-0">DHCP Server</h5>
+    <a href="/ui/dhcpserver/create" class="btn btn-success btn-sm"><span data-feather="plus"></span> New</a>
+  </div>
+  <div class="card-body p-0">
+    <div class="table-responsive">
+      <table class="table table-striped table-hover table-sm align-middle mb-0" id="records">
+        <thead>
+          <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Name</th>
+            <th scope="col">Interface</th>
+            <th scope="col">Subnet</th>
+            <th scope="col">Netmask</th>
+            <th scope="col">Range</th>
+            <th scope="col">Routers</th>
+            <th scope="col">DNS Servers</th>
+            <th scope="col">Router</th>
+            <th scope="col" class="text-end">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{ range .}}
+          <tr>
+            <td>{{ .ID }}</td>
+            <td>{{ .Name }}</td>
+            <td>{{ .Interface }}</td>
+            <td>{{ .Subnet }}</td>
+            <td>{{ .Netmask }}</td>
+            <td>{{ .RangeStart }} - {{ .RangeEnd }}</td>
+            <td>{{ .Routers }}</td>
+            <td>{{ .DomainNameServers }}</td>
+            <td>{{ .PfconfigID }}</td>
+            <td class="text-end">
+              <a href="{{.ID}}" class="btn btn-sm btn-outline-secondary" title="Edit"><span data-feather="edit"></span></a>
+              <a href="#" onclick="confirmDelete('/ui/dhcpserver/delete/{{.ID}}')" class="btn btn-sm btn-outline-danger" title="Delete"><span data-feather="x-square"></span></a>
+            </td>
+          </tr>
+          {{ end }}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<script src="/ui/static/local/listutils.js"></script>
+{{end}}
+{{define "tail_script"}}{{end}}

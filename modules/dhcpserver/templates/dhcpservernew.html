@@ -1,0 +1,101 @@
+{{define "title"}}DHCP Server Form{{end}}
+{{define "head_script"}}{{end}}
+{{define "content"}}
+ <div class="row justify-content-center">
+  <div class="col-12 col-xl-8">
+   <div class="card shadow-sm my-4">
+    <div class="card-body p-4">
+     <form method="POST" action="/ui/dhcpserver/addorupdate">
+   <div class="mb-3">
+     <label class="form-label" for="basic-form-name">Name</label>
+     <input class="form-control" id="basic-form-name" type="text" placeholder="" name="Name" pattern="[A-Za-z0-9]*" maxlength="100"/>
+     <div class="form-text">Letters and numbers only, no spaces, up to 100 characters.</div>
+   </div>
+   <div class="mb-3">
+     <label class="form-label" for="basic-form-interface">Interface</label>
+     <select class="form-select" id="basic-form-interface" aria-label="Select Interface" name="Interface"/>
+     {{ range .Pfifaces }}
+       {{ if eq .Type "internal" }}
+         <option value="{{ .Device }}">{{ .Device }} ({{ .Name }})</option>
+       {{ end }}
+     {{ end }}
+     </select>
+     <div class="form-text">The internal (LAN-side) interface dhcpd will listen on.</div>
+   </div>
+   <div class="mb-3">
+     <label class="form-label" for="basic-form-subnet">Subnet</label>
+     <input class="form-control" id="basic-form-subnet" type="text" placeholder="192.168.1.0" name="Subnet" pattern="(\d{1,3}\.){3}\d{1,3}|[0-9a-fA-F:]+"/>
+     <div class="form-text">The subnet's network address, e.g. 192.168.1.0.</div>
+   </div>
+   <div class="mb-3">
+     <label class="form-label" for="basic-form-netmask">Netmask</label>
+     <input class="form-control" id="basic-form-netmask" type="text" placeholder="255.255.255.0" name="Netmask" pattern="(\d{1,3}\.){3}\d{1,3}|[0-9a-fA-F:]+"/>
+     <div class="form-text">A valid IPv4 netmask, e.g. 255.255.255.0.</div>
+   </div>
+   <div class="mb-3">
+     <label class="form-label" for="basic-form-rangestart">Range Start</label>
+     <input class="form-control" id="basic-form-rangestart" type="text" placeholder="192.168.1.100" name="RangeStart" pattern="(\d{1,3}\.){3}\d{1,3}|[0-9a-fA-F:]+"/>
+   </div>
+   <div class="mb-3">
+     <label class="form-label" for="basic-form-rangeend">Range End</label>
+     <input class="form-control" id="basic-form-rangeend" type="text" placeholder="192.168.1.200" name="RangeEnd" pattern="(\d{1,3}\.){3}\d{1,3}|[0-9a-fA-F:]+"/>
+   </div>
+   <div class="mb-3">
+     <label class="form-label" for="basic-form-routers">Routers</label>
+     <input class="form-control" id="basic-form-routers" type="text" placeholder="192.168.1.1" name="Routers"/>
+     <div class="form-text">One or more IP addresses, comma and/or space separated.</div>
+   </div>
+   <div class="mb-3">
+     <label class="form-label" for="basic-form-domainname">Domain Name</label>
+     <input class="form-control" id="basic-form-domainname" type="text" placeholder="example.com" name="DomainName" pattern="[A-Za-z0-9./:_,\* -]*" maxlength="100"/>
+   </div>
+   <div class="mb-3">
+     <label class="form-label" for="basic-form-dns">Domain Name Servers</label>
+     <input class="form-control" id="basic-form-dns" type="text" placeholder="8.8.8.8, 8.8.4.4" name="DomainNameServers"/>
+     <div class="form-text">One or more IP addresses, comma and/or space separated.</div>
+   </div>
+   <div class="mb-3">
+     <label class="form-label" for="basic-form-broadcast">Broadcast Address</label>
+     <input class="form-control" id="basic-form-broadcast" type="text" placeholder="192.168.1.255" name="BroadcastAddress" pattern="(\d{1,3}\.){3}\d{1,3}|[0-9a-fA-F:]+"/>
+   </div>
+   <div class="mb-3">
+     <label class="form-label" for="basic-form-ntp">NTP Servers</label>
+     <input class="form-control" id="basic-form-ntp" type="text" placeholder="" name="NtpServers"/>
+     <div class="form-text">One or more IP addresses, comma and/or space separated. Leave blank if none.</div>
+   </div>
+   <div class="mb-3">
+     <label class="form-label" for="basic-form-deflease">Default Lease Time (seconds)</label>
+     <input class="form-control" id="basic-form-deflease" type="number" placeholder="43200" name="DefaultLeaseTime"/>
+   </div>
+   <div class="mb-3">
+     <label class="form-label" for="basic-form-maxlease">Max Lease Time (seconds)</label>
+     <input class="form-control" id="basic-form-maxlease" type="number" placeholder="86400" name="MaxLeaseTime"/>
+   </div>
+   <div class="mb-3">
+     <label class="form-label" for="basic-form-nextserver">Next Server (PXE)</label>
+     <input class="form-control" id="basic-form-nextserver" type="text" placeholder="" name="NextServer" pattern="(\d{1,3}\.){3}\d{1,3}|[0-9a-fA-F:]+"/>
+     <div class="form-text">Optional. The TFTP server IP for PXE network boot.</div>
+   </div>
+   <div class="mb-3">
+     <label class="form-label" for="basic-form-filename">Filename (PXE)</label>
+     <input class="form-control" id="basic-form-filename" type="text" placeholder="boot/pxeboot" name="Filename" pattern="[A-Za-z0-9./:_,\* -]*" maxlength="100"/>
+     <div class="form-text">Optional. The boot file path for PXE network boot.</div>
+   </div>
+   <div class="mb-3">
+     <label class="form-label" for="basic-form-pfconfig">Router</label>
+     <select class="form-select" id="basic-form-pfconfig" aria-label="Select Router" name="PfconfigID"/>
+     {{ range .Pfconfigs }}
+       <option value="{{ .ID }}">{{ .Router }}</option>
+     {{ end }}
+     </select>
+   </div>
+     <div class="d-grid d-sm-flex justify-content-sm-end mt-4">
+       <button class="btn btn-primary" type="submit">Submit</button>
+     </div>
+    </form>
+   </div>
+  </div>
+ </div>
+</div>
+{{end}}
+{{define "tail_script"}}{{end}}
