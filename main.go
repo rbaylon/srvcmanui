@@ -10,6 +10,7 @@ import (
 	collectionrouter "github.com/rbaylon/srvcmanui/modules/colls/routes"
 	dashrouter "github.com/rbaylon/srvcmanui/modules/dashboard/routes"
 	fwrouter "github.com/rbaylon/srvcmanui/modules/firewall/routes"
+	gatewayrouter "github.com/rbaylon/srvcmanui/modules/gateways/routes"
 	grouprouter "github.com/rbaylon/srvcmanui/modules/groups/routes"
 	instancerouter "github.com/rbaylon/srvcmanui/modules/instances/routes"
 	pfifacerouter "github.com/rbaylon/srvcmanui/modules/pfifaces/routes"
@@ -30,6 +31,7 @@ func main() {
 	vouchersrouter := voucherrouter.New()
 	plansrouter := planrouter.New()
 	fwsrouter := fwrouter.New()
+	gatewaysrouter := gatewayrouter.New()
 	dashrouter := dashrouter.New()
 	pppoerouter := pppoerouter.New()
 	instacerouter := instancerouter.New()
@@ -47,6 +49,7 @@ func main() {
 	mainrouter.Handle("/ui/vouchers/", http.StripPrefix("/ui/vouchers", vouchersrouter))
 	mainrouter.Handle("/ui/plans/", http.StripPrefix("/ui/plans", plansrouter))
 	mainrouter.Handle("/ui/firewall/", http.StripPrefix("/ui/firewall", fwsrouter))
+	mainrouter.Handle("/ui/gateways/", http.StripPrefix("/ui/gateways", gatewaysrouter))
 	mainrouter.Handle("/ui/dashboard/", http.StripPrefix("/ui/dashboard", dashrouter))
 	mainrouter.Handle("/ui/pppoes/", http.StripPrefix("/ui/pppoes", pppoerouter))
 	mainrouter.Handle("/ui/instances/", http.StripPrefix("/ui/instances", instacerouter))
