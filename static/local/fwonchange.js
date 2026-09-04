@@ -76,3 +76,37 @@ document.getElementById('basic-form-interface').addEventListener('change', funct
   const selectedCategory = this.value;
   disableFields(encodeURIComponent(selectedCategory));
 });
+
+// Toggle the Protocol select vs. its "Other" free-text fallback. Both
+// controls share name="Proto", so whichever one isn't the active source is
+// stripped of its name (and, for the text input, disabled) - otherwise both
+// would submit a "Proto" value. The select itself stays enabled even while
+// "Other" is active so the user can switch back to a known protocol.
+(function() {
+  const select = document.getElementById('basic-form-protocol');
+  const other = document.getElementById('basic-form-protocol-other');
+  if (!select || !other) return;
+
+  function sync() {
+    const isOther = select.value === 'other';
+    other.disabled = !isOther;
+    other.style.display = isOther ? 'block' : 'none';
+    if (isOther) {
+      select.removeAttribute('name');
+    } else {
+      select.setAttribute('name', 'Proto');
+    }
+  }
+
+  const isKnown = Array.from(select.options).some(function(opt) {
+    return opt.value !== 'other' && opt.value === other.value;
+  });
+  if (other.value && isKnown) {
+    select.value = other.value;
+    other.value = '';
+  } else if (other.value) {
+    select.value = 'other';
+  }
+  sync();
+  select.addEventListener('change', sync);
+})();

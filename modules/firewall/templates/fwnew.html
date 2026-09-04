@@ -69,28 +69,43 @@
    </div>
    <div class="mb-3">
      <label class="form-label" for="basic-form-protocol">Protocol</label>
-     <input class="form-control" id="basic-form-protocol" type="text" placeholder="tcp" name="Proto" pattern="[A-Za-z0-9./:_,* -]*" maxlength="100"/>
-     <div class="form-text">Letters, numbers, and . / : _ , * - and spaces, up to 100 characters. No quotes or semicolons.</div>
+     <select class="form-select" id="basic-form-protocol" aria-label="Select Protocol" name="Proto">
+       <option value="tcp">TCP</option>
+       <option value="udp">UDP</option>
+       <option value="icmp">ICMP</option>
+       <option value="icmp6">ICMP6</option>
+       <option value="esp">ESP</option>
+       <option value="ah">AH</option>
+       <option value="gre">GRE</option>
+       <option value="ospf">OSPF</option>
+       <option value="sctp">SCTP</option>
+       <option value="igmp">IGMP</option>
+       <option value="pim">PIM</option>
+       <option value="carp">CARP</option>
+       <option value="other">Other</option>
+     </select>
+     <input class="form-control mt-2" id="basic-form-protocol-other" type="text" placeholder="custom protocol" name="Proto" pattern="[A-Za-z0-9]*" maxlength="100" style="display:none" disabled/>
+     <div class="form-text">Select a known protocol, or choose "Other" to enter a custom one (letters and numbers only, up to 100 characters).</div>
    </div>
    <div class="mb-3">
      <label class="form-label" for="basic-form-source">Source</label>
-     <input class="form-control" id="basic-form-source" type="text" placeholder="any or ip or network block or alias " name="Source" pattern="[A-Za-z0-9./:_,* -]*" maxlength="100">
-     <div class="form-text">Letters, numbers, and . / : _ , * - and spaces, up to 100 characters. No quotes or semicolons.</div>
+     <input class="form-control" id="basic-form-source" type="text" placeholder="any or ip or network block or alias " name="Source" pattern="[A-Za-z0-9./:_,*()&lt;&gt; -]*" maxlength="100">
+     <div class="form-text">Letters, numbers, and . / : _ , * ( ) &lt; &gt; - and spaces, up to 100 characters. &lt;table&gt; references are supported. No quotes or semicolons.</div>
    </div>
    <div class="mb-3">
      <label class="form-label" for="basic-form-srcport">Source Port</label>
-     <input class="form-control" id="basic-form-srcport" type="text" placeholder="any or port number" name="SrcPort" pattern="[A-Za-z0-9./:_,* -]*" maxlength="100"/>
-     <div class="form-text">Letters, numbers, and . / : _ , * - and spaces, up to 100 characters. No quotes or semicolons.</div>
+     <input class="form-control" id="basic-form-srcport" type="text" placeholder="any or port number" name="SrcPort" pattern="[A-Za-z0-9./:_,*!=&lt;&gt; -]*" maxlength="100"/>
+     <div class="form-text">Digits, letters, and . / : _ , * ! = &lt; &gt; - and spaces, up to 100 characters. Supports pf port operators: =, !=, &lt;, &lt;=, &gt;, &gt;=, : (range), &gt;&lt; (exclusive range), &lt;&gt; (except range) - e.g. "2000:2004" or "2000 &gt;&lt; 2004". No quotes or semicolons.</div>
    </div>
    <div class="mb-3">
      <label class="form-label" for="basic-form-destination">Destination</label>
-     <input class="form-control" id="basic-form-destination" type="text" placeholder="any or ip or network block or alias" name="Destination" pattern="[A-Za-z0-9./:_,* -]*" maxlength="100">
-     <div class="form-text">Letters, numbers, and . / : _ , * - and spaces, up to 100 characters. No quotes or semicolons.</div>
+     <input class="form-control" id="basic-form-destination" type="text" placeholder="any or ip or network block or alias" name="Destination" pattern="[A-Za-z0-9./:_,*()&lt;&gt; -]*" maxlength="100">
+     <div class="form-text">Letters, numbers, and . / : _ , * ( ) &lt; &gt; - and spaces, up to 100 characters. &lt;table&gt; references are supported. No quotes or semicolons.</div>
    </div>
    <div class="mb-3">
      <label class="form-label" for="basic-form-dstport">Destination Port</label>
-     <input class="form-control" id="basic-form-dstport" type="text" placeholder="any or port number" name="DstPort" pattern="[A-Za-z0-9./:_,* -]*" maxlength="100"/>
-     <div class="form-text">Letters, numbers, and . / : _ , * - and spaces, up to 100 characters. No quotes or semicolons.</div>
+     <input class="form-control" id="basic-form-dstport" type="text" placeholder="any or port number" name="DstPort" pattern="[A-Za-z0-9./:_,*!=&lt;&gt; -]*" maxlength="100"/>
+     <div class="form-text">Digits, letters, and . / : _ , * ! = &lt; &gt; - and spaces, up to 100 characters. Supports pf port operators: =, !=, &lt;, &lt;=, &gt;, &gt;=, : (range), &gt;&lt; (exclusive range), &lt;&gt; (except range) - e.g. "2000:2004" or "2000 &gt;&lt; 2004". No quotes or semicolons.</div>
    </div>
    <br>
    <hr>
