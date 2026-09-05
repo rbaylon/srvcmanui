@@ -211,7 +211,7 @@ window.addEventListener('DOMContentLoaded', fetchChartData);
 const trafficCharts = {};
 const trafficHistory = {};
 const TRAFFIC_MAX_POINTS = 30;
-const TRAFFIC_POLL_MS = 2000;
+const TRAFFIC_POLL_MS = 5000;
 
 function initTrafficCharts() {
     document.querySelectorAll('.traffic-chart').forEach(canvas => {
@@ -311,7 +311,7 @@ window.addEventListener('DOMContentLoaded', function () {
     setInterval(pollTraffic, TRAFFIC_POLL_MS);
 });
 
-const GATEWAY_STATUS_POLL_MS = 5000;
+const GATEWAY_STATUS_POLL_MS = 10000;
 const GATEWAY_STATUS_BADGE = {
     up: 'bg-success',
     down: 'bg-danger',
