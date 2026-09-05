@@ -9,6 +9,7 @@ import (
 	"net/url"
 	"os"
 	"strconv"
+	"time"
 
 	"github.com/gorilla/sessions"
 	"github.com/rbaylon/srvcman/database"
@@ -34,16 +35,17 @@ func login() http.HandlerFunc {
 		token, err := client.GetToken(username, password)
 		if err == nil {
 			me := usermodel.User{}
-			err, _ := client.Rester("users/username/"+username, "GET", &me, r)
-			if err != nil {
-				fmt.Println("Failed to get user details:", err)
-			}
 			session, _ := store.Get(r, database.GetEnvVariable("APP_NAME"))
 			session.Values["authenticated"] = true
 			session.Values["whoami"] = username
 			session.Values["jwt"] = *token
-			session.Values["id"] = strconv.FormatUint(uint64(me.ID), 10)
 			session.Save(r, w)
+			time.Sleep(1 * time.Second)
+			err, _ := client.Rester("users/username/"+username, "GET", &me, r)
+			if err != nil {
+				fmt.Println("Failed to get user details:", err)
+			}
+			session.Values["id"] = strconv.FormatUint(uint64(me.ID), 10)
 			prevurl := r.PostFormValue("prevurl")
 			if prevurl == "" {
 				prevurl = "/ui/dashboard"
