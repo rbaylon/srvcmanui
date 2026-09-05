@@ -207,7 +207,7 @@ func New() *http.ServeMux {
 			utils.RenderErrorPage(w, status, err.Error())
 			return
 		}
-		formdata := userdata{record, nil}
+		formdata := userdata{record, record.Groups}
 		pwd, _ := os.Getwd()
 		files := []string{
 			pwd + "/layouts/newbase.html",
