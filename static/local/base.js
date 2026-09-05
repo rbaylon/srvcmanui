@@ -43,16 +43,21 @@ document.addEventListener('DOMContentLoaded', function () {
     return;
   }
   fetch('/ui/users/whoami')
-    .then(response => response.ok ? response.json() : Promise.reject(response.status))
+    .then(response => response.ok ? response.json() : Promise.reject('HTTP ' + response.status))
     .then(data => {
       if (nameEl) {
         nameEl.textContent = data.username || '';
       }
-      if (profileLink && data.ID) {
-        profileLink.href = '/ui/users/' + data.ID;
+      const userId = data.ID ?? data.id;
+      if (profileLink) {
+        if (userId) {
+          profileLink.href = '/ui/users/' + userId;
+        } else {
+          console.warn('/ui/users/whoami response had no ID/id field:', data);
+        }
       }
     })
-    .catch(error => console.error('Error fetching current user:', error));
+    .catch(error => console.error('Error fetching current user from /ui/users/whoami:', error));
 });
 
 document.addEventListener('DOMContentLoaded', function getPfconfig(id){
