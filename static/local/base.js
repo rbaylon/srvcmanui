@@ -36,6 +36,23 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 });
 
+document.addEventListener('DOMContentLoaded', function () {
+  const profileLink = document.getElementById('userMenuProfile');
+  if (!profileLink) {
+    return;
+  }
+  fetch('/ui/users/myid')
+    .then(response => response.ok ? response.json() : Promise.reject('HTTP ' + response.status))
+    .then(data => {
+      if (data.id) {
+        profileLink.href = '/ui/users/' + data.id;
+      } else {
+        console.warn('/ui/users/myid response had no id:', data);
+      }
+    })
+    .catch(error => console.error('Error fetching current user id from /ui/users/myid:', error));
+});
+
 document.addEventListener('DOMContentLoaded', function getPfconfig(id){
   fetch(`/ui/dashboard/changes`)
     .then(response => response.json())

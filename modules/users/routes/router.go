@@ -1,6 +1,7 @@
 package userrouter
 
 import (
+	"encoding/json"
 	"fmt"
 	"html/template"
 	"log"
@@ -32,10 +33,16 @@ func login() http.HandlerFunc {
 		}
 		token, err := client.GetToken(username, password)
 		if err == nil {
+			me := usermodel.User{}
+			err, _ := client.Rester("users/username/"+username, "GET", &me, r)
+			if err != nil {
+				fmt.Println("Failed to get user details:", err)
+			}
 			session, _ := store.Get(r, database.GetEnvVariable("APP_NAME"))
 			session.Values["authenticated"] = true
 			session.Values["whoami"] = username
 			session.Values["jwt"] = *token
+			session.Values["id"] = strconv.FormatUint(uint64(me.ID), 10)
 			session.Save(r, w)
 			prevurl := r.PostFormValue("prevurl")
 			if prevurl == "" {
@@ -78,6 +85,13 @@ func New() *http.ServeMux {
 		}
 		tmpl := template.Must(template.ParseFiles(files...))
 		tmpl.ExecuteTemplate(w, "htmx", records)
+	})
+
+	Router.HandleFunc("GET /myid", func(w http.ResponseWriter, r *http.Request) {
+		session, _ := store.Get(r, database.GetEnvVariable("APP_NAME"))
+		id, _ := session.Values["id"].(string)
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(map[string]string{"id": id})
 	})
 
 	Router.HandleFunc("GET /create", func(w http.ResponseWriter, r *http.Request) {
