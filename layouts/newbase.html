@@ -92,8 +92,16 @@
   <div id="changes" class="text-danger text-sm">
   </div>
   <div class="navbar-nav">
-    <div class="nav-item text-nowrap">
-      <a class="nav-link px-3" href="/ui/users/logout">Sign out</a>
+    <div class="nav-item text-nowrap dropdown">
+      <a class="nav-link px-3 dropdown-toggle d-flex align-items-center gap-1" href="#" id="userMenuToggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+        <span data-feather="user"></span>
+        <span id="userMenuName" class="d-none d-sm-inline"></span>
+      </a>
+      <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userMenuToggle">
+        <li><a class="dropdown-item" id="userMenuProfile" href="#">Profile</a></li>
+        <li><hr class="dropdown-divider"></li>
+        <li><a class="dropdown-item" href="/ui/users/logout">Sign out</a></li>
+      </ul>
     </div>
   </div>
 </header>

@@ -1,6 +1,7 @@
 package userrouter
 
 import (
+	"encoding/json"
 	"fmt"
 	"html/template"
 	"log"
@@ -78,6 +79,24 @@ func New() *http.ServeMux {
 		}
 		tmpl := template.Must(template.ParseFiles(files...))
 		tmpl.ExecuteTemplate(w, "htmx", records)
+	})
+
+	Router.HandleFunc("GET /whoami", func(w http.ResponseWriter, r *http.Request) {
+		session, _ := store.Get(r, database.GetEnvVariable("APP_NAME"))
+		username, _ := session.Values["whoami"].(string)
+		if username == "" {
+			w.WriteHeader(http.StatusUnauthorized)
+			return
+		}
+		var record usermodel.User
+		err, status := client.Rester("users/username/"+username, "GET", &record, r)
+		if err != nil {
+			fmt.Println(err)
+			utils.RenderErrorPage(w, status, err.Error())
+			return
+		}
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(record)
 	})
 
 	Router.HandleFunc("GET /create", func(w http.ResponseWriter, r *http.Request) {

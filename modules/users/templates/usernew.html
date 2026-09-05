@@ -30,12 +30,25 @@
    </div>
    <div class="mb-3">
      <label class="form-label" for="basic-form-password">Password</label>
-     <input class="form-control" id="basic-form-password" type="password" placeholder="" name="Password" required minlength="8" maxlength="100"/>
+     <div class="input-group">
+       <input class="form-control" id="basic-form-password" type="password" placeholder="" name="Password" required minlength="8" maxlength="100"/>
+       <button class="btn btn-outline-secondary" type="button" data-toggle-password="basic-form-password" title="Show password">
+         <span data-feather="eye" class="icon-show"></span>
+         <span data-feather="eye-off" class="icon-hide d-none"></span>
+       </button>
+     </div>
      <div class="form-text">Required. At least 8 characters, up to 100. Any characters allowed.</div>
    </div>
    <div class="mb-3">
-     <label class="form-label" for="basic-form-password">Repeat Password</label>
-     <input class="form-control" id="basic-form-password" type="password" placeholder="" required minlength="8" maxlength="100"/>
+     <label class="form-label" for="basic-form-password2">Repeat Password</label>
+     <div class="input-group">
+       <input class="form-control" id="basic-form-password2" type="password" placeholder="" required minlength="8" maxlength="100"/>
+       <button class="btn btn-outline-secondary" type="button" data-toggle-password="basic-form-password2" title="Show password">
+         <span data-feather="eye" class="icon-show"></span>
+         <span data-feather="eye-off" class="icon-hide d-none"></span>
+       </button>
+     </div>
+     <div class="form-text" id="basic-form-password2-feedback"></div>
    </div>
      <div class="d-grid d-sm-flex justify-content-sm-end mt-4">
        <button class="btn btn-primary" type="submit">Submit</button>
@@ -46,4 +59,50 @@
  </div>
 </div>
 {{end}}
-{{define "tail_script"}}{{end}}
+{{define "tail_script"}}
+<script>
+document.querySelectorAll('[data-toggle-password]').forEach(function (btn) {
+  btn.addEventListener('click', function () {
+    var input = document.getElementById(btn.getAttribute('data-toggle-password'));
+    if (!input) return;
+    var showIcon = btn.querySelector('.icon-show');
+    var hideIcon = btn.querySelector('.icon-hide');
+    if (input.type === 'password') {
+      input.type = 'text';
+      if (showIcon) showIcon.classList.add('d-none');
+      if (hideIcon) hideIcon.classList.remove('d-none');
+      btn.setAttribute('title', 'Hide password');
+    } else {
+      input.type = 'password';
+      if (showIcon) showIcon.classList.remove('d-none');
+      if (hideIcon) hideIcon.classList.add('d-none');
+      btn.setAttribute('title', 'Show password');
+    }
+  });
+});
+
+(function () {
+  var pw = document.getElementById('basic-form-password');
+  var pw2 = document.getElementById('basic-form-password2');
+  var feedback = document.getElementById('basic-form-password2-feedback');
+  if (!pw || !pw2) return;
+  function validateMatch() {
+    if (pw2.value !== pw.value) {
+      pw2.setCustomValidity('Passwords do not match.');
+      if (feedback) {
+        feedback.textContent = pw2.value ? 'Passwords do not match.' : '';
+        feedback.classList.toggle('text-danger', !!pw2.value);
+      }
+    } else {
+      pw2.setCustomValidity('');
+      if (feedback) {
+        feedback.textContent = '';
+        feedback.classList.remove('text-danger');
+      }
+    }
+  }
+  pw.addEventListener('input', validateMatch);
+  pw2.addEventListener('input', validateMatch);
+})();
+</script>
+{{end}}

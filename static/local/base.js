@@ -36,6 +36,25 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 });
 
+document.addEventListener('DOMContentLoaded', function () {
+  const nameEl = document.getElementById('userMenuName');
+  const profileLink = document.getElementById('userMenuProfile');
+  if (!nameEl && !profileLink) {
+    return;
+  }
+  fetch('/ui/users/whoami')
+    .then(response => response.ok ? response.json() : Promise.reject(response.status))
+    .then(data => {
+      if (nameEl) {
+        nameEl.textContent = data.username || '';
+      }
+      if (profileLink && data.ID) {
+        profileLink.href = '/ui/users/' + data.ID;
+      }
+    })
+    .catch(error => console.error('Error fetching current user:', error));
+});
+
 document.addEventListener('DOMContentLoaded', function getPfconfig(id){
   fetch(`/ui/dashboard/changes`)
     .then(response => response.json())
