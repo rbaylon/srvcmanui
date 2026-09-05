@@ -36,30 +36,6 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 });
 
-document.addEventListener('DOMContentLoaded', function () {
-  const nameEl = document.getElementById('userMenuName');
-  const profileLink = document.getElementById('userMenuProfile');
-  if (!nameEl && !profileLink) {
-    return;
-  }
-  fetch('/ui/users/whoami')
-    .then(response => response.ok ? response.json() : Promise.reject('HTTP ' + response.status))
-    .then(data => {
-      if (nameEl) {
-        nameEl.textContent = data.username || '';
-      }
-      const userId = data.ID ?? data.id;
-      if (profileLink) {
-        if (userId) {
-          profileLink.href = '/ui/users/' + userId;
-        } else {
-          console.warn('/ui/users/whoami response had no ID/id field:', data);
-        }
-      }
-    })
-    .catch(error => console.error('Error fetching current user from /ui/users/whoami:', error));
-});
-
 document.addEventListener('DOMContentLoaded', function getPfconfig(id){
   fetch(`/ui/dashboard/changes`)
     .then(response => response.json())
