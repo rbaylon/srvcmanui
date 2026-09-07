@@ -1,0 +1,895 @@
+<title>Arkgate Handbook</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@400;500;600;700&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  :root {
+    --bg: #eef2f0;
+    --surface: #ffffff;
+    --surface-2: #e3e9e6;
+    --ink: #101a1c;
+    --muted: #55686b;
+    --line: #d5ddd8;
+    --accent: #b5501c;
+    --accent-ink: #7a3712;
+    --accent-soft: #f4e3d5;
+    --up: #2f7d4f;
+    --up-soft: #e3f0e7;
+    --down: #b23b3b;
+    --down-soft: #f6e6e5;
+    --warn: #a8781a;
+    --warn-soft: #f5ecd8;
+    --code-bg: #101a1c;
+    --code-ink: #e9efec;
+    --shadow: 0 1px 2px rgba(16,26,28,.05), 0 10px 28px rgba(16,26,28,.07);
+    --font-display: 'Zilla Slab', Georgia, 'Times New Roman', serif;
+    --font-body: 'Public Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --font-mono: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #12191b;
+      --surface: #182224;
+      --surface-2: #1d292b;
+      --ink: #edf2f0;
+      --muted: #9db0b2;
+      --line: #2b3739;
+      --accent: #e08a4c;
+      --accent-ink: #ffd9b8;
+      --accent-soft: #35230f;
+      --up: #63c98a;
+      --up-soft: #17281d;
+      --down: #e2726b;
+      --down-soft: #2c1a19;
+      --warn: #e0b23f;
+      --warn-soft: #2c2412;
+      --code-bg: #0b1213;
+      --code-ink: #d8e6e2;
+      --shadow: 0 1px 2px rgba(0,0,0,.4), 0 10px 28px rgba(0,0,0,.35);
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #12191b;
+    --surface: #182224;
+    --surface-2: #1d292b;
+    --ink: #edf2f0;
+    --muted: #9db0b2;
+    --line: #2b3739;
+    --accent: #e08a4c;
+    --accent-ink: #ffd9b8;
+    --accent-soft: #35230f;
+    --up: #63c98a;
+    --up-soft: #17281d;
+    --down: #e2726b;
+    --down-soft: #2c1a19;
+    --warn: #e0b23f;
+    --warn-soft: #2c2412;
+    --code-bg: #0b1213;
+    --code-ink: #d8e6e2;
+    --shadow: 0 1px 2px rgba(0,0,0,.4), 0 10px 28px rgba(0,0,0,.35);
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.55;
+  }
+  h1, h2, h3, h4 { font-family: var(--font-display); text-wrap: balance; color: var(--ink); }
+  code, .mono { font-family: var(--font-mono); }
+  a { color: var(--accent-ink); }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  .shell { display: flex; align-items: flex-start; max-width: 1240px; margin: 0 auto; }
+
+  /* ---- Sidebar ---- */
+  .side {
+    width: 264px;
+    flex: 0 0 264px;
+    position: sticky;
+    top: 0;
+    max-height: 100vh;
+    overflow-y: auto;
+    padding: 28px 18px 40px 28px;
+    border-right: 1px solid var(--line);
+  }
+  .side-brand { display: flex; align-items: baseline; gap: .5rem; margin-bottom: .15rem; }
+  .side-brand .mark { font-family: var(--font-display); font-weight: 700; font-size: 1.35rem; letter-spacing: -.01em; }
+  .side-brand .ver { font-family: var(--font-mono); font-size: .7rem; color: var(--muted); }
+  .side-tag { font-size: .8rem; color: var(--muted); margin-bottom: 1.6rem; }
+  .side nav { display: flex; flex-direction: column; gap: 1.4rem; }
+  .side-group-label {
+    font-size: .68rem; font-weight: 600; text-transform: uppercase; letter-spacing: .08em;
+    color: var(--muted); margin-bottom: .5rem; display: flex; align-items: center; gap: .4rem;
+  }
+  .side ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: .1rem; }
+  .side a {
+    display: block; text-decoration: none; color: var(--ink); font-size: .875rem;
+    padding: .3rem .55rem; border-radius: 6px; border-left: 2px solid transparent;
+  }
+  .side a:hover { background: var(--surface-2); }
+  .side a.current { border-left-color: var(--accent); color: var(--accent-ink); background: var(--surface-2); font-weight: 600; }
+
+  /* ---- Content ---- */
+  .content { flex: 1 1 auto; min-width: 0; padding: 40px 56px 120px; }
+  .content-inner { max-width: 760px; }
+
+  .masthead h1 { font-size: 2.5rem; margin: .2rem 0 .6rem; }
+  .masthead .eyebrow {
+    font-family: var(--font-mono); font-size: .75rem; text-transform: uppercase; letter-spacing: .1em;
+    color: var(--accent-ink); margin-bottom: .3rem;
+  }
+  .masthead .lede { font-size: 1.1rem; color: var(--muted); max-width: 640px; }
+  .masthead { margin-bottom: 2.2rem; }
+
+  section.module { padding-top: 3.2rem; border-top: 1px solid var(--line); margin-top: 3.2rem; scroll-margin-top: 1.5rem; }
+  section.module:first-of-type { border-top: none; margin-top: 0; }
+  .module-eyebrow { font-family: var(--font-mono); font-size: .75rem; color: var(--muted); text-transform: uppercase; letter-spacing: .07em; margin-bottom: .3rem; }
+  .module h2 { font-size: 1.7rem; margin: 0 0 .5rem; }
+  .module .path { font-family: var(--font-mono); font-size: .78rem; color: var(--muted); background: var(--surface-2); padding: .1rem .45rem; border-radius: 5px; }
+  .module .intro { color: var(--muted); max-width: 640px; margin: .6rem 0 1.6rem; }
+
+  h3.sub { font-size: 1.05rem; margin: 1.8rem 0 .6rem; }
+
+  /* ---- Field table ---- */
+  table.fields { width: 100%; border-collapse: collapse; font-size: .9rem; margin-bottom: 1.2rem; }
+  table.fields caption { text-align: left; font-size: .8rem; color: var(--muted); margin-bottom: .4rem; }
+  table.fields th { text-align: left; font-size: .72rem; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); font-weight: 600; padding: .4rem .6rem; border-bottom: 1px solid var(--line); }
+  table.fields td { padding: .55rem .6rem; border-bottom: 1px solid var(--line); vertical-align: top; }
+  table.fields tr:last-child td { border-bottom: none; }
+  table.fields td.field-name { font-family: var(--font-mono); font-size: .84rem; white-space: nowrap; }
+  table.fields td.example { color: var(--muted); font-family: var(--font-mono); font-size: .82rem; }
+  .req { display: inline-block; font-size: .62rem; font-weight: 700; letter-spacing: .04em; color: var(--accent-ink); background: var(--accent-soft); padding: .05rem .35rem; border-radius: 4px; margin-left: .4rem; vertical-align: middle; }
+
+  /* ---- Preview mock ---- */
+  .preview { border: 1px solid var(--line); border-radius: 10px; overflow: hidden; box-shadow: var(--shadow); margin: 1.1rem 0 1.6rem; background: var(--surface); }
+  .preview .chrome { display: flex; align-items: center; gap: .5rem; padding: .5rem .7rem; background: var(--surface-2); border-bottom: 1px solid var(--line); }
+  .preview .chrome .dots { display: flex; gap: 4px; }
+  .preview .chrome .dots span { width: 7px; height: 7px; border-radius: 50%; background: var(--line); }
+  .preview .chrome .url { font-family: var(--font-mono); font-size: .72rem; color: var(--muted); background: var(--bg); border: 1px solid var(--line); border-radius: 5px; padding: .1rem .5rem; }
+  .preview .body { padding: 1.1rem 1.3rem; }
+  .preview .caption { font-size: .72rem; color: var(--muted); padding: .4rem 1.3rem .7rem; border-top: 1px solid var(--line); }
+  .mini-field { margin-bottom: .65rem; }
+  .mini-field label { display: block; font-size: .72rem; color: var(--muted); margin-bottom: .2rem; }
+  .mini-field .val { display: block; border: 1px solid var(--line); background: var(--bg); border-radius: 6px; padding: .35rem .55rem; font-size: .85rem; font-family: var(--font-mono); }
+  .mini-field .val.select::after { content: '▾'; float: right; color: var(--muted); font-family: var(--font-body); }
+  .mini-row { display: flex; gap: .7rem; }
+  .mini-row .mini-field { flex: 1; }
+  .mini-check { display: flex; align-items: center; gap: .45rem; font-size: .85rem; margin-bottom: .4rem; }
+  .mini-check .box { width: 14px; height: 14px; border: 1px solid var(--muted); border-radius: 3px; background: var(--accent); position: relative; flex: none; }
+  .mini-check .box::after { content: ''; position: absolute; left: 3px; top: 0px; width: 4px; height: 8px; border-right: 2px solid var(--surface); border-bottom: 2px solid var(--surface); transform: rotate(45deg); }
+  .mini-check .box.off { background: transparent; }
+  .mini-check .box.off::after { display: none; }
+  .mini-submit { display: inline-block; margin-top: .3rem; background: var(--accent); color: #fff; font-size: .8rem; font-weight: 600; padding: .4rem .9rem; border-radius: 6px; }
+
+  /* ---- Callouts ---- */
+  .callout { border-radius: 10px; padding: .9rem 1.1rem; margin: 1.1rem 0; font-size: .9rem; border: 1px solid var(--line); background: var(--surface); }
+  .callout.tip { border-left: 3px solid var(--accent); }
+  .callout.warn { border-left: 3px solid var(--warn); background: var(--warn-soft); }
+  .callout strong { display: block; font-size: .72rem; text-transform: uppercase; letter-spacing: .06em; margin-bottom: .3rem; color: var(--accent-ink); }
+  .callout.warn strong { color: var(--warn); }
+
+  /* ---- Walkthrough ---- */
+  ol.steps { padding-left: 1.2rem; margin: 0 0 1.4rem; }
+  ol.steps li { margin-bottom: .5rem; }
+
+  /* ---- badges/status pills used in text ---- */
+  .pill { display: inline-flex; align-items: center; gap: .3rem; font-size: .78rem; font-weight: 600; padding: .12rem .55rem; border-radius: 999px; }
+  .pill.up { background: var(--up-soft); color: var(--up); }
+  .pill.down { background: var(--down-soft); color: var(--down); }
+  .pill.dot::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+
+  code.inline { background: var(--surface-2); padding: .05rem .35rem; border-radius: 4px; font-size: .85em; }
+
+  figure.diagram { margin: 1.4rem 0 1.8rem; }
+  figure.diagram svg { width: 100%; height: auto; max-width: 100%; }
+  figure.diagram figcaption { font-size: .8rem; color: var(--muted); margin-top: .6rem; }
+
+  table.fields { overflow-x: auto; display: block; }
+  @media (min-width: 1px) { table.fields { display: table; } }
+  .table-scroll { overflow-x: auto; }
+
+  @media (max-width: 900px) {
+    .shell { flex-direction: column; }
+    .side { position: relative; width: 100%; flex-basis: auto; max-height: none; border-right: none; border-bottom: 1px solid var(--line); }
+    .content { padding: 32px 20px 80px; }
+  }
+</style>
+
+<div class="shell">
+  <aside class="side">
+    <div class="side-brand"><span class="mark">Arkgate</span><span class="ver">Handbook</span></div>
+    <div class="side-tag">Open-source ISP operations</div>
+    <nav>
+      <div>
+        <div class="side-group-label">Getting started</div>
+        <ul>
+          <li><a href="#overview">What Arkgate is</a></li>
+          <li><a href="#signing-in">Signing in</a></li>
+          <li><a href="#conventions">How every form works</a></li>
+          <li><a href="#applying">Saving vs. applying</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="side-group-label">📶 Internet Provider</div>
+        <ul>
+          <li><a href="#subs">Subscribers</a></li>
+          <li><a href="#vouchers">Vouchers</a></li>
+          <li><a href="#collections">Collections</a></li>
+          <li><a href="#plans">Plans</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="side-group-label">🛡 Security</div>
+        <ul>
+          <li><a href="#firewall">Firewall</a></li>
+          <li><a href="#policies">Access Policy</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="side-group-label">🔀 Network</div>
+        <ul>
+          <li><a href="#instances">System</a></li>
+          <li><a href="#pfifaces">Network Interfaces</a></li>
+          <li><a href="#vlans">VLAN</a></li>
+          <li><a href="#gatewaymonitor">Gateway Monitor</a></li>
+          <li><a href="#staticroutes">Static Routes</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="side-group-label">🖧 Services</div>
+        <ul>
+          <li><a href="#pppoes">PPPoE Server</a></li>
+          <li><a href="#dhcpserver">DHCP Server</a></li>
+          <li><a href="#unbounddns">Unbound DNS</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="side-group-label">⚙ Administration</div>
+        <ul>
+          <li><a href="#users">Users &amp; your profile</a></li>
+          <li><a href="#groups">Groups</a></li>
+        </ul>
+      </div>
+    </nav>
+  </aside>
+
+  <main class="content">
+    <div class="content-inner">
+
+      <div class="masthead" id="overview">
+        <div class="eyebrow">Handbook · for people who run the network</div>
+        <h1>Running an ISP with Arkgate</h1>
+        <p class="lede">Arkgate is an open-source control panel for small and mid-size Internet Service Providers — the kind of operator running their own OpenBSD router with <code class="inline">pf</code>, handing out DHCP leases, billing subscribers by the month, and needing one screen where all of that is a form instead of a config file.</p>
+      </div>
+
+      <p>Everything in Arkgate revolves around one idea: a <strong>Router</strong> record (internally called a <em>Pfconfig</em>) stands for one physical or virtual OpenBSD box you operate. Nearly every form you'll meet in this handbook — interfaces, firewall rules, subscribers, DHCP scopes — asks which Router it belongs to, because Arkgate can manage more than one node from a single dashboard. Throughout this handbook we'll follow one example deployment so the screens have something real to show:</p>
+
+      <div class="callout tip">
+        <strong>Running example</strong>
+        A wireless ISP called <strong>Example Net</strong> operates one edge router, <code class="inline">Node1</code>. Its WAN is <code class="inline">em0</code> (gateway <code class="inline">203.0.113.1</code>); its LAN is <code class="inline">em1</code> (<code class="inline">10.0.0.1/24</code>). A subscriber, <strong>Grace Tan</strong>, is on the <strong>Home 50</strong> plan at <code class="inline">10.0.0.50</code>.
+      </div>
+
+      <h2 id="signing-in" style="margin-top:2.4rem;">Signing in</h2>
+      <p class="intro" style="margin-top:.4rem;">Arkgate has no public sign-up — an administrator creates your account (see <a href="#users">Users</a>) and hands you a username and password. Open the site, enter both, and you land on the <strong>Dashboard</strong>: system info, subscriber-to-plan and subscriber-to-gateway charts, live per-interface traffic, and gateway health.</p>
+
+      <h2 id="conventions" style="margin-top:2.4rem;">How every form works</h2>
+      <p>Arkgate's forms are plain and consistent on purpose — once you've filled in one, you've basically learned all of them. A few patterns repeat everywhere:</p>
+      <ul>
+        <li><strong>Router</strong> — a drop-down naming which of your OpenBSD nodes this record belongs to. Skip it and Arkgate has nowhere to file the record.</li>
+        <li><strong>Letters/numbers-only fields</strong> — names, codes, and device identifiers reject spaces and punctuation on purpose; these values often end up written into a generated config file, where stray characters would break parsing.</li>
+        <li><strong>IP address fields</strong> — accept a plain IPv4 or IPv6 address; leave them blank where a field's helper text says that's allowed.</li>
+        <li><strong>Interface pickers</strong> — most Network and Services forms ask for an interface (<code class="inline">em0</code>, <code class="inline">vlan10</code> …). That list is read live from whatever you've configured under <a href="#pfifaces">Network Interfaces</a>, so set those up first.</li>
+      </ul>
+
+      <h2 id="applying" style="margin-top:2.4rem;">Saving vs. applying</h2>
+      <p>This is the one behavior that trips people up, so it gets its own diagram: clicking <strong>Submit</strong> on any form saves your change to Arkgate immediately, but it does <em>not</em> touch the router yet. Every save is queued as a pending change. A banner reading <span class="pill down dot">changes pending</span> appears at the top of every page until you press <strong>Apply Changes</strong> there — that's the moment Arkgate actually regenerates <code class="inline">pf.conf</code>, <code class="inline">dhcpd.conf</code>, <code class="inline">unbound.conf</code>, and reloads the affected services on the router.</p>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 980 260" role="img" aria-label="A form submit is saved as a pending change in Arkgate; nothing on the router changes until you click Apply Changes, which writes the config files and reloads pf, dhcpd and unbound on Node1.">
+          <defs>
+            <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M0,0 L10,5 L0,10 z" fill="currentColor"/>
+            </marker>
+            <marker id="arrowAccent" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M0,0 L10,5 L0,10 z" fill="#b5501c"/>
+            </marker>
+          </defs>
+          <style>
+            .box { fill: none; stroke: currentColor; stroke-width: 1.4; }
+            .lbl { font: 12px 'Public Sans', sans-serif; fill: currentColor; }
+            .lbl-sub { font: 10px 'IBM Plex Mono', monospace; fill: currentColor; opacity: .65; }
+            .edge { stroke: currentColor; stroke-width: 1.4; fill: none; }
+            .edge-accent { stroke: #b5501c; stroke-width: 2; fill: none; }
+            .edge-lbl { font: 11px 'IBM Plex Mono', monospace; fill: currentColor; }
+            .edge-lbl-accent { font: 11px 'IBM Plex Mono', monospace; fill: #b5501c; font-weight: 600; }
+          </style>
+
+          <!-- Boxes -->
+          <rect class="box" x="10" y="90" width="150" height="60" rx="8"/>
+          <text class="lbl" x="85" y="115" text-anchor="middle">You</text>
+          <text class="lbl-sub" x="85" y="132" text-anchor="middle">fill in a form</text>
+
+          <rect class="box" x="245" y="90" width="150" height="60" rx="8"/>
+          <text class="lbl" x="320" y="115" text-anchor="middle">Arkgate UI</text>
+          <text class="lbl-sub" x="320" y="132" text-anchor="middle">renders the page</text>
+
+          <rect class="box" x="480" y="90" width="150" height="60" rx="8"/>
+          <text class="lbl" x="555" y="115" text-anchor="middle">srvcman API</text>
+          <text class="lbl-sub" x="555" y="132" text-anchor="middle">saves the record</text>
+
+          <rect class="box" x="715" y="15" width="150" height="60" rx="8" stroke="#b5501c"/>
+          <text class="lbl" x="790" y="40" text-anchor="middle" fill="#b5501c">Pending change</text>
+          <text class="lbl-sub" x="790" y="57" text-anchor="middle">queued, not live yet</text>
+
+          <rect class="box" x="715" y="165" width="220" height="80" rx="8"/>
+          <text class="lbl" x="825" y="190" text-anchor="middle">Node1 (OpenBSD)</text>
+          <text class="lbl-sub" x="825" y="207" text-anchor="middle">pf · dhcpd · unbound</text>
+          <text class="lbl-sub" x="825" y="222" text-anchor="middle">reloaded on apply</text>
+
+          <!-- Edges -->
+          <line class="edge" x1="160" y1="120" x2="240" y2="120" marker-end="url(#arrow)"/>
+          <text class="edge-lbl" x="200" y="112" text-anchor="middle">Submit</text>
+
+          <line class="edge" x1="395" y1="120" x2="475" y2="120" marker-end="url(#arrow)"/>
+          <text class="edge-lbl" x="435" y="112" text-anchor="middle">POST + JWT</text>
+
+          <path class="edge" d="M 630 105 Q 675 60 710 45" marker-end="url(#arrow)"/>
+          <text class="edge-lbl" x="672" y="75" text-anchor="middle">saved as</text>
+
+          <path class="edge-accent" d="M 790 76 Q 790 130 795 163" marker-end="url(#arrowAccent)" stroke-dasharray="5 4"/>
+          <text class="edge-lbl-accent" x="880" y="125" text-anchor="middle">You click</text>
+          <text class="edge-lbl-accent" x="880" y="139" text-anchor="middle">Apply Changes</text>
+        </svg>
+        <figcaption>Fig. 1 — Submitting a form only queues a pending change (top path). Nothing reaches the router until you press <strong>Apply Changes</strong>, which writes the config files and reloads services (dashed path).</figcaption>
+      </figure>
+
+      <div class="callout warn">
+        <strong>Why this matters</strong>
+        If a subscriber says their new plan speed "isn't working," the fix is almost always the same: someone forgot to click <strong>Apply Changes</strong> after saving.
+      </div>
+
+      <!-- ================= INTERNET PROVIDER ================= -->
+
+      <section class="module" id="subs">
+        <div class="module-eyebrow">Internet Provider</div>
+        <h2>Subscribers <span class="path">/ui/subs</span></h2>
+        <p class="intro">One row per paying customer: their identity, service address, bandwidth plan, which router interface they ride on, and whether their account is active. This is the record the billing side of Arkgate (and pf itself, once applied) reads to decide who gets how much bandwidth.</p>
+
+        <h3 class="sub">Fields</h3>
+        <div class="table-scroll">
+        <table class="fields">
+          <thead><tr><th>Field</th><th>What it means</th><th>Example</th></tr></thead>
+          <tbody>
+            <tr><td class="field-name">Router</td><td>Which node this subscriber's traffic passes through.</td><td class="example">Node1</td></tr>
+            <tr><td class="field-name">First / Last Name</td><td>The subscriber's name.</td><td class="example">Grace Tan</td></tr>
+            <tr><td class="field-name">Address</td><td>Service address, free text.</td><td class="example">12 Fiber Ln</td></tr>
+            <tr><td class="field-name">IP address</td><td>The static IP this subscriber is pinned to. Leave blank for none.</td><td class="example">10.0.0.50</td></tr>
+            <tr><td class="field-name">PPPoE Username / Password</td><td>Only set these if the subscriber authenticates over PPPoE rather than a plain static IP.</td><td class="example">gtan</td></tr>
+            <tr><td class="field-name">Gateway</td><td>Which router interface's gateway they exit through — leave as <em>Default</em> unless you're steering them out a specific WAN.</td><td class="example">Default</td></tr>
+            <tr><td class="field-name">Status</td><td>active subscribers pass traffic; inactive ones are cut off by pf on the next apply.</td><td class="example">active</td></tr>
+            <tr><td class="field-name">Plan</td><td>Which <a href="#plans">Plan</a> sets their speed. Create the plan first.</td><td class="example">Home 50</td></tr>
+            <tr><td class="field-name">Priority</td><td>pf queue priority, 0 (lowest) – 7 (highest), for QoS.</td><td class="example">3</td></tr>
+            <tr><td class="field-name">Due Day</td><td>Day of the month billing is due.</td><td class="example">15</td></tr>
+            <tr><td class="field-name">Pay later count</td><td>How many grace-period cycles this subscriber has used.</td><td class="example">0</td></tr>
+            <tr><td class="field-name">Over due</td><td>Marks the account as currently overdue.</td><td class="example">off</td></tr>
+          </tbody>
+        </table>
+        </div>
+
+        <div class="preview">
+          <div class="chrome"><span class="dots"><span></span><span></span><span></span></span><span class="url">/ui/subs/create</span></div>
+          <div class="body">
+            <div class="mini-row">
+              <div class="mini-field"><label>First Name</label><span class="val">Grace</span></div>
+              <div class="mini-field"><label>Last Name</label><span class="val">Tan</span></div>
+            </div>
+            <div class="mini-field"><label>Address</label><span class="val">12 Fiber Ln</span></div>
+            <div class="mini-row">
+              <div class="mini-field"><label>IP address</label><span class="val">10.0.0.50</span></div>
+              <div class="mini-field"><label>Plan</label><span class="val select">Home 50</span></div>
+            </div>
+            <div class="mini-row">
+              <div class="mini-field"><label>Status</label><span class="val select">active</span></div>
+              <div class="mini-field"><label>Due Day</label><span class="val">15</span></div>
+            </div>
+            <span class="mini-submit">Submit</span>
+          </div>
+          <div class="caption">Example — creating Grace Tan on the Home 50 plan.</div>
+        </div>
+
+        <h3 class="sub">Walkthrough: sign up a new subscriber</h3>
+        <ol class="steps">
+          <li>Create their <a href="#plans">Plan</a> first if it doesn't exist yet.</li>
+          <li>Open <strong>Internet Provider → Subscribers → New</strong>.</li>
+          <li>Fill in their name, address, and (if they have one) a static IP.</li>
+          <li>Pick the Plan and leave Status as <em>active</em>.</li>
+          <li>Submit, then don't forget <a href="#applying">Apply Changes</a>.</li>
+        </ol>
+      </section>
+
+      <section class="module" id="vouchers">
+        <div class="module-eyebrow">Internet Provider</div>
+        <h2>Vouchers <span class="path">/ui/vouchers</span></h2>
+        <p class="intro">Prepaid access codes — the classic "buy a scratch card, type the code, get online for N hours" flow used at hotspots and sari-sari-store resellers. A voucher is self-contained: it carries its own speed and duration, so it doesn't need a Plan.</p>
+
+        <h3 class="sub">Fields</h3>
+        <div class="table-scroll">
+        <table class="fields">
+          <thead><tr><th>Field</th><th>What it means</th><th>Example</th></tr></thead>
+          <tbody>
+            <tr><td class="field-name">Count<span class="req">required</span></td><td>How many voucher codes to generate at once (1–1000).</td><td class="example">50</td></tr>
+            <tr><td class="field-name">Hours<span class="req">required</span></td><td>How many hours of access each code is good for, from first use.</td><td class="example">24</td></tr>
+            <tr><td class="field-name">Store</td><td>Optional label for which reseller/outlet this batch is for.</td><td class="example">SariSariStore</td></tr>
+          </tbody>
+        </table>
+        </div>
+
+        <div class="preview">
+          <div class="chrome"><span class="dots"><span></span><span></span><span></span></span><span class="url">/ui/vouchers/create</span></div>
+          <div class="body">
+            <div class="mini-row">
+              <div class="mini-field"><label>Count</label><span class="val">50</span></div>
+              <div class="mini-field"><label>Hours</label><span class="val">24</span></div>
+            </div>
+            <div class="mini-field"><label>Store</label><span class="val">SariSariStore</span></div>
+            <span class="mini-submit">Submit</span>
+          </div>
+          <div class="caption">Example — printing 50 one-day codes for a reseller.</div>
+        </div>
+        <p>The list view shows every code's remaining hours and status, so a support agent can look one up by the digits printed on the card.</p>
+      </section>
+
+      <section class="module" id="collections">
+        <div class="module-eyebrow">Internet Provider</div>
+        <h2>Collections <span class="path">/ui/collections</span></h2>
+        <p class="intro">A year-by-year ledger of what a subscriber paid each month — the thing a field collector fills in after a house visit. One Collections row per subscriber per year, with a column for each month.</p>
+
+        <h3 class="sub">Fields</h3>
+        <div class="table-scroll">
+        <table class="fields">
+          <thead><tr><th>Field</th><th>What it means</th><th>Example</th></tr></thead>
+          <tbody>
+            <tr><td class="field-name">SubID</td><td>The subscriber this ledger belongs to (looked up by ID).</td><td class="example">42</td></tr>
+            <tr><td class="field-name">Year</td><td>Which year this row tracks.</td><td class="example">2026</td></tr>
+            <tr><td class="field-name">Jan … Dec</td><td>Amount collected that month. Zero means unpaid/not yet collected.</td><td class="example">799</td></tr>
+          </tbody>
+        </table>
+        </div>
+        <div class="callout tip"><strong>Tip</strong> The sidebar's Collections link always jumps to the <em>current</em> year automatically — you never have to remember to change it in January.</div>
+      </section>
+
+      <section class="module" id="plans">
+        <div class="module-eyebrow">Internet Provider</div>
+        <h2>Plans <span class="path">/ui/plans</span></h2>
+        <p class="intro">A bandwidth package: download/upload speed sold to the subscriber, plus the honest numbers from a real speed test — useful when a subscriber disputes what they're "actually" getting.</p>
+
+        <h3 class="sub">Fields</h3>
+        <div class="table-scroll">
+        <table class="fields">
+          <thead><tr><th>Field</th><th>What it means</th><th>Example</th></tr></thead>
+          <tbody>
+            <tr><td class="field-name">Plan</td><td>The plan's name, shown everywhere a subscriber's speed tier is picked.</td><td class="example">Home50</td></tr>
+            <tr><td class="field-name">Downspeed / Upspeed</td><td>Advertised speed, in Mbps.</td><td class="example">50 / 10</td></tr>
+            <tr><td class="field-name">SpeedTestDownload / Upload</td><td>Actual measured speed, for reference.</td><td class="example">55 / 12</td></tr>
+            <tr><td class="field-name">Router ID</td><td>Which router this plan's queue is defined on.</td><td class="example">1</td></tr>
+          </tbody>
+        </table>
+        </div>
+        <div class="preview">
+          <div class="chrome"><span class="dots"><span></span><span></span><span></span></span><span class="url">/ui/plans/create</span></div>
+          <div class="body">
+            <div class="mini-field"><label>Plan</label><span class="val">Home50</span></div>
+            <div class="mini-row">
+              <div class="mini-field"><label>Downspeed</label><span class="val">50</span></div>
+              <div class="mini-field"><label>Upspeed</label><span class="val">10</span></div>
+            </div>
+            <span class="mini-submit">Submit</span>
+          </div>
+          <div class="caption">Example — the Home 50 plan referenced throughout this handbook.</div>
+        </div>
+      </section>
+
+      <!-- ================= SECURITY ================= -->
+
+      <section class="module" id="firewall">
+        <div class="module-eyebrow">Security</div>
+        <h2>Firewall <span class="path">/ui/firewall</span></h2>
+        <p class="intro">One row per <code class="inline">pf</code> rule. Arkgate renders these directly into <code class="inline">pf.conf</code> in the order you'd expect from pf itself, so the same mental model applies: rules are evaluated top-to-bottom, last match wins, unless a rule is marked <strong>Quick</strong>.</p>
+
+        <h3 class="sub">Fields</h3>
+        <div class="table-scroll">
+        <table class="fields">
+          <thead><tr><th>Field</th><th>What it means</th><th>Example</th></tr></thead>
+          <tbody>
+            <tr><td class="field-name">Status</td><td>active rules are written to pf.conf; inactive ones are kept but skipped.</td><td class="example">active</td></tr>
+            <tr><td class="field-name">Router</td><td>Which node enforces this rule.</td><td class="example">Node1</td></tr>
+            <tr><td class="field-name">Action</td><td><em>pass</em> lets matching traffic through, <em>block</em> drops it.</td><td class="example">pass</td></tr>
+            <tr><td class="field-name">Direction</td><td><em>in</em> or <em>out</em> relative to the interface.</td><td class="example">out</td></tr>
+            <tr><td class="field-name">Log</td><td>Whether/how pf logs matches on this rule.</td><td class="example">No log</td></tr>
+            <tr><td class="field-name">Quick</td><td>Stop evaluating further rules the moment this one matches, instead of "last match wins."</td><td class="example">off</td></tr>
+            <tr><td class="field-name">On Interface</td><td>Which interface this rule applies to.</td><td class="example">em1</td></tr>
+            <tr><td class="field-name">Address Family</td><td><em>inet</em> (IPv4) or <em>inet6</em> (IPv6).</td><td class="example">inet</td></tr>
+            <tr><td class="field-name">Protocol</td><td>e.g. <em>tcp</em>, <em>udp</em>, or blank for any.</td><td class="example">tcp</td></tr>
+            <tr><td class="field-name">Source / Destination</td><td>An IP, CIDR block, alias, or <em>any</em>.</td><td class="example">10.0.0.0/24</td></tr>
+            <tr><td class="field-name">Source Port / Destination Port</td><td>A port number, or blank for any.</td><td class="example">443</td></tr>
+            <tr><td class="field-name">Gateway <em>(Advance)</em></td><td>Route matching traffic out a specific gateway instead of the default.</td><td class="example">Default</td></tr>
+            <tr><td class="field-name">Pipe <em>(Advance)</em></td><td>Attach a <a href="#plans">Plan</a>'s speeds as a traffic-shaping pipe for this rule.</td><td class="example">Home50</td></tr>
+            <tr><td class="field-name">Priority <em>(Advance)</em></td><td>QoS priority, 0–7.</td><td class="example">3</td></tr>
+            <tr><td class="field-name">Advance options</td><td>Any extra pf rule keywords not covered above.</td><td class="example">(blank)</td></tr>
+          </tbody>
+        </table>
+        </div>
+
+        <div class="preview">
+          <div class="chrome"><span class="dots"><span></span><span></span><span></span></span><span class="url">/ui/firewall/create</span></div>
+          <div class="body">
+            <div class="mini-row">
+              <div class="mini-field"><label>Action</label><span class="val select">pass</span></div>
+              <div class="mini-field"><label>Direction</label><span class="val select">out</span></div>
+            </div>
+            <div class="mini-field"><label>On Interface</label><span class="val select">em1 (LAN)</span></div>
+            <div class="mini-row">
+              <div class="mini-field"><label>Source</label><span class="val">10.0.0.0/24</span></div>
+              <div class="mini-field"><label>Destination</label><span class="val">any</span></div>
+            </div>
+            <span class="mini-submit">Submit</span>
+          </div>
+          <div class="caption">Example — let subscribers on the LAN reach the internet.</div>
+        </div>
+        <div class="callout tip"><strong>Tip</strong> Rule order in the list matters exactly like it does in <code class="inline">pf.conf</code> — put narrow exceptions (guest network blocks, per-subscriber overrides) above the broad rule they're meant to override, unless that rule is marked Quick.</div>
+      </section>
+
+      <section class="module" id="policies">
+        <div class="module-eyebrow">Security</div>
+        <h2>Access Policy <span class="path">/ui/policies</span></h2>
+        <p class="intro">Arkgate's own permission system — not pf's. A Policy grants one or more <a href="#groups">Groups</a> either read-only or read-write access to one API resource. This is what decides what a non-admin <a href="#users">User</a> can see and touch inside Arkgate itself.</p>
+
+        <h3 class="sub">Fields</h3>
+        <div class="table-scroll">
+        <table class="fields">
+          <thead><tr><th>Field</th><th>What it means</th><th>Example</th></tr></thead>
+          <tbody>
+            <tr><td class="field-name">Policy Name<span class="req">required</span></td><td>Unique, internal, letters/numbers only.</td><td class="example">SupportViewSubs</td></tr>
+            <tr><td class="field-name">Module</td><td>Which Arkgate module this policy governs.</td><td class="example">subs</td></tr>
+            <tr><td class="field-name">Resource</td><td><em>any</em>, or one exact API path this policy covers.</td><td class="example">any</td></tr>
+            <tr><td class="field-name">Permission</td><td><strong>RO</strong> read-only, or <strong>RW</strong> read-write.</td><td class="example">RO</td></tr>
+            <tr><td class="field-name">Groups</td><td>Which groups this policy applies to — check every group that should get this access.</td><td class="example">support</td></tr>
+          </tbody>
+        </table>
+        </div>
+        <div class="callout warn"><strong>Careful</strong> A Resource of <em>any</em> grants that permission across the entire module, not just one record — reach for <em>any</em> for broad roles, and a specific path only when you mean to scope access to one exact record.</div>
+      </section>
+
+      <!-- ================= NETWORK ================= -->
+
+      <section class="module" id="instances">
+        <div class="module-eyebrow">Network</div>
+        <h2>System <span class="path">/ui/instances</span></h2>
+        <p class="intro">Per-router settings that don't belong anywhere else: which worker process handles this node, where its subscriber/Wi-Fi client lists live on disk, its captive-portal and subscriber-portal ports, and whether load balancing across multiple WANs is on.</p>
+
+        <h3 class="sub">Fields</h3>
+        <div class="table-scroll">
+        <table class="fields">
+          <thead><tr><th>Field</th><th>What it means</th><th>Example</th></tr></thead>
+          <tbody>
+            <tr><td class="field-name">Router</td><td>This node's name, as it'll appear in every other form's Router picker.</td><td class="example">Node1</td></tr>
+            <tr><td class="field-name">Worker Name</td><td>The background worker process that services this node.</td><td class="example">worker1</td></tr>
+            <tr><td class="field-name">WifiIpList</td><td>Path to the file listing connected Wi-Fi client IPs.</td><td class="example">/var/wifi_clients</td></tr>
+            <tr><td class="field-name">SubsIpList</td><td>Path to the file listing subscriber IPs.</td><td class="example">/var/subs_ips</td></tr>
+            <tr><td class="field-name">DNS server</td><td>Resolver this node's own services use.</td><td class="example">8.8.8.8</td></tr>
+            <tr><td class="field-name">Captive Portal Port</td><td>Port the captive-portal login page listens on.</td><td class="example">3000</td></tr>
+            <tr><td class="field-name">Subscribers Portal Port</td><td>Port the subscriber self-service portal listens on.</td><td class="example">4000</td></tr>
+            <tr><td class="field-name">Enable Load Balancer</td><td>Spread outbound traffic across more than one WAN interface.</td><td class="example">off</td></tr>
+          </tbody>
+        </table>
+        </div>
+      </section>
+
+      <section class="module" id="pfifaces">
+        <div class="module-eyebrow">Network</div>
+        <h2>Network Interfaces <span class="path">/ui/pfifaces</span></h2>
+        <p class="intro">Every physical or virtual interface on a router — WAN, LAN, VLANs — with its address, whether it's the default gateway, and its type. Every other module's interface pickers (Firewall, DHCP Server, Unbound DNS, Gateway Monitor) read their options straight from this list, so set it up early.</p>
+
+        <h3 class="sub">Fields</h3>
+        <div class="table-scroll">
+        <table class="fields">
+          <thead><tr><th>Field</th><th>What it means</th><th>Example</th></tr></thead>
+          <tbody>
+            <tr><td class="field-name">Name</td><td>A friendly label for this interface.</td><td class="example">WAN</td></tr>
+            <tr><td class="field-name">Device</td><td>The actual OS device name, or a configured VLAN device.</td><td class="example">em0</td></tr>
+            <tr><td class="field-name">Link Speed</td><td>Free-text speed label.</td><td class="example">900M</td></tr>
+            <tr><td class="field-name">IP Address / Netmask</td><td>This interface's address.</td><td class="example">203.0.113.5 / 255.255.255.0</td></tr>
+            <tr><td class="field-name">Gateway</td><td>The next hop out this interface, if any.</td><td class="example">203.0.113.1</td></tr>
+            <tr><td class="field-name">Type</td><td><em>external</em> (faces the internet) or <em>internal</em> (faces subscribers).</td><td class="example">external</td></tr>
+            <tr><td class="field-name">Load Balance Percentage</td><td>Share of outbound load this interface takes when load balancing is on.</td><td class="example">100</td></tr>
+            <tr><td class="field-name">Default Gateway</td><td>Use this interface's gateway as the router's default route.</td><td class="example">on</td></tr>
+            <tr><td class="field-name">Physical Interface</td><td>Off for a virtual/VLAN device.</td><td class="example">on</td></tr>
+          </tbody>
+        </table>
+        </div>
+
+        <div class="preview">
+          <div class="chrome"><span class="dots"><span></span><span></span><span></span></span><span class="url">/ui/pfifaces/create</span></div>
+          <div class="body">
+            <div class="mini-row">
+              <div class="mini-field"><label>Name</label><span class="val">WAN</span></div>
+              <div class="mini-field"><label>Device</label><span class="val select">em0</span></div>
+            </div>
+            <div class="mini-row">
+              <div class="mini-field"><label>IP Address</label><span class="val">203.0.113.5</span></div>
+              <div class="mini-field"><label>Type</label><span class="val select">external</span></div>
+            </div>
+            <div class="mini-check"><span class="box"></span> Default Gateway</div>
+            <span class="mini-submit">Submit</span>
+          </div>
+          <div class="caption">Example — Node1's WAN, em0.</div>
+        </div>
+        <div class="callout tip"><strong>Tip</strong> The Device list is read live from the router's actual interfaces, plus any <a href="#vlans">VLAN</a> you've defined — you're picking from what's really there, not typing a device name from memory.</div>
+      </section>
+
+      <section class="module" id="vlans">
+        <div class="module-eyebrow">Network</div>
+        <h2>VLAN <span class="path">/ui/vlan</span></h2>
+        <p class="intro">A tagged sub-interface off a physical parent — the usual way to split one LAN port into, say, a subscriber network and a separate guest network without more hardware.</p>
+
+        <h3 class="sub">Fields</h3>
+        <div class="table-scroll">
+        <table class="fields">
+          <thead><tr><th>Field</th><th>What it means</th><th>Example</th></tr></thead>
+          <tbody>
+            <tr><td class="field-name">Name</td><td>The VLAN's device name — this is what shows up as a Device choice elsewhere.</td><td class="example">vlan10</td></tr>
+            <tr><td class="field-name">VLAN ID</td><td>The 802.1Q tag, 1–4094.</td><td class="example">10</td></tr>
+            <tr><td class="field-name">Parent Device</td><td>Which physical interface this VLAN rides on.</td><td class="example">em1</td></tr>
+            <tr><td class="field-name">Priority (Receive/Transmit)</td><td>802.1p priority, 0–7, for traffic in each direction.</td><td class="example">0</td></tr>
+            <tr><td class="field-name">Router</td><td>Which node this VLAN exists on.</td><td class="example">Node1</td></tr>
+          </tbody>
+        </table>
+        </div>
+        <div class="preview">
+          <div class="chrome"><span class="dots"><span></span><span></span><span></span></span><span class="url">/ui/vlan/create</span></div>
+          <div class="body">
+            <div class="mini-row">
+              <div class="mini-field"><label>Name</label><span class="val">vlan10</span></div>
+              <div class="mini-field"><label>VLAN ID</label><span class="val">10</span></div>
+            </div>
+            <div class="mini-field"><label>Parent Device</label><span class="val select">em1 (LAN)</span></div>
+            <span class="mini-submit">Submit</span>
+          </div>
+          <div class="caption">Example — a guest VLAN carved off the LAN port.</div>
+        </div>
+      </section>
+
+      <section class="module" id="gatewaymonitor">
+        <div class="module-eyebrow">Network</div>
+        <h2>Gateway Monitor <span class="path">/ui/gatewaymonitor</span></h2>
+        <p class="intro">Arkgate pings a chosen address on a loop and shows the result as a status pill — <span class="pill up dot">up</span> or <span class="pill down dot">down</span> — right on the Dashboard, so an upstream outage shows up before a subscriber calls in about it.</p>
+
+        <h3 class="sub">Fields</h3>
+        <div class="table-scroll">
+        <table class="fields">
+          <thead><tr><th>Field</th><th>What it means</th><th>Example</th></tr></thead>
+          <tbody>
+            <tr><td class="field-name">Name</td><td>A label for this gateway.</td><td class="example">MainWAN</td></tr>
+            <tr><td class="field-name">IP Address</td><td>Picked from your external interfaces' configured gateways.</td><td class="example">203.0.113.1</td></tr>
+            <tr><td class="field-name">Monitor IP</td><td>The address actually pinged to judge link health — often a public resolver, not the gateway itself.</td><td class="example">1.1.1.1</td></tr>
+            <tr><td class="field-name">Router</td><td>Which node performs the ping.</td><td class="example">Node1</td></tr>
+          </tbody>
+        </table>
+        </div>
+      </section>
+
+      <section class="module" id="staticroutes">
+        <div class="module-eyebrow">Network</div>
+        <h2>Static Routes <span class="path">/ui/staticroutes</span></h2>
+        <p class="intro">A manually-pinned route for traffic that shouldn't follow the default gateway — the same job as running <code class="inline">route add</code> by hand, kept in Arkgate so it survives a rebuild.</p>
+
+        <h3 class="sub">Fields</h3>
+        <div class="table-scroll">
+        <table class="fields">
+          <thead><tr><th>Field</th><th>What it means</th><th>Example</th></tr></thead>
+          <tbody>
+            <tr><td class="field-name">Name</td><td>A label for this route.</td><td class="example">OfficeVPN</td></tr>
+            <tr><td class="field-name">Type</td><td><strong>Host</strong>: destination is one IP. <strong>Net</strong>: destination is a CIDR block.</td><td class="example">Net</td></tr>
+            <tr><td class="field-name">Destination</td><td>An IP (Host) or CIDR block (Net).</td><td class="example">172.16.5.0/24</td></tr>
+            <tr><td class="field-name">Gateway</td><td>Next-hop IP for this route.</td><td class="example">10.0.0.254</td></tr>
+            <tr><td class="field-name">Router</td><td>Which node this route lives on.</td><td class="example">Node1</td></tr>
+          </tbody>
+        </table>
+        </div>
+      </section>
+
+      <!-- ================= SERVICES ================= -->
+
+      <section class="module" id="pppoes">
+        <div class="module-eyebrow">Services</div>
+        <h2>PPPoE Server <span class="path">/ui/pppoes</span></h2>
+        <p class="intro">Turns the router into a PPPoE concentrator — the setup that hands a subscriber's modem an IP only after it authenticates, the traditional DSL-style login-then-connect model.</p>
+
+        <h3 class="sub">Fields</h3>
+        <div class="table-scroll">
+        <table class="fields">
+          <thead><tr><th>Field</th><th>What it means</th><th>Example</th></tr></thead>
+          <tbody>
+            <tr><td class="field-name">Router</td><td>Which node runs this PPPoE server.</td><td class="example">Node1</td></tr>
+            <tr><td class="field-name">Device</td><td>Which interface PPPoE sessions arrive on.</td><td class="example">em1</td></tr>
+            <tr><td class="field-name">Name</td><td>A label for this server.</td><td class="example">pppoe1</td></tr>
+            <tr><td class="field-name">IP</td><td>An IP from this device not currently assigned elsewhere.</td><td class="example">10.0.0.2</td></tr>
+            <tr><td class="field-name">Pool range</td><td>The address range handed out to connecting sessions.</td><td class="example">10.0.0.100-10.0.0.200</td></tr>
+            <tr><td class="field-name">DNS servers</td><td>Resolvers pushed to each session.</td><td class="example">8.8.8.8 8.8.4.4</td></tr>
+          </tbody>
+        </table>
+        </div>
+        <p>Each subscriber's own PPPoE username/password is set on their <a href="#subs">Subscriber</a> record, not here — this form only defines the server they connect to.</p>
+      </section>
+
+      <section class="module" id="dhcpserver">
+        <div class="module-eyebrow">Services</div>
+        <h2>DHCP Server <span class="path">/ui/dhcpserver</span></h2>
+        <p class="intro">A standard DHCP scope: a subnet, a lease range, and the options (routers, DNS, NTP, even PXE boot) handed to anything that asks for an address on your LAN.</p>
+
+        <h3 class="sub">Fields</h3>
+        <div class="table-scroll">
+        <table class="fields">
+          <thead><tr><th>Field</th><th>What it means</th><th>Example</th></tr></thead>
+          <tbody>
+            <tr><td class="field-name">Name</td><td>A label for this scope.</td><td class="example">LanDhcp</td></tr>
+            <tr><td class="field-name">Interface</td><td>The internal (LAN-side) interface dhcpd listens on.</td><td class="example">em1</td></tr>
+            <tr><td class="field-name">Subnet / Netmask</td><td>The subnet this scope serves.</td><td class="example">10.0.0.0 / 255.255.255.0</td></tr>
+            <tr><td class="field-name">Range Start / End</td><td>The addresses dhcpd is allowed to hand out.</td><td class="example">10.0.0.100 – 10.0.0.200</td></tr>
+            <tr><td class="field-name">Routers</td><td>Default gateway(s) pushed to clients.</td><td class="example">10.0.0.1</td></tr>
+            <tr><td class="field-name">Domain Name / Name Servers</td><td>DNS suffix and resolvers pushed to clients.</td><td class="example">example.net / 8.8.8.8, 8.8.4.4</td></tr>
+            <tr><td class="field-name">Broadcast Address</td><td>The subnet's broadcast address.</td><td class="example">10.0.0.255</td></tr>
+            <tr><td class="field-name">NTP Servers</td><td>Optional time servers pushed to clients.</td><td class="example">(blank)</td></tr>
+            <tr><td class="field-name">Default / Max Lease Time</td><td>Lease length in seconds.</td><td class="example">43200 / 86400</td></tr>
+            <tr><td class="field-name">Next Server / Filename <em>(PXE)</em></td><td>Optional network-boot server IP and boot file path.</td><td class="example">(blank)</td></tr>
+          </tbody>
+        </table>
+        </div>
+        <div class="preview">
+          <div class="chrome"><span class="dots"><span></span><span></span><span></span></span><span class="url">/ui/dhcpserver/create</span></div>
+          <div class="body">
+            <div class="mini-row">
+              <div class="mini-field"><label>Interface</label><span class="val select">em1 (LAN)</span></div>
+              <div class="mini-field"><label>Subnet</label><span class="val">10.0.0.0</span></div>
+            </div>
+            <div class="mini-row">
+              <div class="mini-field"><label>Range Start</label><span class="val">10.0.0.100</span></div>
+              <div class="mini-field"><label>Range End</label><span class="val">10.0.0.200</span></div>
+            </div>
+            <span class="mini-submit">Submit</span>
+          </div>
+          <div class="caption">Example — leasing 10.0.0.100–200 on the LAN.</div>
+        </div>
+        <div class="callout tip"><strong>Tip</strong> The <strong>Generated dhcpd.conf</strong> view (linked from the list page) renders the exact file Arkgate will write on your next Apply Changes — a good place to sanity-check a scope before it goes live.</div>
+      </section>
+
+      <section class="module" id="unbounddns">
+        <div class="module-eyebrow">Services</div>
+        <h2>Unbound DNS <span class="path">/ui/unbounddns</span></h2>
+        <p class="intro">A recursive/forwarding DNS resolver for your LAN, including DNS-over-TLS upstreams, access control, and a handful of local overrides — the most involved form in Arkgate, because unbound.conf itself has a lot of knobs.</p>
+
+        <h3 class="sub">Fields</h3>
+        <div class="table-scroll">
+        <table class="fields">
+          <thead><tr><th>Field</th><th>What it means</th><th>Example</th></tr></thead>
+          <tbody>
+            <tr><td class="field-name">Name</td><td>A label for this resolver instance.</td><td class="example">LanResolver</td></tr>
+            <tr><td class="field-name">Interface</td><td>The IP unbound listens on, or <em>All Interfaces</em>.</td><td class="example">10.0.0.1</td></tr>
+            <tr><td class="field-name">TLS Cert Bundle</td><td>CA bundle path used to verify DNS-over-TLS upstreams.</td><td class="example">/etc/ssl/cert.pem</td></tr>
+            <tr><td class="field-name">Access Control</td><td>Comma-separated "network action" entries.</td><td class="example">10.0.0.0/24 allow</td></tr>
+            <tr><td class="field-name">Do Not Query Localhost / Hide Identity / Hide Version / Prefetch</td><td>Standard unbound hardening/performance toggles.</td><td class="example">on</td></tr>
+            <tr><td class="field-name">Local Data</td><td>Comma-separated local DNS overrides.</td><td class="example">node1.example.net. IN A 10.0.0.1</td></tr>
+            <tr><td class="field-name">Forward Zone Name</td><td>The zone to forward — <code class="inline">.</code> means all queries.</td><td class="example">.</td></tr>
+            <tr><td class="field-name">Forward TLS Upstream</td><td>Use DNS-over-TLS for the forwarders below.</td><td class="example">on</td></tr>
+            <tr><td class="field-name">Forward Addr</td><td>Upstream resolvers; append <code class="inline">@853</code> for DNS-over-TLS.</td><td class="example">1.1.1.1@853, 8.8.8.8</td></tr>
+          </tbody>
+        </table>
+        </div>
+        <div class="callout tip"><strong>Tip</strong> Same as DHCP Server: a <strong>Generated unbound.conf</strong> preview is one click away from the list page, showing exactly what will be written on Apply.</div>
+      </section>
+
+      <!-- ================= ADMINISTRATION ================= -->
+
+      <section class="module" id="users">
+        <div class="module-eyebrow">Administration</div>
+        <h2>Users &amp; your profile <span class="path">/ui/users</span></h2>
+        <p class="intro">Everyone who can log into Arkgate is a User, placed in one or more <a href="#groups">Groups</a> that (via <a href="#policies">Access Policy</a>) decide what they can see. Creating a user here is the only way anyone gets in — there's no self-registration.</p>
+
+        <h3 class="sub">Creating a user</h3>
+        <div class="table-scroll">
+        <table class="fields">
+          <thead><tr><th>Field</th><th>What it means</th><th>Example</th></tr></thead>
+          <tbody>
+            <tr><td class="field-name">First / Last Name<span class="req">required</span></td><td>Letters, numbers and spaces.</td><td class="example">Grace Tan</td></tr>
+            <tr><td class="field-name">Username<span class="req">required</span></td><td>Letters/numbers only — this is the login name.</td><td class="example">gtan</td></tr>
+            <tr><td class="field-name">Password<span class="req">required</span></td><td>At least 8 characters. A matching confirm field must be identical before the form will submit.</td><td class="example">••••••••</td></tr>
+          </tbody>
+        </table>
+        </div>
+        <div class="preview">
+          <div class="chrome"><span class="dots"><span></span><span></span><span></span></span><span class="url">/ui/users/create</span></div>
+          <div class="body">
+            <div class="mini-row">
+              <div class="mini-field"><label>First Name</label><span class="val">Grace</span></div>
+              <div class="mini-field"><label>Last Name</label><span class="val">Tan</span></div>
+            </div>
+            <div class="mini-field"><label>Username</label><span class="val">gtan</span></div>
+            <div class="mini-row">
+              <div class="mini-field"><label>Password</label><span class="val">••••••••</span></div>
+              <div class="mini-field"><label>Repeat Password</label><span class="val">••••••••</span></div>
+            </div>
+            <span class="mini-submit">Submit</span>
+          </div>
+          <div class="caption">Example — a new login for Grace Tan. Group membership is assigned afterward, from the edit page.</div>
+        </div>
+
+        <h3 class="sub">Your own profile</h3>
+        <p>Click your name in the top-right corner → <strong>Profile</strong> to see a read-only summary of your own name, username, and groups, plus one thing you're always allowed to change yourself: your <strong>password</strong>. Everything else on that page is locked — ask an administrator to change your name, username, or group membership.</p>
+        <div class="preview">
+          <div class="chrome"><span class="dots"><span></span><span></span><span></span></span><span class="url">/ui/users/profile</span></div>
+          <div class="body">
+            <table style="width:100%; font-size:.85rem; margin-bottom:.9rem;">
+              <tr><td style="color:var(--muted); padding:.15rem 0; width:110px;">First Name</td><td>Grace</td></tr>
+              <tr><td style="color:var(--muted); padding:.15rem 0;">Last Name</td><td>Tan</td></tr>
+              <tr><td style="color:var(--muted); padding:.15rem 0;">Username</td><td>gtan</td></tr>
+              <tr><td style="color:var(--muted); padding:.15rem 0;">Groups</td><td>support</td></tr>
+            </table>
+            <div class="mini-field"><label>Password</label><span class="val">••••••••</span></div>
+            <span class="mini-submit">Submit</span>
+          </div>
+          <div class="caption">Example — Grace viewing her own profile. Only Password is editable here.</div>
+        </div>
+      </section>
+
+      <section class="module" id="groups">
+        <div class="module-eyebrow">Administration</div>
+        <h2>Groups <span class="path">/ui/groups</span></h2>
+        <p class="intro">The simplest form in Arkgate on purpose: a Group is just a name. Its only job is to be something both a <a href="#users">User</a> and an <a href="#policies">Access Policy</a> can point at — the two combine to decide what that user can actually do.</p>
+
+        <h3 class="sub">Fields</h3>
+        <div class="table-scroll">
+        <table class="fields">
+          <thead><tr><th>Field</th><th>What it means</th><th>Example</th></tr></thead>
+          <tbody>
+            <tr><td class="field-name">Group Name<span class="req">required</span></td><td>Letters/numbers only.</td><td class="example">support</td></tr>
+          </tbody>
+        </table>
+        </div>
+        <div class="callout tip"><strong>Tip</strong> Create the Group first, then attach an Access Policy to it, then add Users to it — in that order, a new hire's access is ready the moment their account is created.</div>
+      </section>
+
+      <div style="margin-top:3.5rem; padding-top:1.5rem; border-top:1px solid var(--line); font-size:.8rem; color:var(--muted);">
+        Arkgate is open source. This handbook describes the forms as they exist in the UI you're running — if a screen looks different from what's shown here, your deployment may be on a different version.
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<script>
+  (function () {
+    var links = Array.prototype.slice.call(document.querySelectorAll('.side a'));
+    var targets = links
+      .map(function (a) {
+        var id = a.getAttribute('href').slice(1);
+        var el = document.getElementById(id);
+        return el ? { link: a, el: el } : null;
+      })
+      .filter(Boolean);
+
+    function onScroll() {
+      var pos = window.scrollY + 120;
+      var current = targets[0];
+      targets.forEach(function (t) {
+        if (t.el.offsetTop <= pos) current = t;
+      });
+      links.forEach(function (a) { a.classList.remove('current'); });
+      if (current) current.link.classList.add('current');
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+  })();
+</script>
