@@ -5,6 +5,17 @@
   <div class="col-12 col-xl-8">
    <div class="card shadow-sm my-4">
     <div class="card-body p-4">
+     {{ if .IsProfile }}
+     <h5 class="mb-3">My Profile</h5>
+     <table class="table table-sm table-borderless mb-4">
+       <tbody>
+         <tr><th class="text-muted" style="width:160px;">First Name</th><td>{{.User.Firstname}}</td></tr>
+         <tr><th class="text-muted">Last Name</th><td>{{.User.Lastname}}</td></tr>
+         <tr><th class="text-muted">Username</th><td>{{.User.Username}}</td></tr>
+         <tr><th class="text-muted">Groups</th><td>{{ range $i, $g := .User.Groups }}{{ if $i }}, {{ end }}{{ $g.Groupname }}{{ end }}</td></tr>
+       </tbody>
+     </table>
+     {{ end }}
      <form method="POST" action="/ui/users/addorupdate">
    <div class="mb-3">
      <input class="form-control" id="basic-form-created" type="hidden" name="CreatedAt" value="{{.User.CreatedAt}}"/>
@@ -13,6 +24,14 @@
    <div class="mb-3">
      <input class="form-control" id="basic-form-updated" type="hidden"  name="UpdatedAt"/>
    </div>
+   {{ if .IsProfile }}
+   <input type="hidden" name="Firstname" value="{{.User.Firstname}}"/>
+   <input type="hidden" name="Lastname" value="{{.User.Lastname}}"/>
+   <input type="hidden" name="Username" value="{{.User.Username}}"/>
+   {{ range .User.Groups }}
+   <input type="hidden" name="Groups" value="{{.Groupname}}"/>
+   {{ end }}
+   {{ else }}
    <div class="mb-3">
      <label class="form-label" for="basic-form-fname">First Name</label>
      <input class="form-control" id="basic-form-fname" type="text" placeholder="First Name" name="Firstname" value="{{.User.Firstname}}" required pattern="[A-Za-z0-9 ]+" maxlength="100"/>
@@ -28,6 +47,7 @@
      <input class="form-control" id="basic-form-loc" type="text" placeholder="Username" name="Username" value="{{.User.Username}}" required pattern="[A-Za-z0-9]+" maxlength="100">
      <div class="form-text">Required. Letters and numbers only, no spaces, up to 100 characters.</div>
    </div>
+   {{ end }}
    <div class="mb-3">
      <label class="form-label" for="basic-form-password"><input type="checkbox" onclick="myFunction()">Show Password (To change your password, delete the encrypted password below and replace it with your new password. Otherwise leave it as is.)</label>
      <input onclick="myFunction()" class="form-control" id="basic-form-password" type="password" placeholder="" name="Password" value="{{.User.Password}}" required minlength="8" maxlength="100"/>
@@ -43,15 +63,17 @@
       }
       </script>
     </div>
+   {{ if not .IsProfile }}
    <hr>
    <b>Select which group this user should belong to. Groups already checked is the user's current group(s).</b><br>
     {{ range $x, $y := .Groups }}
-    <input name="Groups" type="checkbox" value="{{$y.Groupname}}" 
+    <input name="Groups" type="checkbox" value="{{$y.Groupname}}"
     {{range $i, $v := $.User.Groups}}
       {{ if eq $v.Groupname $y.Groupname }} checked{{end}}
     {{end}}><label for="Groups">{{$y.Groupname}}</label>&nbsp;
     {{ end }}
     <hr>
+   {{ end }}
      <div class="d-grid d-sm-flex justify-content-sm-end mt-4">
        <button class="btn btn-primary" type="submit">Submit</button>
      </div>

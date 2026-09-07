@@ -164,8 +164,9 @@ func New() *http.ServeMux {
 	})
 
 	type userdata struct {
-		User   usermodel.User
-		Groups []groupmodel.Group
+		User      usermodel.User
+		Groups    []groupmodel.Group
+		IsProfile bool
 	}
 	Router.HandleFunc("GET /{id}", func(w http.ResponseWriter, r *http.Request) {
 		var record usermodel.User
@@ -182,7 +183,7 @@ func New() *http.ServeMux {
 			utils.RenderErrorPage(w, status, err.Error())
 			return
 		}
-		formdata := userdata{record, groups}
+		formdata := userdata{User: record, Groups: groups}
 		pwd, _ := os.Getwd()
 		files := []string{
 			pwd + "/layouts/newbase.html",
@@ -207,7 +208,7 @@ func New() *http.ServeMux {
 			utils.RenderErrorPage(w, status, err.Error())
 			return
 		}
-		formdata := userdata{record, record.Groups}
+		formdata := userdata{User: record, Groups: record.Groups, IsProfile: true}
 		pwd, _ := os.Getwd()
 		files := []string{
 			pwd + "/layouts/newbase.html",
