@@ -38,6 +38,8 @@
                                 <th>Gateway IP</th>
                                 <th>Monitor IP</th>
                                 <th>Status</th>
+                                <th>Success (5m)</th>
+                                <th>Failed (5m)</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -47,6 +49,8 @@
                                 <td>{{.Ip}}</td>
                                 <td>{{.MonitorIp}}</td>
                                 <td class="gateway-status-cell"><span class="badge bg-secondary">{{.Status}}</span></td>
+                                <td class="gateway-success-cell">{{.SuccessCount}}</td>
+                                <td class="gateway-failed-cell">{{.FailedCount}}</td>
                             </tr>
                             {{ end }}
                         </tbody>
@@ -332,12 +336,19 @@ async function pollGatewayStatus() {
                 return;
             }
             const cell = row.querySelector('.gateway-status-cell .badge');
-            if (!cell) {
-                return;
+            if (cell) {
+                const status = gw.status || 'unknown';
+                cell.textContent = status;
+                cell.className = 'badge ' + (GATEWAY_STATUS_BADGE[status] || GATEWAY_STATUS_BADGE.unknown);
             }
-            const status = gw.status || 'unknown';
-            cell.textContent = status;
-            cell.className = 'badge ' + (GATEWAY_STATUS_BADGE[status] || GATEWAY_STATUS_BADGE.unknown);
+            const successCell = row.querySelector('.gateway-success-cell');
+            if (successCell) {
+                successCell.textContent = gw.success_count || 0;
+            }
+            const failedCell = row.querySelector('.gateway-failed-cell');
+            if (failedCell) {
+                failedCell.textContent = gw.failed_count || 0;
+            }
         });
     } catch (error) {
         console.error('Error fetching gateway status:', error);
