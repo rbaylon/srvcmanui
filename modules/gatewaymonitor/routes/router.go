@@ -36,6 +36,20 @@ func New() *http.ServeMux {
 		tmpl.ExecuteTemplate(w, "htmx", records)
 	})
 
+	Router.HandleFunc("GET /applyroutes", func(w http.ResponseWriter, r *http.Request) {
+		var result struct {
+			Applied int `json:"applied"`
+			Failed  int `json:"failed"`
+		}
+		err, status := client.Rester("gatewaymonitor/applyroutes", "PUT", &result, r)
+		if err != nil {
+			fmt.Println(err)
+			utils.RenderErrorPage(w, status, err.Error())
+			return
+		}
+		http.Redirect(w, r, "/ui/gatewaymonitor", http.StatusSeeOther)
+	})
+
 	type formData struct {
 		Record    *gatewaymonitormodel.GatewayMonitor
 		Pfifaces  []pfifacemodel.Pfiface
