@@ -12,6 +12,7 @@ import (
 
 	"github.com/go-chi/render"
 	pfconfigmodel "github.com/rbaylon/srvcman/modules/pfconfig/model"
+	pfifacemodel "github.com/rbaylon/srvcman/modules/pfifaces/model"
 	planmodel "github.com/rbaylon/srvcman/modules/plans/model"
 	submodel "github.com/rbaylon/srvcman/modules/subs/model"
 	"github.com/rbaylon/srvcmanui/client"
@@ -160,6 +161,55 @@ func New() *http.ServeMux {
 			return
 		}
 		http.Redirect(w, r, "/ui/subs", http.StatusSeeOther)
+	})
+
+	type migrateGatewayFormData struct {
+		Pfifaces []pfifacemodel.Pfiface
+		Migrated int
+	}
+
+	Router.HandleFunc("GET /migrategateway", func(w http.ResponseWriter, r *http.Request) {
+		ifs := []pfifacemodel.Pfiface{}
+		err, status := client.Rester("pfiface", "GET", &ifs, r)
+		if err != nil {
+			fmt.Println(err)
+			utils.RenderErrorPage(w, status, err.Error())
+			return
+		}
+		migrated, _ := strconv.Atoi(r.URL.Query().Get("migrated"))
+		pwd, _ := os.Getwd()
+		files := []string{
+			pwd + "/layouts/newbase.html",
+			pwd + "/modules/subs/templates/submigrategateway.html",
+		}
+		formdata := migrateGatewayFormData{Pfifaces: ifs, Migrated: migrated}
+		tmpl := template.Must(template.ParseFiles(files...))
+		if err := tmpl.ExecuteTemplate(w, "htmx", formdata); err != nil {
+			log.Println(err)
+		}
+	})
+
+	Router.HandleFunc("POST /migrategateway", func(w http.ResponseWriter, r *http.Request) {
+		req := &submodel.MigrateGatewayRequest{}
+		if err := render.Bind(r, req); err != nil {
+			utils.RenderErrorPage(w, http.StatusBadRequest, err.Error())
+			return
+		}
+		// client.Rester JSON-marshals payload for the outgoing PUT body,
+		// then unmarshals the API's response back onto the same pointer -
+		// so payload needs both the request fields (old_gateway/new_gateway/
+		// count) and somewhere for the response's "migrated" count to land.
+		payload := &struct {
+			submodel.MigrateGatewayRequest
+			Migrated int `json:"migrated"`
+		}{MigrateGatewayRequest: *req}
+		err, status := client.Rester("subs/migrategateway", "PUT", payload, r)
+		if err != nil {
+			fmt.Println(err)
+			utils.RenderErrorPage(w, status, err.Error())
+			return
+		}
+		http.Redirect(w, r, fmt.Sprintf("/ui/subs/migrategateway?migrated=%d", payload.Migrated), http.StatusSeeOther)
 	})
 
 	Router.HandleFunc("GET /delete/{id}", func(w http.ResponseWriter, r *http.Request) {
