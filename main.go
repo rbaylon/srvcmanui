@@ -10,6 +10,7 @@ import (
 	collectionrouter "github.com/rbaylon/srvcmanui/modules/colls/routes"
 	dashrouter "github.com/rbaylon/srvcmanui/modules/dashboard/routes"
 	dhcpserverrouter "github.com/rbaylon/srvcmanui/modules/dhcpserver/routes"
+	diagnosticsrouter "github.com/rbaylon/srvcmanui/modules/diagnostics/routes"
 	fwrouter "github.com/rbaylon/srvcmanui/modules/firewall/routes"
 	gatewaymonitorrouter "github.com/rbaylon/srvcmanui/modules/gatewaymonitor/routes"
 	grouprouter "github.com/rbaylon/srvcmanui/modules/groups/routes"
@@ -38,6 +39,7 @@ func main() {
 	fwsrouter := fwrouter.New()
 	gatewaymonitorsrouter := gatewaymonitorrouter.New()
 	staticroutessrouter := staticroutesrouter.New()
+	diagnosticsrouter := diagnosticsrouter.New()
 	dashrouter := dashrouter.New()
 	pppoerouter := pppoerouter.New()
 	instacerouter := instancerouter.New()
@@ -59,6 +61,7 @@ func main() {
 	mainrouter.Handle("/ui/firewall/", http.StripPrefix("/ui/firewall", fwsrouter))
 	mainrouter.Handle("/ui/gatewaymonitor/", http.StripPrefix("/ui/gatewaymonitor", gatewaymonitorsrouter))
 	mainrouter.Handle("/ui/staticroutes/", http.StripPrefix("/ui/staticroutes", staticroutessrouter))
+	mainrouter.Handle("/ui/diagnostics/", http.StripPrefix("/ui/diagnostics", diagnosticsrouter))
 	mainrouter.Handle("/ui/dashboard/", http.StripPrefix("/ui/dashboard", dashrouter))
 	mainrouter.Handle("/ui/pppoes/", http.StripPrefix("/ui/pppoes", pppoerouter))
 	mainrouter.Handle("/ui/instances/", http.StripPrefix("/ui/instances", instacerouter))
