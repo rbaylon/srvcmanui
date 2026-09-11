@@ -16,6 +16,7 @@
    <div class="mb-3">
      <label class="form-label" for="basic-form-oldgateway">Old Gateway</label>
      <select class="form-select" id="basic-form-oldgateway" aria-label="Select Old Gateway" name="OldGateway"/>
+       <option value="">Default (no gateway)</option>
      {{ range .Pfifaces }}
        {{ if and (eq .Type "external") (ne .Gateway "") }}
          <option value="{{ .Gateway }}">{{ .Gateway }} ({{ .Name }})</option>
@@ -27,6 +28,7 @@
    <div class="mb-3">
      <label class="form-label" for="basic-form-newgateway">New Gateway</label>
      <select class="form-select" id="basic-form-newgateway" aria-label="Select New Gateway" name="NewGateway"/>
+       <option value="">Default (no gateway)</option>
      {{ range .Pfifaces }}
        {{ if and (eq .Type "external") (ne .Gateway "") }}
          <option value="{{ .Gateway }}">{{ .Gateway }} ({{ .Name }})</option>
