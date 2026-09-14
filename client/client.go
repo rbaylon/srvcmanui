@@ -50,14 +50,18 @@ func Rester(module_uri string, method string, data any, r *http.Request) (error,
 	)
 	session, _ := store.Get(r, database.GetEnvVariable("APP_NAME"))
 	client := &http.Client{}
-	req, _ := http.NewRequest(method, api_url+module_uri, nil)
+
+	var body io.Reader
 	if method == "POST" || method == "PUT" || method == "DELETE" {
 		jsondata, jderr := json.Marshal(data)
 		if jderr != nil {
 			return jderr, 501
 		}
-		preq, _ := http.NewRequest(method, api_url+module_uri, bytes.NewBuffer(jsondata))
-		req = preq
+		body = bytes.NewBuffer(jsondata)
+	}
+	req, nerr := http.NewRequest(method, api_url+module_uri, body)
+	if nerr != nil {
+		return nerr, 501
 	}
 	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", session.Values["jwt"]))
 	res, rerror := client.Do(req)
@@ -69,6 +73,14 @@ func Rester(module_uri string, method string, data any, r *http.Request) (error,
 		responseData, ioerr := io.ReadAll(res.Body)
 		if ioerr != nil {
 			return ioerr, 501
+		}
+		// data is nil for callers that don't care about the response body
+		// (e.g. every DELETE handler) - json.Unmarshal into a nil v always
+		// fails with InvalidUnmarshalError without even looking at
+		// responseData, which previously turned every successful delete
+		// into a reported error despite the API call having succeeded.
+		if data == nil {
+			return nil, res.StatusCode
 		}
 		jerr := json.Unmarshal(responseData, data)
 		if jerr != nil {
