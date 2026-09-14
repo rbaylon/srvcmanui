@@ -3,107 +3,146 @@
 {{end}}
 {{define "content"}}
 <div class="container-fluid px-1">
-    <h1 class="mt-4">Dashboard</h1>
-    <div class="row py-4">
-        <div class="col-lg-12">
-            <div class="card mb-12">
-                <div class="card-header">
-                    <span data-feather="bar-chart-2" class="me-1"></span>
-                    System Info
-                </div>
-                <div class="card-body">
-                    <table>
-                    {{ range $k, $v := .SysInfo }}
-                        <tr><td><b>{{$k}}:</b></td><td>{{ $v }}</td></tr>
-                    {{end}}
-                    </table>
-                </div>
-                <div class="card-footer small text-muted">Updated with latest data</div>
-            </div>
+    <div class="d-flex align-items-center justify-content-between mt-4 mb-2 flex-wrap gap-2">
+        <h1 class="mb-0">Dashboard</h1>
+        {{ if or .Pfconfigs .HasUnassigned }}
+        <div class="dropdown">
+            <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="pfconfigDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                <span data-feather="server" class="me-1"></span>
+                {{ if .Group.Unassigned }}Unassigned{{ else }}{{ .Group.Pfconfig.Router }}{{ end }}
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="pfconfigDropdown">
+                {{ $selected := .SelectedID }}
+                {{ range .Pfconfigs }}
+                <li><a class="dropdown-item{{ if eq .ID $selected }} active{{ end }}" href="/ui/dashboard?pfconfig_id={{.ID}}">{{ .Router }}</a></li>
+                {{ end }}
+                {{ if .HasUnassigned }}
+                <li><a class="dropdown-item{{ if $.Group.Unassigned }} active{{ end }}" href="/ui/dashboard?pfconfig_id=0">Unassigned</a></li>
+                {{ end }}
+            </ul>
         </div>
+        {{ end }}
     </div>
-    {{ if .GatewayMonitors }}
-    <div class="row py-1">
-        <div class="col-lg-12">
-            <div class="card mb-6">
-                <div class="card-header">
-                    <span data-feather="navigation" class="me-1"></span>
-                    Gateway Status
+    <div class="router-group" data-pfconfig-id="{{.Group.Pfconfig.ID}}">
+        <div class="d-flex align-items-center mt-3 mb-2">
+            <span data-feather="server" class="me-2"></span>
+            <h4 class="mb-0">{{ if .Group.Unassigned }}Unassigned{{ else }}{{ .Group.Pfconfig.Router }}{{ end }}</h4>
+            {{ if not .Group.Unassigned }}<span class="badge bg-secondary ms-2">pfconfig #{{ .Group.Pfconfig.ID }}</span>{{ end }}
+        </div>
+        {{ with .Group }}
+        {{ if .SysInfo }}
+        <div class="row py-1">
+            <div class="col-lg-12">
+                <div class="card mb-6">
+                    <div class="card-header">
+                        <span data-feather="bar-chart-2" class="me-1"></span>
+                        System Info
+                    </div>
+                    <div class="card-body">
+                        <table>
+                        {{ range $k, $v := .SysInfo }}
+                            <tr><td><b>{{$k}}:</b></td><td>{{ $v }}</td></tr>
+                        {{end}}
+                        </table>
+                    </div>
+                    <div class="card-footer small text-muted">Updated with latest data</div>
                 </div>
-                <div class="card-body p-0">
-                    <table class="table table-sm mb-0" id="gateway-status-table">
-                        <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>Gateway IP</th>
-                                <th>Monitor IP</th>
-                                <th>Status</th>
-                                <th>Success (5m)</th>
-                                <th>Failed (5m)</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {{ range .GatewayMonitors }}
-                            <tr data-gateway-id="{{.ID}}">
-                                <td>{{.Name}}</td>
-                                <td>{{.Ip}}</td>
-                                <td>{{.MonitorIp}}</td>
-                                <td class="gateway-status-cell"><span class="badge bg-secondary">{{.Status}}</span></td>
-                                <td class="gateway-success-cell">{{.SuccessCount}}</td>
-                                <td class="gateway-failed-cell">{{.FailedCount}}</td>
-                            </tr>
-                            {{ end }}
-                        </tbody>
-                    </table>
-                </div>
-                <div class="card-footer small text-muted">Updates every 5 seconds</div>
             </div>
         </div>
+        {{ else if .SysInfoError }}
+        <div class="row py-1">
+            <div class="col-lg-12">
+                <div class="alert alert-warning mb-0"><span data-feather="alert-triangle" class="me-1"></span> System info unavailable: {{ .SysInfoError }}</div>
+            </div>
+        </div>
+        {{ end }}
+        {{ if .GatewayMonitors }}
+        <div class="row py-1">
+            <div class="col-lg-12">
+                <div class="card mb-6">
+                    <div class="card-header">
+                        <span data-feather="navigation" class="me-1"></span>
+                        Gateway Status
+                    </div>
+                    <div class="card-body p-0">
+                        <table class="table table-sm mb-0 gateway-status-table">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Gateway IP</th>
+                                    <th>Monitor IP</th>
+                                    <th>Status</th>
+                                    <th>Success (5m)</th>
+                                    <th>Failed (5m)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{ range .GatewayMonitors }}
+                                <tr data-gateway-id="{{.ID}}">
+                                    <td>{{.Name}}</td>
+                                    <td>{{.Ip}}</td>
+                                    <td>{{.MonitorIp}}</td>
+                                    <td class="gateway-status-cell"><span class="badge bg-secondary">{{.Status}}</span></td>
+                                    <td class="gateway-success-cell">{{.SuccessCount}}</td>
+                                    <td class="gateway-failed-cell">{{.FailedCount}}</td>
+                                </tr>
+                                {{ end }}
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="card-footer small text-muted">Updates every 5 seconds</div>
+                </div>
+            </div>
+        </div>
+        {{ end }}
+        <div class="row py-1">
+            <div class="col-lg-6">
+                <div class="card mb-6">
+                    <div class="card-header">
+                        <span data-feather="pie-chart" class="me-1"></span>
+                        Subscribers to Plan distribution
+                    </div>
+                    <div class="card-body"><canvas class="chart-plan-to-sub" id="myPieChart-{{.Pfconfig.ID}}" width="100%" height="50"></canvas></div>
+                    <div class="card-footer small text-muted">Updated with latest data</div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="card mb-6">
+                    <div class="card-header">
+                        <span data-feather="pie-chart" class="me-1"></span>
+                        Subscribers to gateway distribution
+                    </div>
+                    <div class="card-body"><canvas class="chart-gw-to-sub" id="myBarChart-{{.Pfconfig.ID}}" width="100%" height="50"></canvas></div>
+                    <div class="card-footer small text-muted">Updated with latest data</div>
+                </div>
+            </div>
+        </div>
+        {{ if .Pfifaces }}
+        <div class="row py-1">
+            <div class="col-lg-12">
+                <div class="card mb-6">
+                    <div class="card-header">
+                        <span data-feather="activity" class="me-1"></span>
+                        Realtime Interface Traffic
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            {{ range .Pfifaces }}
+                            <div class="col-lg-6 col-xl-4 mb-4">
+                                <div class="small text-muted mb-1">{{.Name}} ({{.Device}})</div>
+                                <canvas class="traffic-chart" data-device="{{.Device}}" id="traffic-chart-{{.ID}}" height="150"></canvas>
+                            </div>
+                            {{ end }}
+                        </div>
+                    </div>
+                    <div class="card-footer small text-muted">Updates every 2 seconds</div>
+                </div>
+            </div>
+        </div>
+        {{ end }}
+        <script type="application/json" class="chart-data" data-pfconfig-id="{{.Pfconfig.ID}}">{{ .ChartDataJSON }}</script>
     </div>
     {{ end }}
-    <div class="row py-1">
-        <div class="col-lg-6">
-            <div class="card mb-6">
-                <div class="card-header">
-                    <span data-feather="pie-chart" class="me-1"></span>
-                    Subscribers to Plan distribution
-                </div>
-                <div class="card-body"><canvas id="myPieChart" width="100%" height="50"></canvas></div>
-                <div class="card-footer small text-muted">Updated with latest data</div>
-            </div>
-        </div>
-        <div class="col-lg-6">
-            <div class="card mb-6">
-                <div class="card-header">
-                    <span data-feather="pie-chart" class="me-1"></span>
-                    Subscribers to gateway distribution
-                </div>
-                <div class="card-body"><canvas id="myBarChart" width="100%" height="50"></canvas></div>
-                <div class="card-footer small text-muted">Updated with latest data</div>
-            </div>
-        </div>
-    </div>
-    <div class="row py-1">
-        <div class="col-lg-12">
-            <div class="card mb-6">
-                <div class="card-header">
-                    <span data-feather="activity" class="me-1"></span>
-                    Realtime Interface Traffic
-                </div>
-                <div class="card-body">
-                    <div class="row">
-                        {{ range .Pfifaces }}
-                        <div class="col-lg-6 col-xl-4 mb-4">
-                            <div class="small text-muted mb-1">{{.Name}} ({{.Device}})</div>
-                            <canvas class="traffic-chart" data-device="{{.Device}}" id="traffic-chart-{{.ID}}" height="150"></canvas>
-                        </div>
-                        {{ end }}
-                    </div>
-                </div>
-                <div class="card-footer small text-muted">Updates every 2 seconds</div>
-            </div>
-        </div>
-    </div>
 </div>
 {{end}}
 {{define "tail_script"}}
@@ -113,35 +152,22 @@
 Chart.defaults.global.defaultFontFamily = '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
 Chart.defaults.global.defaultFontColor = '#292b2c';
 
-async function fetchChartData() {
-    try {
-        const response = await fetch('/ui/dashboard/stats');
-        const data = await response.json();
-
-        const labels = data.GwToSub.Gws;
-        const values = data.GwToSub.Subs;
-        const glabels = data.PlanTosub.Plans;
-        const gvalues = data.PlanTosub.Subs;
-
-        renderPieChart(glabels, gvalues);
-        renderBarChart(labels, values);
-    } catch (error) {
-        console.error('Error fetching API data:', error);
-    }
-}
-
 const generateColors = (count) => {
   const colors = [];
   for (let i = 0; i < count; i++) {
     // Distribute hues evenly across the 360-degree color wheel
-    const hue = (i * (360 / count)) % 360; 
+    const hue = (i * (360 / count)) % 360;
     colors.push(`hsl(${hue}, 70%, 60%)`);
   }
   return colors;
 };
 
-function renderPieChart(labels, dataValues) {
-    const ctx = document.getElementById('myPieChart').getContext('2d');
+function renderPieChart(canvasId, labels, dataValues) {
+    const canvas = document.getElementById(canvasId);
+    if (!canvas) {
+        return;
+    }
+    const ctx = canvas.getContext('2d');
     // Dynamically size the color array to match the data length
     const dynamicColors = generateColors(dataValues.length);
     new Chart(ctx, {
@@ -166,9 +192,12 @@ function renderPieChart(labels, dataValues) {
     });
 }
 
-function renderBarChart(glabels, gdataValues) {
-    var ctx = document.getElementById("myBarChart");
-    var myLineChart = new Chart(ctx, {
+function renderBarChart(canvasId, glabels, gdataValues) {
+    const canvas = document.getElementById(canvasId);
+    if (!canvas) {
+        return;
+    }
+    var myLineChart = new Chart(canvas, {
     type: 'bar',
     data: {
         labels: glabels,
@@ -210,7 +239,22 @@ function renderBarChart(glabels, gdataValues) {
     }
     });
 }
-window.addEventListener('DOMContentLoaded', fetchChartData);
+
+function renderGroupCharts() {
+    document.querySelectorAll('script.chart-data').forEach(function (el) {
+        const pfconfigId = el.dataset.pfconfigId;
+        let data;
+        try {
+            data = JSON.parse(el.textContent);
+        } catch (e) {
+            console.error('Error parsing chart data for pfconfig', pfconfigId, e);
+            return;
+        }
+        renderPieChart('myPieChart-' + pfconfigId, data.PlanToSub.Plans, data.PlanToSub.Subs);
+        renderBarChart('myBarChart-' + pfconfigId, data.GwToSub.Gws, data.GwToSub.Subs);
+    });
+}
+window.addEventListener('DOMContentLoaded', renderGroupCharts);
 
 const trafficCharts = {};
 const trafficHistory = {};
@@ -323,32 +367,34 @@ const GATEWAY_STATUS_BADGE = {
 };
 
 async function pollGatewayStatus() {
-    const table = document.getElementById('gateway-status-table');
-    if (!table) {
+    const tables = document.querySelectorAll('.gateway-status-table');
+    if (!tables.length) {
         return;
     }
     try {
         const response = await fetch('/ui/dashboard/gatewaystatus');
         const gateways = await response.json();
         gateways.forEach(function (gw) {
-            const row = table.querySelector('tr[data-gateway-id="' + gw.ID + '"]');
-            if (!row) {
-                return;
-            }
-            const cell = row.querySelector('.gateway-status-cell .badge');
-            if (cell) {
-                const status = gw.status || 'unknown';
-                cell.textContent = status;
-                cell.className = 'badge ' + (GATEWAY_STATUS_BADGE[status] || GATEWAY_STATUS_BADGE.unknown);
-            }
-            const successCell = row.querySelector('.gateway-success-cell');
-            if (successCell) {
-                successCell.textContent = gw.success_count || 0;
-            }
-            const failedCell = row.querySelector('.gateway-failed-cell');
-            if (failedCell) {
-                failedCell.textContent = gw.failed_count || 0;
-            }
+            tables.forEach(function (table) {
+                const row = table.querySelector('tr[data-gateway-id="' + gw.ID + '"]');
+                if (!row) {
+                    return;
+                }
+                const cell = row.querySelector('.gateway-status-cell .badge');
+                if (cell) {
+                    const status = gw.status || 'unknown';
+                    cell.textContent = status;
+                    cell.className = 'badge ' + (GATEWAY_STATUS_BADGE[status] || GATEWAY_STATUS_BADGE.unknown);
+                }
+                const successCell = row.querySelector('.gateway-success-cell');
+                if (successCell) {
+                    successCell.textContent = gw.success_count || 0;
+                }
+                const failedCell = row.querySelector('.gateway-failed-cell');
+                if (failedCell) {
+                    failedCell.textContent = gw.failed_count || 0;
+                }
+            });
         });
     } catch (error) {
         console.error('Error fetching gateway status:', error);
