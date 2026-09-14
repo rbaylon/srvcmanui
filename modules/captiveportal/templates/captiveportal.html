@@ -1,0 +1,34 @@
+{{define "title"}}Captive Portal{{end}}
+{{define "head_script"}}{{end}}
+{{define "content"}}
+<div class="card shadow-sm my-3">
+  <div class="card-header">
+    <span data-feather="server" class="me-1"></span>
+    Captive Portal
+  </div>
+  <div class="card-body">
+    {{ if .Error }}
+    <div class="alert alert-danger">{{.Error}}</div>
+    {{ else }}
+    <p>
+      Status:
+      {{ if .Running }}
+      <span class="badge bg-success">Running</span>
+      {{ else }}
+      <span class="badge bg-secondary">Stopped</span>
+      {{ end }}
+    </p>
+    {{ end }}
+    <div class="d-flex gap-2 mb-3">
+      <a class="btn btn-success" href="/ui/captiveportal/start">Start</a>
+      <a class="btn btn-danger" href="/ui/captiveportal/stop">Stop</a>
+      <a class="btn btn-secondary" href="/ui/captiveportal/restart">Restart</a>
+      <a class="btn btn-outline-secondary" href="/ui/captiveportal">Refresh</a>
+    </div>
+    {{ if .Output }}
+    <pre class="p-3 bg-light border rounded mb-0" style="white-space: pre-wrap;">{{.Output}}</pre>
+    {{ end }}
+  </div>
+</div>
+{{end}}
+{{define "tail_script"}}{{end}}
