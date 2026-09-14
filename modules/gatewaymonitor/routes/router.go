@@ -19,6 +19,10 @@ import (
 func New() *http.ServeMux {
 	Router := http.NewServeMux() // 3
 
+	type listData struct {
+		Records      []gatewaymonitormodel.GatewayMonitor
+		ActiveRoutes string
+	}
 	Router.HandleFunc("GET /", func(w http.ResponseWriter, r *http.Request) {
 		var records []gatewaymonitormodel.GatewayMonitor
 		err, status := client.Rester("gatewaymonitor", "GET", &records, r)
@@ -27,13 +31,22 @@ func New() *http.ServeMux {
 			utils.RenderErrorPage(w, status, err.Error())
 			return
 		}
+		var activeRoutes struct {
+			Output string `json:"output"`
+			Error  string `json:"error,omitempty"`
+		}
+		if err, _ := client.Rester("gatewaymonitor/activeroutes", "GET", &activeRoutes, r); err != nil {
+			fmt.Println(err)
+		} else if activeRoutes.Error != "" {
+			fmt.Println(activeRoutes.Error)
+		}
 		pwd, _ := os.Getwd()
 		files := []string{
 			pwd + "/layouts/newbase.html",
 			pwd + "/modules/gatewaymonitor/templates/gatewaymonitors.html",
 		}
 		tmpl := template.Must(template.ParseFiles(files...))
-		tmpl.ExecuteTemplate(w, "htmx", records)
+		tmpl.ExecuteTemplate(w, "htmx", listData{records, activeRoutes.Output})
 	})
 
 	Router.HandleFunc("GET /applyroutes", func(w http.ResponseWriter, r *http.Request) {

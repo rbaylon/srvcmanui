@@ -1,6 +1,16 @@
 {{define "title"}}Gateway Monitor{{end}}
 {{define "head_script"}}{{end}}
 {{define "content"}}
+{{ if .ActiveRoutes }}
+<div class="card shadow-sm my-3">
+  <div class="card-header">
+    <h6 class="mb-0">Active Routes <small class="text-muted">(netstat -rn | grep UGHS)</small></h6>
+  </div>
+  <div class="card-body p-0">
+    <pre class="p-3 mb-0 small" style="white-space: pre-wrap;">{{.ActiveRoutes}}</pre>
+  </div>
+</div>
+{{ end }}
 <div class="card shadow-sm my-3">
   <div class="card-header d-flex align-items-center justify-content-between">
     <h5 class="mb-0">Gateway Monitor</h5>
@@ -23,7 +33,7 @@
           </tr>
         </thead>
         <tbody>
-          {{ range .}}
+          {{ range .Records}}
           <tr>
             <td>{{ .ID }}</td>
             <td>{{ .Name }}</td>
