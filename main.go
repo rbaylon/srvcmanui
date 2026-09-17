@@ -23,6 +23,7 @@ import (
 	pppoerouter "github.com/rbaylon/srvcmanui/modules/pppoes/routes"
 	staticroutesrouter "github.com/rbaylon/srvcmanui/modules/staticroutes/routes"
 	subrouter "github.com/rbaylon/srvcmanui/modules/subs/routes"
+	tunnelrouter "github.com/rbaylon/srvcmanui/modules/tunnels/routes"
 	unbounddnsrouter "github.com/rbaylon/srvcmanui/modules/unbounddns/routes"
 	userrouter "github.com/rbaylon/srvcmanui/modules/users/routes"
 	vlanrouter "github.com/rbaylon/srvcmanui/modules/vlans/routes"
@@ -33,6 +34,7 @@ func main() {
 	port := database.GetEnvVariable("APP_PORT")
 	captiveportalsrouter := captiveportalrouter.New()
 	billportalsrouter := billportalrouter.New()
+	tunnelsrouter := tunnelrouter.New()
 	subsrouter := subrouter.New()
 	usersrouter := userrouter.New()
 	collsrouter := collectionrouter.New()
@@ -75,6 +77,7 @@ func main() {
 	mainrouter.Handle("/ui/policies/", http.StripPrefix("/ui/policies", policyrouter))
 	mainrouter.Handle("/ui/captiveportal/", http.StripPrefix("/ui/captiveportal", captiveportalsrouter))
 	mainrouter.Handle("/ui/billportal/", http.StripPrefix("/ui/billportal", billportalsrouter))
+	mainrouter.Handle("/ui/tunnels/", http.StripPrefix("/ui/tunnels", tunnelsrouter))
 	finalrouter := accessvalidator.Check(accesslogger.Log(mainrouter))
 
 	log.Println("Go app listening on port", port)

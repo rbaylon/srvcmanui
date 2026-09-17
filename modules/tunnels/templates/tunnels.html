@@ -1,0 +1,83 @@
+{{define "title"}}Tunnels{{end}}
+{{define "head_script"}}{{end}}
+{{define "content"}}
+<div class="row my-3">
+  <div class="col-6 col-md-3">
+    <div class="card shadow-sm h-100">
+      <div class="card-body">
+        <h6 class="text-muted mb-1">Active</h6>
+        <h3 class="mb-0 text-success">{{.Active}}</h3>
+        <div class="form-text">ssh forwards currently running</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-6 col-md-3">
+    <div class="card shadow-sm h-100">
+      <div class="card-body">
+        <h6 class="text-muted mb-1">Inactive</h6>
+        <h3 class="mb-0 {{ if .Inactive }}text-danger{{ else }}text-muted{{ end }}">{{.Inactive}}</h3>
+        <div class="form-text">not started, or dropped</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="card shadow-sm my-3">
+  <div class="card-header d-flex align-items-center justify-content-between">
+    <h5 class="mb-0">Tunnels</h5>
+    <div>
+      <a href="/ui/tunnels/startinactive" class="btn btn-outline-secondary btn-sm" title="Establish every tunnel below that isn't running"><span data-feather="refresh-cw"></span> Start Inactive</a>
+      <a href="/ui/tunnels/create" class="btn btn-success btn-sm"><span data-feather="plus"></span> New</a>
+    </div>
+  </div>
+  <div class="card-body p-0">
+    <div class="table-responsive">
+      <table class="table table-striped table-hover table-sm align-middle mb-0" id="records">
+        <thead>
+          <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Name</th>
+            <th scope="col">Type</th>
+            <th scope="col">Remote</th>
+            <th scope="col">Local</th>
+            <th scope="col">Status</th>
+            <th scope="col">Age</th>
+            <th scope="col">PID</th>
+            <th scope="col" class="text-end">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{ range .Records}}
+          <tr>
+            <td>{{ .ID }}</td>
+            <td>{{ .Name }}</td>
+            <td>{{ .Type }}</td>
+            <td>{{ .RemoteUser }}@{{ .RemoteIp }}:{{ .RemotePort }}</td>
+            <td>{{ .LocalIp }}:{{ .LocalPort }}</td>
+            <td>
+              {{ if eq .Status "active" }}
+              <span class="badge bg-success">Active</span>
+              {{ else }}
+              <span class="badge bg-secondary">Inactive</span>
+              {{ end }}
+            </td>
+            <td>{{ if .Age }}{{ .Age }}{{ else }}-{{ end }}</td>
+            <td>{{ if .Pid }}{{ .Pid }}{{ else }}-{{ end }}</td>
+            <td class="text-end">
+              {{ if eq .Status "active" }}
+              <a href="/ui/tunnels/stop/{{.ID}}" class="btn btn-sm btn-outline-warning" title="Stop"><span data-feather="square"></span></a>
+              {{ else }}
+              <a href="/ui/tunnels/start/{{.ID}}" class="btn btn-sm btn-outline-success" title="Start"><span data-feather="play"></span></a>
+              {{ end }}
+              <a href="/ui/tunnels/{{.ID}}" class="btn btn-sm btn-outline-secondary" title="Edit"><span data-feather="edit"></span></a>
+              <a href="#" onclick="confirmDelete('/ui/tunnels/delete/{{.ID}}')" class="btn btn-sm btn-outline-danger" title="Delete"><span data-feather="x-square"></span></a>
+            </td>
+          </tr>
+          {{ end }}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<script src="/ui/static/local/listutils.js"></script>
+{{end}}
+{{define "tail_script"}}{{end}}
