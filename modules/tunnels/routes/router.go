@@ -17,6 +17,7 @@ import (
 	"strconv"
 
 	"github.com/go-chi/render"
+	pfconfigmodel "github.com/rbaylon/srvcman/modules/pfconfig/model"
 	tunnelmodel "github.com/rbaylon/srvcman/modules/tunnels/model"
 	"github.com/rbaylon/srvcmanui/client"
 	"github.com/rbaylon/srvcmanui/utils"
@@ -90,16 +91,24 @@ func New() *http.ServeMux {
 	Router.HandleFunc("GET /stop/{id}", action("stop"))
 
 	type formData struct {
-		Record *tunnelmodel.Tunnel
+		Record    *tunnelmodel.Tunnel
+		Pfconfigs []pfconfigmodel.Pfconfig
 	}
 	Router.HandleFunc("GET /create", func(w http.ResponseWriter, r *http.Request) {
+		pfconfigs := []pfconfigmodel.Pfconfig{}
+		err, status := client.Rester("pfconfig", "GET", &pfconfigs, r)
+		if err != nil {
+			fmt.Println(err)
+			utils.RenderErrorPage(w, status, err.Error())
+			return
+		}
 		pwd, _ := os.Getwd()
 		files := []string{
 			pwd + "/layouts/newbase.html",
 			pwd + "/modules/tunnels/templates/tunnelnew.html",
 		}
 		tmpl := template.Must(template.ParseFiles(files...))
-		if err := tmpl.ExecuteTemplate(w, "htmx", formData{nil}); err != nil {
+		if err := tmpl.ExecuteTemplate(w, "htmx", formData{nil, pfconfigs}); err != nil {
 			log.Println(err)
 		}
 	})
@@ -112,13 +121,20 @@ func New() *http.ServeMux {
 			utils.RenderErrorPage(w, status, err.Error())
 			return
 		}
+		pfconfigs := []pfconfigmodel.Pfconfig{}
+		err, status = client.Rester("pfconfig", "GET", &pfconfigs, r)
+		if err != nil {
+			fmt.Println(err)
+			utils.RenderErrorPage(w, status, err.Error())
+			return
+		}
 		pwd, _ := os.Getwd()
 		files := []string{
 			pwd + "/layouts/newbase.html",
 			pwd + "/modules/tunnels/templates/tunnel.html",
 		}
 		tmpl := template.Must(template.ParseFiles(files...))
-		if err := tmpl.ExecuteTemplate(w, "htmx", formData{&record}); err != nil {
+		if err := tmpl.ExecuteTemplate(w, "htmx", formData{&record, pfconfigs}); err != nil {
 			log.Println(err)
 		}
 	})
