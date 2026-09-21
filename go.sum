@@ -29,6 +29,8 @@ github.com/mattn/go-sqlite3 v1.14.32 h1:JD12Ag3oLy1zQA+BNn74xRgaBbdhbNIDYvQUEuuE
 github.com/mattn/go-sqlite3 v1.14.32/go.mod h1:Uh1q+B4BYcTPb+yiD3kU8Ct7aC0hY9fxUwlHK0RXw+Y=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
+github.com/rbaylon/arkgatecmd v1.1.8 h1:dj5jDDc5db6zlnEiDTWU+lqSUHT8AOpJPDLuHfJ79lo=
+github.com/rbaylon/arkgatecmd v1.1.8/go.mod h1:2+cGMUWHrOzsCoFVGwqrJmgB1qgoCmm+87ZAdMqlT+Y=
 github.com/rbaylon/srvcman v1.1.67 h1:8xpv88cdVVYVD3cN9T25XjKM5eterLE/K6zpKr+wL98=
 github.com/rbaylon/srvcman v1.1.67/go.mod h1:BmQpr4/p/EHJ2fWtq4BBfIwaAM52G9ElPcG+KadN6qA=
 github.com/stretchr/objx v0.1.0/go.mod h1:HFkY916IF+rwdDfMAkV7OtwuqBVzrE8GR6GFx+wExME=

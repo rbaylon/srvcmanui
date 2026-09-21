@@ -5,7 +5,7 @@ go 1.24.0
 require (
 	github.com/go-chi/render v1.0.3
 	github.com/gorilla/sessions v1.4.0
-	github.com/rbaylon/arkgatecmd v1.1.7
+	github.com/rbaylon/arkgatecmd v1.1.8
 	github.com/rbaylon/srvcman v1.1.67
 )
 
@@ -28,5 +28,3 @@ require (
 	gorm.io/driver/sqlite v1.6.0 // indirect
 	gorm.io/gorm v1.31.0 // indirect
 )
-
-replace github.com/rbaylon/arkgatecmd => ../arkgatecmd
