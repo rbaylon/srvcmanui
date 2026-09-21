@@ -11,6 +11,44 @@
   </div>
 </div>
 {{ end }}
+{{ if .ActiveHealthCheck.TotalCount }}
+<div class="card shadow-sm my-3">
+  <div class="card-header d-flex align-items-center justify-content-between">
+    <h6 class="mb-0">
+      Active Health Checks
+      <span class="badge {{if .ActiveHealthCheck.Count}}bg-warning text-dark{{else}}bg-secondary{{end}} ms-1">{{.ActiveHealthCheck.Count}} in flight</span>
+      <small class="text-muted">({{.ActiveHealthCheck.TotalCount}} commands total on arkgated)</small>
+    </h6>
+    {{ if .ActiveHealthCheck.Count }}
+    <a href="/ui/gatewaymonitor/clearhealthchecks" onclick="return confirm('Terminate all {{.ActiveHealthCheck.Count}} in-flight health checks?')" class="btn btn-outline-danger btn-sm" title="Kill every in-flight HealthPing on arkgated - does not change which gateways are monitored"><span data-feather="x-octagon"></span> Clear</a>
+    {{ end }}
+  </div>
+  {{ if .ActiveHealthCheck.Commands }}
+  <div class="card-body p-0">
+    <div class="table-responsive">
+      <table class="table table-striped table-hover table-sm align-middle mb-0">
+        <thead>
+          <tr>
+            <th scope="col">Command</th>
+            <th scope="col">From</th>
+            <th scope="col" class="text-end">Running for</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{ range .ActiveHealthCheck.Commands }}
+          <tr{{if gt .RunningMs 10000}} class="table-warning"{{end}}>
+            <td>{{ .Name }} <small class="text-muted">{{ .Cmd }}</small></td>
+            <td>{{ .Remote }}</td>
+            <td class="text-end">{{ .RunningMs }}ms</td>
+          </tr>
+          {{ end }}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  {{ end }}
+</div>
+{{ end }}
 <div class="card shadow-sm my-3">
   <div class="card-header d-flex align-items-center justify-content-between">
     <h5 class="mb-0">Gateway Monitor</h5>

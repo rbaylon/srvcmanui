@@ -9,6 +9,7 @@ import (
 	"strconv"
 
 	"github.com/go-chi/render"
+	"github.com/rbaylon/arkgatecmd"
 	gatewaymonitormodel "github.com/rbaylon/srvcman/modules/gatewaymonitor/model"
 	pfconfigmodel "github.com/rbaylon/srvcman/modules/pfconfig/model"
 	pfifacemodel "github.com/rbaylon/srvcman/modules/pfifaces/model"
@@ -20,8 +21,9 @@ func New() *http.ServeMux {
 	Router := http.NewServeMux() // 3
 
 	type listData struct {
-		Records      []gatewaymonitormodel.GatewayMonitor
-		ActiveRoutes string
+		Records           []gatewaymonitormodel.GatewayMonitor
+		ActiveRoutes      string
+		ActiveHealthCheck arkgatecmd.ActiveHealthChecksSnapshot
 	}
 	Router.HandleFunc("GET /", func(w http.ResponseWriter, r *http.Request) {
 		var records []gatewaymonitormodel.GatewayMonitor
@@ -40,13 +42,26 @@ func New() *http.ServeMux {
 		} else if activeRoutes.Error != "" {
 			fmt.Println(activeRoutes.Error)
 		}
+		// Same "fetch, log on failure, degrade gracefully" treatment as
+		// activeRoutes above - this panel is supplementary information on
+		// the list page, not something that should keep the page from
+		// rendering if arkgated happens to be unreachable right now.
+		var activeHealthChecks struct {
+			arkgatecmd.ActiveHealthChecksSnapshot
+			Error string `json:"error,omitempty"`
+		}
+		if err, _ := client.Rester("gatewaymonitor/activehealthchecks", "GET", &activeHealthChecks, r); err != nil {
+			fmt.Println(err)
+		} else if activeHealthChecks.Error != "" {
+			fmt.Println(activeHealthChecks.Error)
+		}
 		pwd, _ := os.Getwd()
 		files := []string{
 			pwd + "/layouts/newbase.html",
 			pwd + "/modules/gatewaymonitor/templates/gatewaymonitors.html",
 		}
 		tmpl := template.Must(template.ParseFiles(files...))
-		tmpl.ExecuteTemplate(w, "htmx", listData{records, activeRoutes.Output})
+		tmpl.ExecuteTemplate(w, "htmx", listData{records, activeRoutes.Output, activeHealthChecks.ActiveHealthChecksSnapshot})
 	})
 
 	Router.HandleFunc("GET /applyroutes", func(w http.ResponseWriter, r *http.Request) {
@@ -59,6 +74,28 @@ func New() *http.ServeMux {
 			fmt.Println(err)
 			utils.RenderErrorPage(w, status, err.Error())
 			return
+		}
+		http.Redirect(w, r, "/ui/gatewaymonitor", http.StatusSeeOther)
+	})
+
+	// Administrative action behind the "Clear" button on the Active Health
+	// Checks panel: terminates every HealthPing arkgated currently has in
+	// flight. Does not touch monitoring configuration - the next scheduled
+	// tick pings normally again, same as /applyroutes doesn't change which
+	// gateways are monitored.
+	Router.HandleFunc("GET /clearhealthchecks", func(w http.ResponseWriter, r *http.Request) {
+		var result struct {
+			Cleared int    `json:"cleared"`
+			Error   string `json:"error,omitempty"`
+		}
+		err, status := client.Rester("gatewaymonitor/clearhealthchecks", "PUT", &result, r)
+		if err != nil {
+			fmt.Println(err)
+			utils.RenderErrorPage(w, status, err.Error())
+			return
+		}
+		if result.Error != "" {
+			fmt.Println(result.Error)
 		}
 		http.Redirect(w, r, "/ui/gatewaymonitor", http.StatusSeeOther)
 	})
