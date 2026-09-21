@@ -13,6 +13,7 @@ import (
 	dashrouter "github.com/rbaylon/srvcmanui/modules/dashboard/routes"
 	dhcpserverrouter "github.com/rbaylon/srvcmanui/modules/dhcpserver/routes"
 	diagnosticsrouter "github.com/rbaylon/srvcmanui/modules/diagnostics/routes"
+	fdmonitorrouter "github.com/rbaylon/srvcmanui/modules/fdmonitor/routes"
 	fwrouter "github.com/rbaylon/srvcmanui/modules/firewall/routes"
 	gatewaymonitorrouter "github.com/rbaylon/srvcmanui/modules/gatewaymonitor/routes"
 	grouprouter "github.com/rbaylon/srvcmanui/modules/groups/routes"
@@ -35,6 +36,7 @@ func main() {
 	captiveportalsrouter := captiveportalrouter.New()
 	billportalsrouter := billportalrouter.New()
 	tunnelsrouter := tunnelrouter.New()
+	fdmonitorsrouter := fdmonitorrouter.New()
 	subsrouter := subrouter.New()
 	usersrouter := userrouter.New()
 	collsrouter := collectionrouter.New()
@@ -78,6 +80,7 @@ func main() {
 	mainrouter.Handle("/ui/captiveportal/", http.StripPrefix("/ui/captiveportal", captiveportalsrouter))
 	mainrouter.Handle("/ui/billportal/", http.StripPrefix("/ui/billportal", billportalsrouter))
 	mainrouter.Handle("/ui/tunnels/", http.StripPrefix("/ui/tunnels", tunnelsrouter))
+	mainrouter.Handle("/ui/fdmonitor/", http.StripPrefix("/ui/fdmonitor", fdmonitorsrouter))
 	finalrouter := accessvalidator.Check(accesslogger.Log(mainrouter))
 
 	log.Println("Go app listening on port", port)
