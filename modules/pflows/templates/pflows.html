@@ -5,7 +5,9 @@
   <div class="card-header d-flex align-items-center justify-content-between">
     <h5 class="mb-0">Pflow Export</h5>
     <div>
+      {{ if .ID }}
       <a href="/ui/pflows/create" class="btn btn-success btn-sm"><span data-feather="plus"></span> New</a>
+      {{ end }}
     </div>
   </div>
   <div class="card-body p-0">
