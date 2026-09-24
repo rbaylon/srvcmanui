@@ -8,12 +8,15 @@ import (
 	"net/url"
 	"os"
 	"strconv"
+	"strings"
+	"time"
 
 	"github.com/gorilla/sessions"
 	"github.com/rbaylon/srvcman/database"
 	groupmodel "github.com/rbaylon/srvcman/modules/groups/model"
 	usermodel "github.com/rbaylon/srvcman/modules/users/model"
 	"github.com/rbaylon/srvcmanui/client"
+	"github.com/rbaylon/srvcmanui/loginguard"
 	"github.com/rbaylon/srvcmanui/utils"
 )
 
@@ -22,29 +25,99 @@ var (
 	store = sessions.NewCookieStore(key)
 )
 
+// LoginData is what the sign-in page shows: where to go afterwards, what
+// was typed, why the last attempt failed, and a fresh math challenge.
+type LoginData struct {
+	Prevurl  string
+	Username string
+	Error    string
+	Question string
+	Token    string
+}
+
+// showLogin draws the sign-in page with a new challenge - every failed
+// submission has spent its old one. retryAfter, when set, is also sent as
+// the Retry-After header.
+func showLogin(w http.ResponseWriter, status int, prevurl, username, msg string, retryAfter time.Duration) {
+	ch, err := loginguard.NewChallenge()
+	if err != nil {
+		log.Println("login: could not build challenge:", err)
+		utils.RenderErrorPage(w, http.StatusInternalServerError, "Could not prepare the sign-in form.")
+		return
+	}
+	pwd, err := os.Getwd()
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+	files := []string{
+		pwd + "/layouts/base.html",
+		pwd + "/modules/users/templates/sign-in.html",
+	}
+	tmpl := template.Must(template.ParseFiles(files...))
+	// The page embeds a one-time token; a cached copy would only ever
+	// fail the challenge.
+	w.Header().Set("Cache-Control", "no-store")
+	if retryAfter > 0 {
+		w.Header().Set("Retry-After", fmt.Sprint(int(retryAfter.Seconds())+1))
+	}
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	w.WriteHeader(status)
+	ld := LoginData{Prevurl: prevurl, Username: username, Error: msg, Question: ch.Question, Token: ch.Token}
+	if err := tmpl.ExecuteTemplate(w, "base", &ld); err != nil {
+		log.Println("template error:", err)
+	}
+}
+
+func waitText(d time.Duration) string {
+	if d < 90*time.Second {
+		return fmt.Sprintf("%d seconds", int(d.Seconds())+1)
+	}
+	return fmt.Sprintf("%d minutes", int(d.Minutes())+1)
+}
+
 func login() http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		username := r.PostFormValue("username")
+		username := strings.TrimSpace(r.PostFormValue("username"))
 		password := r.PostFormValue("password")
+		prevurl := r.PostFormValue("prevurl")
+		ip := loginguard.ClientIP(r)
+
+		if ok, wait := loginguard.Begin(ip, username); !ok {
+			log.Println("login: rate limited", ip, username)
+			showLogin(w, http.StatusTooManyRequests, prevurl, username,
+				"Too many sign-in attempts. Try again in "+waitText(wait)+".", wait)
+			return
+		}
 		if username == "" || password == "" {
-			utils.RenderErrorPage(w, http.StatusUnauthorized, "username and password required!")
+			showLogin(w, http.StatusBadRequest, prevurl, username, "Username and password are required.", 0)
+			return
+		}
+		// The challenge is checked before the password so a bot that cannot
+		// answer it never learns whether a password was right - and never
+		// costs the srvcman backend a login request.
+		if !loginguard.VerifyChallenge(r.PostFormValue("captcha_token"), r.PostFormValue("captcha_answer")) {
+			loginguard.Fail(ip, "")
+			showLogin(w, http.StatusUnauthorized, prevurl, username,
+				"The math answer was wrong or expired. Please answer the new question.", 0)
 			return
 		}
 		token, err := client.GetToken(username, password)
 		if err == nil {
+			loginguard.Succeed(username)
 			session, _ := store.Get(r, database.GetEnvVariable("APP_NAME"))
 			session.Values["authenticated"] = true
 			session.Values["whoami"] = username
 			session.Values["jwt"] = *token
 			session.Save(r, w)
-			prevurl := r.PostFormValue("prevurl")
 			if prevurl == "" {
 				prevurl = "/ui/dashboard"
 			}
 			http.Redirect(w, r, prevurl, http.StatusSeeOther)
 			return
 		}
-		utils.RenderErrorPage(w, http.StatusUnauthorized, "Invalid username or password!")
+		loginguard.Fail(ip, username)
+		showLogin(w, http.StatusUnauthorized, prevurl, username, "Invalid username or password!", 0)
 	})
 }
 
@@ -54,10 +127,6 @@ func logout(w http.ResponseWriter, r *http.Request) {
 	session.Options.MaxAge = -1
 	session.Save(r, w)
 	http.Redirect(w, r, "/ui/users/login", http.StatusSeeOther)
-}
-
-type LoginData struct {
-	Prevurl string
 }
 
 func New() *http.ServeMux {
@@ -231,18 +300,7 @@ func New() *http.ServeMux {
 			}
 			prevurl = rawprevurl
 		}
-		pwd, err := os.Getwd()
-		ld := LoginData{Prevurl: prevurl}
-		if err != nil {
-			fmt.Println(err)
-			os.Exit(1)
-		}
-		files := []string{
-			pwd + "/layouts/base.html",
-			pwd + "/modules/users/templates/sign-in.html",
-		}
-		tmpl := template.Must(template.ParseFiles(files...))
-		tmpl.ExecuteTemplate(w, "base", &ld)
+		showLogin(w, http.StatusOK, prevurl, "", "", 0)
 	})
 
 	Router.HandleFunc("POST /login", login())

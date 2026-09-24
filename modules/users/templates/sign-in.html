@@ -7,13 +7,23 @@
       <form method="POST" action="/ui/users/login">
         <h1 class="h3 mb-4 fw-normal text-center">ARKGATE</h1>
 
+        {{ if .Error }}<div class="alert alert-danger py-2 small text-start" role="alert">{{ .Error }}</div>{{ end }}
+
         <div class="form-floating">
-          <input type="text" class="form-control" id="floatingInput" placeholder="username" name="username">
+          <input type="text" class="form-control" id="floatingInput" placeholder="username" name="username" value="{{ .Username }}" autocomplete="username">
           <label for="floatingInput">Username</label>
         </div>
         <div class="form-floating">
-          <input type="password" class="form-control" id="floatingPassword" placeholder="Password" name="password">
+          <input type="password" class="form-control" id="floatingPassword" placeholder="Password" name="password" autocomplete="current-password">
           <label for="floatingPassword">Password</label>
+        </div>
+        <div class="text-start mt-3 mb-3">
+          <label for="captchaAnswer" class="form-label small text-muted mb-1">Solve to continue (multiply and divide first):</label>
+          <div class="input-group">
+            <span class="input-group-text fw-bold">{{ .Question }} =</span>
+            <input type="text" class="form-control" id="captchaAnswer" name="captcha_answer" inputmode="numeric" pattern="[0-9]+" autocomplete="off" required placeholder="?">
+          </div>
+          <input type="hidden" name="captcha_token" value="{{ .Token }}">
         </div>
 
         <div class="checkbox mb-3">
