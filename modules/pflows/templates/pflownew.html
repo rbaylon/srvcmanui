@@ -1,0 +1,46 @@
+{{define "title"}}Pflow Form{{end}}
+{{define "head_script"}}{{end}}
+{{define "content"}}
+ <div class="row justify-content-center">
+  <div class="col-12 col-xl-8">
+   <div class="card shadow-sm my-4">
+    <div class="card-body p-4">
+     <form method="POST" action="/ui/pflows/addorupdate">
+   <div class="mb-3">
+     <label class="form-label" for="basic-form-device">Device</label>
+     <input class="form-control" id="basic-form-device" type="text" placeholder="pflow0" name="Device" pattern="[A-Za-z0-9]*" maxlength="100" required/>
+     <div class="form-text">The pflow interface name, e.g. pflow0. Becomes hostname.&lt;device&gt; on the gateway.</div>
+   </div>
+   <div class="mb-3">
+     <label class="form-label" for="basic-form-src">Flow Source</label>
+     <input class="form-control" id="basic-form-src" type="text" placeholder="10.0.0.1" name="Src" pattern="(\d{1,3}\.){3}\d{1,3}|[0-9a-fA-F:]+" required/>
+     <div class="form-text">Address the flow records are sent from (flowsrc).</div>
+   </div>
+   <div class="mb-3">
+     <label class="form-label" for="basic-form-dst">Flow Destination</label>
+     <input class="form-control" id="basic-form-dst" type="text" placeholder="10.0.0.2" name="Dst" pattern="(\d{1,3}\.){3}\d{1,3}|[0-9a-fA-F:]+" required/>
+     <div class="form-text">Collector the flow records are sent to (flowdst).</div>
+   </div>
+   <div class="mb-3">
+     <label class="form-label" for="basic-form-proto">Proto</label>
+     <input class="form-control" id="basic-form-proto" type="number" min="0" max="255" name="Proto" required/>
+     <div class="form-text">pflowproto version - 5 for NetFlow v5, 10 for IPFIX. Check pflow(4) on your OpenBSD release for what it accepts.</div>
+   </div>
+   <div class="mb-3">
+     <label class="form-label" for="basic-form-pfconfig">Router</label>
+     <select class="form-select" id="basic-form-pfconfig" aria-label="Select Router" name="PfconfigID"/>
+     {{ range .Pfconfigs }}
+       <option value="{{ .ID }}">{{ .Router }}</option>
+     {{ end }}
+     </select>
+   </div>
+     <div class="d-grid d-sm-flex justify-content-sm-end mt-4">
+       <button class="btn btn-primary" type="submit">Submit</button>
+     </div>
+    </form>
+   </div>
+  </div>
+ </div>
+</div>
+{{end}}
+{{define "tail_script"}}{{end}}

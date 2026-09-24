@@ -19,6 +19,7 @@ import (
 	grouprouter "github.com/rbaylon/srvcmanui/modules/groups/routes"
 	instancerouter "github.com/rbaylon/srvcmanui/modules/instances/routes"
 	pfifacerouter "github.com/rbaylon/srvcmanui/modules/pfifaces/routes"
+	pflowrouter "github.com/rbaylon/srvcmanui/modules/pflows/routes"
 	planrouter "github.com/rbaylon/srvcmanui/modules/plans/routes"
 	policyrouter "github.com/rbaylon/srvcmanui/modules/policies/routes"
 	pppoerouter "github.com/rbaylon/srvcmanui/modules/pppoes/routes"
@@ -37,6 +38,7 @@ func main() {
 	billportalsrouter := billportalrouter.New()
 	tunnelsrouter := tunnelrouter.New()
 	fdmonitorsrouter := fdmonitorrouter.New()
+	pflowsrouter := pflowrouter.New()
 	subsrouter := subrouter.New()
 	usersrouter := userrouter.New()
 	collsrouter := collectionrouter.New()
@@ -81,6 +83,7 @@ func main() {
 	mainrouter.Handle("/ui/billportal/", http.StripPrefix("/ui/billportal", billportalsrouter))
 	mainrouter.Handle("/ui/tunnels/", http.StripPrefix("/ui/tunnels", tunnelsrouter))
 	mainrouter.Handle("/ui/fdmonitor/", http.StripPrefix("/ui/fdmonitor", fdmonitorsrouter))
+	mainrouter.Handle("/ui/pflows/", http.StripPrefix("/ui/pflows", pflowsrouter))
 	finalrouter := accessvalidator.Check(accesslogger.Log(mainrouter))
 
 	log.Println("Go app listening on port", port)
