@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"os"
 	"strconv"
+	"time"
 
 	pfconfigmodel "github.com/rbaylon/srvcman/modules/pfconfig/model"
 	vouchermodel "github.com/rbaylon/srvcman/modules/vouchers/model"
@@ -39,6 +40,44 @@ func New() *http.ServeMux {
 		if err != nil {
 			log.Println("template error:", err)
 		}
+	})
+
+	// Every voucher, not just the page DataTables happens to be showing.
+	// A static path, so it wins over "GET /{id}" below.
+	Router.HandleFunc("GET /export", func(w http.ResponseWriter, r *http.Request) {
+		var records []vouchermodel.Voucher
+		err, status := client.Rester("vouchers", "GET", &records, r)
+		if err != nil {
+			fmt.Println(err)
+			utils.RenderErrorPage(w, status, err.Error())
+			return
+		}
+		// A zero time means "not set yet", which the table shows as
+		// 0001-01-01; an empty cell says it better.
+		when := func(t time.Time) any {
+			if t.IsZero() {
+				return nil
+			}
+			return t.Format("2006-01-02 15:04:05")
+		}
+		rows := make([][]any, 0, len(records))
+		for _, v := range records {
+			rows = append(rows, []any{
+				v.ID, v.Value, v.Type, v.Hours, v.Status, v.Downspeed, v.Upspeed,
+				v.Burstspeed, v.Duration, v.PfconfigID,
+				when(v.DateStarted), when(v.DateEnd), when(v.DateExpires),
+			})
+		}
+		data, err := utils.BuildXLSX("Vouchers", []string{
+			"ID", "Code", "Iface", "Hours", "Status", "DownSpeed", "UpSpeed",
+			"BurstSpeed", "BurstDuration", "RouterID", "DateStart", "DateEnd", "DateExpire",
+		}, rows)
+		if err != nil {
+			log.Println("vouchers export:", err)
+			utils.RenderErrorPage(w, http.StatusInternalServerError, err.Error())
+			return
+		}
+		utils.ServeXLSX(w, "vouchers-"+time.Now().Format("2006-01-02")+".xlsx", data)
 	})
 
 	Router.HandleFunc("GET /{id}", func(w http.ResponseWriter, r *http.Request) {
