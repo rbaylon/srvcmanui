@@ -16,6 +16,34 @@ import (
 	"github.com/rbaylon/srvcmanui/utils"
 )
 
+// listData is the unbounddns list page: the configured records, plus the
+// live status of the unbound service they describe - same status/start/
+// stop/restart shape as the billportal/captiveportal modules, just folded
+// into this module's existing CRUD list instead of a standalone page.
+type listData struct {
+	Records     []unbounddnsmodel.UnboundDns
+	Running     bool
+	Output      string
+	StatusError string
+}
+
+// serviceStatus fetches unbound's current state. A failure to reach
+// srvcman/arkgated is shown inline (StatusError) rather than a full error
+// page, since "can't tell right now" is a normal, recoverable state for a
+// status display - the start/stop/restart actions still get the full
+// error page treatment, since those are the ones a user needs to notice
+// failed.
+func serviceStatus(r *http.Request) (running bool, output string, statusErr string) {
+	var result struct {
+		Running bool   `json:"running"`
+		Output  string `json:"output"`
+	}
+	if err, _ := client.Rester("unbounddns/status", "GET", &result, r); err != nil {
+		return false, "", err.Error()
+	}
+	return result.Running, result.Output, ""
+}
+
 func New() *http.ServeMux {
 	Router := http.NewServeMux() // 3
 
@@ -33,7 +61,8 @@ func New() *http.ServeMux {
 			pwd + "/modules/unbounddns/templates/unbounddnss.html",
 		}
 		tmpl := template.Must(template.ParseFiles(files...))
-		tmpl.ExecuteTemplate(w, "htmx", records)
+		running, output, statusErr := serviceStatus(r)
+		tmpl.ExecuteTemplate(w, "htmx", listData{Records: records, Running: running, Output: output, StatusError: statusErr})
 	})
 
 	Router.HandleFunc("GET /conf", func(w http.ResponseWriter, r *http.Request) {
@@ -162,6 +191,22 @@ func New() *http.ServeMux {
 		}
 		http.Redirect(w, r, "/ui/unbounddns", http.StatusSeeOther)
 	})
+
+	serviceAction := func(name string) http.HandlerFunc {
+		return func(w http.ResponseWriter, r *http.Request) {
+			var result map[string]string
+			err, httpStatus := client.Rester("unbounddns/"+name, "PUT", &result, r)
+			if err != nil {
+				fmt.Println(err)
+				utils.RenderErrorPage(w, httpStatus, err.Error())
+				return
+			}
+			http.Redirect(w, r, "/ui/unbounddns", http.StatusSeeOther)
+		}
+	}
+	Router.HandleFunc("GET /start", serviceAction("start"))
+	Router.HandleFunc("GET /stop", serviceAction("stop"))
+	Router.HandleFunc("GET /restart", serviceAction("restart"))
 
 	return Router
 }
