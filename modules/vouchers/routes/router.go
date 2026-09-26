@@ -9,6 +9,7 @@ import (
 	"os"
 	"strconv"
 
+	pfconfigmodel "github.com/rbaylon/srvcman/modules/pfconfig/model"
 	vouchermodel "github.com/rbaylon/srvcman/modules/vouchers/model"
 	"github.com/rbaylon/srvcman/utils/validate"
 	"github.com/rbaylon/srvcmanui/client"
@@ -61,14 +62,22 @@ func New() *http.ServeMux {
 	})
 
 	Router.HandleFunc("GET /create", func(w http.ResponseWriter, r *http.Request) {
+		pfconfigs := []pfconfigmodel.Pfconfig{}
+		err, status := client.Rester("pfconfig", "GET", &pfconfigs, r)
+		if err != nil {
+			fmt.Println(err)
+			utils.RenderErrorPage(w, status, err.Error())
+			return
+		}
 		pwd, _ := os.Getwd()
 		files := []string{
 			pwd + "/layouts/newbase.html",
-			pwd + "/modules/vouchers/templates/voucher.html",
+			pwd + "/modules/vouchers/templates/vouchernew.html",
 		}
 		tmpl := template.Must(template.ParseFiles(files...))
-		err := tmpl.ExecuteTemplate(w, "htmx", nil)
-		if err != nil {
+		if err := tmpl.ExecuteTemplate(w, "htmx", struct {
+			Pfconfigs []pfconfigmodel.Pfconfig
+		}{pfconfigs}); err != nil {
 			log.Println(err)
 		}
 	})
@@ -98,6 +107,16 @@ func New() *http.ServeMux {
 			utils.RenderErrorPage(w, http.StatusBadRequest, err.Error())
 			return
 		}
+		// Without a router, every generated voucher carries pfconfig_id 0:
+		// rejected outright by the vouchers -> pfconfigs foreign key on
+		// Postgres, and silently useless on SQLite (which doesn't enforce
+		// it), since pf.conf generation only ever reaches a voucher through
+		// that association.
+		pfconfigID, err := strconv.Atoi(r.FormValue("PfconfigID"))
+		if err != nil || pfconfigID < 1 {
+			utils.RenderErrorPage(w, http.StatusBadRequest, "a router must be selected")
+			return
+		}
 
 		code := []byte("00000000")
 		maxlen := len(letters) - 1
@@ -117,6 +136,7 @@ func New() *http.ServeMux {
 			v.Burstspeed = 5
 			v.Duration = 60000
 			v.Type = storetype
+			v.PfconfigID = uint(pfconfigID)
 			vcs.Vouchers = append(vcs.Vouchers, *v)
 		}
 

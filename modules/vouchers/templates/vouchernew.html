@@ -1,0 +1,46 @@
+{{define "title"}}Generate Vouchers{{end}}
+{{define "head_script"}}{{end}}
+{{define "content"}}
+ <div class="row justify-content-center">
+  <div class="col-12 col-xl-8">
+   <div class="card shadow-sm my-4">
+    <div class="card-body p-4">
+     <form method="POST" action="/ui/vouchers/addorupdate">
+   <div class="mb-3">
+     <label class="form-label" for="basic-form-count">Count</label>
+     <input class="form-control" id="basic-form-count" type="number" placeholder="100" name="count" required min="1" max="1000"/>
+     <div class="form-text">Required. A whole number between 1 and 1000.</div>
+   </div>
+   <div class="mb-3">
+     <label class="form-label" for="basic-form-hours">Hours</label>
+     <input class="form-control" id="basic-form-hours" type="number" placeholder="24" name="hours" required/>
+     <div class="form-text">Required. A whole number.</div>
+   </div>
+   <div class="mb-3">
+     <label class="form-label" for="basic-form-storetype">Store</label>
+     <input class="form-control" id="basic-form-storetype" type="text" placeholder="SarisariStore" name="storetype" pattern="[A-Za-z0-9]*" maxlength="100"/>
+     <div class="form-text">Letters and numbers only, no spaces, up to 100 characters.</div>
+   </div>
+   <div class="mb-3">
+     <label class="form-label" for="basic-form-pfconfig">Router</label>
+     <select class="form-select" id="basic-form-pfconfig" aria-label="Select Router" name="PfconfigID" required>
+     {{ range .Pfconfigs }}
+       <option value="{{ .ID }}">{{ .Router }}</option>
+     {{ end }}
+     </select>
+     <div class="form-text">
+       Required. Vouchers are only written into a router's pf allowlist
+       through this association, so a voucher generated without one could
+       never authorize a client.
+     </div>
+   </div>
+     <div class="d-grid d-sm-flex justify-content-sm-end mt-4">
+       <button class="btn btn-primary" type="submit">Submit</button>
+     </div>
+    </form>
+   </div>
+  </div>
+ </div>
+</div>
+{{end}}
+{{define "tail_script"}}{{end}}
