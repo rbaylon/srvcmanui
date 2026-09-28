@@ -210,7 +210,7 @@ func New() *http.ServeMux {
 			v.Downspeed = plan.Downspeed
 			v.Upspeed = plan.Upspeed
 			v.Burstspeed = plan.Downspeed * 2
-			v.Duration = 60000
+			v.Duration = 10000
 			v.Type = storetype
 			v.PfconfigID = uint(pfconfigID)
 			vcs.Vouchers = append(vcs.Vouchers, *v)
