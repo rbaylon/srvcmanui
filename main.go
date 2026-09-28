@@ -92,8 +92,8 @@ func main() {
 	mainrouter.Handle("/ui/changes/", http.StripPrefix("/ui/changes", changessrouter))
 	finalrouter := accessvalidator.Check(accesslogger.Log(mainrouter))
 
-	log.Println("Go app listening on port", port)
-	server := http.Server{Addr: ":" + port, Handler: finalrouter}
-	server.ListenAndServe()
-
+	log.Println("Go app listening on port", port, "(TLS)")
+	if err := serveTLS(finalrouter, port); err != nil {
+		log.Fatal(err)
+	}
 }

@@ -109,6 +109,14 @@ func login() http.HandlerFunc {
 			session.Values["authenticated"] = true
 			session.Values["whoami"] = username
 			session.Values["jwt"] = *token
+			// This app always terminates TLS itself now (see tls.go -
+			// certmagic or a self-signed cert, never plain HTTP), so every
+			// request here already arrived over TLS: Secure can be a flat
+			// true instead of conditioned on the request. That condition
+			// only ever existed for when a proxy could hand this process a
+			// plain HTTP connection because this app didn't do TLS itself.
+			session.Options.Secure = true
+			session.Options.SameSite = http.SameSiteLaxMode
 			session.Save(r, w)
 			if prevurl == "" {
 				prevurl = "/ui/dashboard"
@@ -125,6 +133,8 @@ func logout(w http.ResponseWriter, r *http.Request) {
 	session, _ := store.Get(r, database.GetEnvVariable("APP_NAME"))
 	session.Values["authenticated"] = false
 	session.Options.MaxAge = -1
+	session.Options.Secure = true
+	session.Options.SameSite = http.SameSiteLaxMode
 	session.Save(r, w)
 	http.Redirect(w, r, "/ui/users/login", http.StatusSeeOther)
 }
