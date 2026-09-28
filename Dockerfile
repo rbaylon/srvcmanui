@@ -1,6 +1,5 @@
-# go.mod requires go 1.25+ (pulled in by github.com/caddyserver/certmagic) -
-# keep this in sync with the `go` directive in go.mod.
-FROM golang:1.25-bookworm AS base
+# Use Go 1.23 bookworm as base image
+FROM golang:1.24-bookworm AS base
 
 # Move to working directory /build
 WORKDIR /build

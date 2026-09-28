@@ -21,7 +21,6 @@
 go.work
 .env
 *.db
-tls/
 srvcmanui
 srvcman.code-workspace
 tags

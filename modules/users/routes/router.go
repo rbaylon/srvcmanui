@@ -25,6 +25,23 @@ var (
 	store = sessions.NewCookieStore(key)
 )
 
+// requestIsSecure reports whether r reached this app over HTTPS - directly
+// (r.TLS set, if this process ever terminates TLS itself) or via a reverse
+// proxy that terminated it and says so through X-Forwarded-Proto (what
+// nginx-proxy, this app's actual deployment, sets). Only used to decide
+// the session cookie's Secure flag: gorilla/sessions' CookieStore defaults
+// to Secure=true, which is correct behind the proxy (the browser sees
+// https:// and stores the cookie) but breaks direct http://<ip> access -
+// the browser silently discards a Secure cookie offered over plain HTTP,
+// so login "succeeds" server-side yet the browser never has anything to
+// send back, and the next request looks signed-out again: an infinite
+// redirect loop back to the login page. Hardcoding Secure=false instead
+// would fix that but weaken the normal, proxied HTTPS case, so this
+// follows the request instead of a fixed setting either way.
+func requestIsSecure(r *http.Request) bool {
+	return r.TLS != nil || r.Header.Get("X-Forwarded-Proto") == "https"
+}
+
 // LoginData is what the sign-in page shows: where to go afterwards, what
 // was typed, why the last attempt failed, and a fresh math challenge.
 type LoginData struct {
@@ -109,13 +126,7 @@ func login() http.HandlerFunc {
 			session.Values["authenticated"] = true
 			session.Values["whoami"] = username
 			session.Values["jwt"] = *token
-			// This app always terminates TLS itself now (see tls.go -
-			// certmagic or a self-signed cert, never plain HTTP), so every
-			// request here already arrived over TLS: Secure can be a flat
-			// true instead of conditioned on the request. That condition
-			// only ever existed for when a proxy could hand this process a
-			// plain HTTP connection because this app didn't do TLS itself.
-			session.Options.Secure = true
+			session.Options.Secure = requestIsSecure(r)
 			session.Options.SameSite = http.SameSiteLaxMode
 			session.Save(r, w)
 			if prevurl == "" {
@@ -133,7 +144,7 @@ func logout(w http.ResponseWriter, r *http.Request) {
 	session, _ := store.Get(r, database.GetEnvVariable("APP_NAME"))
 	session.Values["authenticated"] = false
 	session.Options.MaxAge = -1
-	session.Options.Secure = true
+	session.Options.Secure = requestIsSecure(r)
 	session.Options.SameSite = http.SameSiteLaxMode
 	session.Save(r, w)
 	http.Redirect(w, r, "/ui/users/login", http.StatusSeeOther)
