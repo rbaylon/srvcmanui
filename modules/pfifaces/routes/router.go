@@ -93,6 +93,24 @@ func New() *http.ServeMux {
 			utils.RenderErrorPage(w, status, err.Error())
 			return
 		}
+		existing := []pfifacemodel.Pfiface{}
+		err, status = client.Rester("pfiface", "GET", &existing, r)
+		if err != nil {
+			fmt.Println(err)
+			utils.RenderErrorPage(w, status, err.Error())
+			return
+		}
+		used := map[string]bool{}
+		for _, e := range existing {
+			used[e.Device] = true
+		}
+		available := devices[:0]
+		for _, d := range devices {
+			if !used[d] {
+				available = append(available, d)
+			}
+		}
+		devices = available
 		files := []string{
 			pwd + "/layouts/newbase.html",
 			pwd + "/modules/pfifaces/templates/pfiface.html",
