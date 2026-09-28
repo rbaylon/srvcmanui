@@ -53,7 +53,7 @@
    </div>
    <div class="mb-3">
      <label class="form-label" for="basic-form-type">Type</label>
-     <select class="form-select" id="basic-form-type" aria-label="Select Type" name="Type"/>
+     <select class="form-select" id="basic-form-type" aria-label="Select Type" name="Type" onchange="toggleLbPercentage(this)"/>
        {{ if .Record }} <option selected="selected" value="{{.Record.Type}}">{{.Record.Type}}</option> {{end}}
        <option value="internal">internal</option>
        <option value="external">external</option>
@@ -62,7 +62,8 @@
    <div class="mb-3">
      <label class="form-label" for="basic-form-lb">Load Balance Percentage</label>
      <input class="form-control" id="basic-form-lb" type="number" placeholder="" name="LbPercentage" {{ if .Record }} value="{{.Record.LbPercentage}}" {{end}} min="0" max="100"/>
-     <div class="form-text">A whole number between 0 and 100.</div>
+     <div class="form-text">A whole number between 0 and 100. Only applies to external (load-balanced) interfaces.</div>
+     <div class="form-text">Load Balancer must be enabled first on the selected router - <a id="lb-router-link" href="#" target="_blank" rel="noopener">open settings</a>.</div>
    </div>
    <div class="mb-3 form-check">
      <input class="form-check-input" id="basic-form-default" type="checkbox" name="Default" value="true" {{ if .Record }} {{ if .Record.Default }}checked{{ end }} {{end}}/>
@@ -74,7 +75,7 @@
    </div>
    <div class="mb-3">
      <label class="form-label" for="basic-form-pfconfig">Router</label>
-     <select class="form-select" id="basic-form-pfconfig" aria-label="Select Type" name="PfconfigID"/>
+     <select class="form-select" id="basic-form-pfconfig" aria-label="Select Type" name="PfconfigID" onchange="updateLbRouterLink()"/>
      {{ range .Pfconfigs }}
        <option value="{{ .ID }}" {{ if $.Record }}{{ if eq $.Record.PfconfigID .ID }} selected="selected" {{ end }} {{end}}>{{ .Router }}</option>
      {{ end }}
@@ -88,5 +89,29 @@
   </div>
  </div>
 </div>
+ <script>
+   // UI-only: LbPercentage is meaningless for an internal interface, but
+   // still a plain optional int on the backend (validate.IntRange(0,100)
+   // accepts the zero value a disabled, unsubmitted field decodes to -
+   // see pfifacemodel.Pfiface.Bind), so disabling it here needs no
+   // server-side change.
+   function toggleLbPercentage(select) {
+     document.getElementById('basic-form-lb').disabled = (select.value === 'internal');
+   }
+   // Points the "open router settings" link at whichever router (pfconfig)
+   // is currently selected, so it always leads to the LoadBalance checkbox
+   // for the right one - see modules/instances/templates/instance.html.
+   function updateLbRouterLink() {
+     var select = document.getElementById('basic-form-pfconfig');
+     var link = document.getElementById('lb-router-link');
+     if (select && select.value) {
+       link.href = '/ui/instances/' + select.value;
+     }
+   }
+   document.addEventListener('DOMContentLoaded', function () {
+     toggleLbPercentage(document.getElementById('basic-form-type'));
+     updateLbRouterLink();
+   });
+ </script>
 {{end}}
 {{define "tail_script"}}{{end}}
