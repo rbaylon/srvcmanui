@@ -9,6 +9,7 @@ import (
 	accessvalidator "github.com/rbaylon/srvcmanui/middlewares/access/validator"
 	billportalrouter "github.com/rbaylon/srvcmanui/modules/billportal/routes"
 	captiveportalrouter "github.com/rbaylon/srvcmanui/modules/captiveportal/routes"
+	changesrouter "github.com/rbaylon/srvcmanui/modules/changes/routes"
 	collectionrouter "github.com/rbaylon/srvcmanui/modules/colls/routes"
 	dashrouter "github.com/rbaylon/srvcmanui/modules/dashboard/routes"
 	dhcpserverrouter "github.com/rbaylon/srvcmanui/modules/dhcpserver/routes"
@@ -37,6 +38,7 @@ func main() {
 	port := database.GetEnvVariable("APP_PORT")
 	captiveportalsrouter := captiveportalrouter.New()
 	billportalsrouter := billportalrouter.New()
+	changessrouter := changesrouter.New()
 	tunnelsrouter := tunnelrouter.New()
 	fdmonitorsrouter := fdmonitorrouter.New()
 	pflowsrouter := pflowrouter.New()
@@ -87,6 +89,7 @@ func main() {
 	mainrouter.Handle("/ui/fdmonitor/", http.StripPrefix("/ui/fdmonitor", fdmonitorsrouter))
 	mainrouter.Handle("/ui/pflows/", http.StripPrefix("/ui/pflows", pflowsrouter))
 	mainrouter.Handle("/ui/snmpserver/", http.StripPrefix("/ui/snmpserver", snmpserversrouter))
+	mainrouter.Handle("/ui/changes/", http.StripPrefix("/ui/changes", changessrouter))
 	finalrouter := accessvalidator.Check(accesslogger.Log(mainrouter))
 
 	log.Println("Go app listening on port", port)
