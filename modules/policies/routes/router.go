@@ -13,12 +13,28 @@ import (
 	"github.com/rbaylon/srvcmanui/utils"
 )
 
+// fetchModules asks srvcman which module names a policy's Type can
+// meaningfully reference - every module actually mounted in that
+// deployment (core plus whatever optional ones its modules.json enables),
+// via srvcman's own /api/v1/modules (see ActiveModuleNames in srvcman's
+// moduleregistry.go). Fetched live rather than hardcoded here, so this
+// list can't fall out of sync with srvcman's module registry or list a
+// module that isn't actually running in a given deployment.
+func fetchModules(r *http.Request) ([]string, error, int) {
+	var result struct {
+		Modules []string `json:"modules"`
+	}
+	err, status := client.Rester("modules", "GET", &result, r)
+	return result.Modules, err, status
+}
+
 func New() *http.ServeMux {
 	Router := http.NewServeMux()
 
 	type formdata struct {
-		Policy *policymodel.Policy
-		Groups []groupmodel.Group
+		Policy  *policymodel.Policy
+		Groups  []groupmodel.Group
+		Modules []string
 	}
 
 	Router.HandleFunc("GET /", func(w http.ResponseWriter, r *http.Request) {
@@ -47,7 +63,13 @@ func New() *http.ServeMux {
 			utils.RenderErrorPage(w, status, err.Error())
 			return
 		}
-		fd := formdata{nil, groups}
+		modules, err, status := fetchModules(r)
+		if err != nil {
+			fmt.Println(err)
+			utils.RenderErrorPage(w, status, err.Error())
+			return
+		}
+		fd := formdata{nil, groups, modules}
 		files := []string{
 			pwd + "/layouts/newbase.html",
 			pwd + "/modules/policies/templates/policynew.html",
@@ -144,7 +166,13 @@ func New() *http.ServeMux {
 			utils.RenderErrorPage(w, status, err.Error())
 			return
 		}
-		fd := formdata{&record, groups}
+		modules, err, status := fetchModules(r)
+		if err != nil {
+			fmt.Println(err)
+			utils.RenderErrorPage(w, status, err.Error())
+			return
+		}
+		fd := formdata{&record, groups, modules}
 		pwd, _ := os.Getwd()
 		files := []string{
 			pwd + "/layouts/newbase.html",

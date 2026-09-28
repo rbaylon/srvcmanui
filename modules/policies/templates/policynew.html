@@ -20,8 +20,11 @@
    </div>
    <div class="mb-3">
      <label class="form-label" for="basic-form-module">Module</label>
-     <input class="form-control" id="basic-form-module" type="text" placeholder="Module name" name="Type" pattern="[A-Za-z0-9]*" maxlength="100"/>
-     <div class="form-text">Letters and numbers only, no spaces, up to 100 characters.</div>
+     <select class="form-select" id="basic-form-module" aria-label="Select Module" name="Type">
+      {{ range .Modules }}
+        <option value="{{ . }}">{{ . }}</option>
+      {{ end }}
+     </select>
    </div>
    <div class="mb-3">
      <label class="form-label" for="basic-form-resource">Resource</label>
