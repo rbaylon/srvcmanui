@@ -11,6 +11,7 @@ import (
 	"time"
 
 	pfconfigmodel "github.com/rbaylon/srvcman/modules/pfconfig/model"
+	planmodel "github.com/rbaylon/srvcman/modules/plans/model"
 	vouchermodel "github.com/rbaylon/srvcman/modules/vouchers/model"
 	"github.com/rbaylon/srvcman/utils/validate"
 	"github.com/rbaylon/srvcmanui/client"
@@ -108,6 +109,13 @@ func New() *http.ServeMux {
 			utils.RenderErrorPage(w, status, err.Error())
 			return
 		}
+		plans := []planmodel.Plan{}
+		err, status = client.Rester("plans", "GET", &plans, r)
+		if err != nil {
+			fmt.Println(err)
+			utils.RenderErrorPage(w, status, err.Error())
+			return
+		}
 		pwd, _ := os.Getwd()
 		files := []string{
 			pwd + "/layouts/newbase.html",
@@ -116,7 +124,8 @@ func New() *http.ServeMux {
 		tmpl := template.Must(template.ParseFiles(files...))
 		if err := tmpl.ExecuteTemplate(w, "htmx", struct {
 			Pfconfigs []pfconfigmodel.Pfconfig
-		}{pfconfigs}); err != nil {
+			Plans     []planmodel.Plan
+		}{pfconfigs, plans}); err != nil {
 			log.Println(err)
 		}
 	})
@@ -157,6 +166,34 @@ func New() *http.ServeMux {
 			return
 		}
 
+		// The voucher's Downspeed/Upspeed/Burstspeed used to be hardcoded
+		// here; they now come from the selected Plan, the same source of
+		// truth subs already uses, so a voucher's speed actually matches
+		// the plan name printed on it. Burstspeed is fixed at 2x Downspeed.
+		planName := r.FormValue("Plan")
+		if err := validate.Alnum("plan", planName, 100); err != nil || planName == "" {
+			utils.RenderErrorPage(w, http.StatusBadRequest, "a plan must be selected")
+			return
+		}
+		plans := []planmodel.Plan{}
+		err, status := client.Rester("plans", "GET", &plans, r)
+		if err != nil {
+			fmt.Println(err)
+			utils.RenderErrorPage(w, status, err.Error())
+			return
+		}
+		var plan *planmodel.Plan
+		for i := range plans {
+			if plans[i].Plan == planName {
+				plan = &plans[i]
+				break
+			}
+		}
+		if plan == nil {
+			utils.RenderErrorPage(w, http.StatusBadRequest, "unknown plan: "+planName)
+			return
+		}
+
 		code := []byte("00000000")
 		maxlen := len(letters) - 1
 		v := &vouchermodel.Voucher{}
@@ -170,16 +207,16 @@ func New() *http.ServeMux {
 			v.Value = newcode
 			v.Hours = hours
 			v.Status = "available"
-			v.Downspeed = 3
-			v.Upspeed = 2
-			v.Burstspeed = 5
+			v.Downspeed = plan.Downspeed
+			v.Upspeed = plan.Upspeed
+			v.Burstspeed = plan.Downspeed * 2
 			v.Duration = 60000
 			v.Type = storetype
 			v.PfconfigID = uint(pfconfigID)
 			vcs.Vouchers = append(vcs.Vouchers, *v)
 		}
 
-		err, status := client.Rester("vouchers/createBulk", "POST", &vcs, r)
+		err, status = client.Rester("vouchers/createBulk", "POST", &vcs, r)
 		if err != nil {
 			fmt.Println(err)
 			utils.RenderErrorPage(w, status, err.Error())

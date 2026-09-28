@@ -22,6 +22,18 @@
      <div class="form-text">Letters and numbers only, no spaces, up to 100 characters.</div>
    </div>
    <div class="mb-3">
+     <label class="form-label" for="basic-form-plan">Plan</label>
+     <select class="form-select" id="basic-form-plan" aria-label="Select Plan" name="Plan" required>
+      {{ range .Plans}}
+        <option value="{{ .Plan }}">{{ .Plan }}</option>
+      {{ end }}
+     </select>
+     <div class="form-text">
+       Required. Sets each voucher's Downspeed and Upspeed from this plan;
+       Burstspeed is fixed at 2x Downspeed.
+     </div>
+   </div>
+   <div class="mb-3">
      <label class="form-label" for="basic-form-pfconfig">Router</label>
      <select class="form-select" id="basic-form-pfconfig" aria-label="Select Router" name="PfconfigID" required>
      {{ range .Pfconfigs }}
