@@ -48,14 +48,18 @@
      <input class="form-control" id="basic-form-ip" type="text" placeholder="192.0.2.100" name="FramedIp" value="{{.Record.FramedIp}}" pattern="(\d{1,3}\.){3}\d{1,3}|[0-9a-fA-F:]+"/>
      <div class="form-text">A valid IPv4 or IPv6 address, e.g. 192.0.2.100. Leave blank if none.</div>
    </div>
+   <div class="mb-3 form-check">
+     <input class="form-check-input" id="basic-form-pppoe-enable" type="checkbox" onchange="togglePppoeFields(this)" {{ if .Record.Pppusername }}checked{{ end }}/>
+     <label class="form-check-label" for="basic-form-pppoe-enable">Enable PPPoE</label>
+   </div>
    <div class="mb-3">
      <label class="form-label" for="basic-form-pppuname">PPPoE Username</label>
-     <input class="form-control" id="basic-form-ppppw" type="text" placeholder="Leave blank for non pppoe user" name="Pppusername" value="{{.Record.Pppusername}}" pattern="[A-Za-z0-9]*" maxlength="100"/>
+     <input class="form-control" id="basic-form-pppuname" type="text" placeholder="Leave blank for non pppoe user" name="Pppusername" value="{{.Record.Pppusername}}" pattern="[A-Za-z0-9]*" maxlength="100" {{ if not .Record.Pppusername }}disabled{{ end }}/>
      <div class="form-text">Letters and numbers only, no spaces, up to 100 characters. Leave blank for non-PPPoE subscribers.</div>
    </div>
    <div class="mb-3">
-     <label class="form-label" for="basic-form-lname">PPPoE Password</label>
-     <input class="form-control" id="basic-form-lname" type="password" placeholder="" name="Ppppassword" value="{{.Record.Ppppassword}}" maxlength="100"/>
+     <label class="form-label" for="basic-form-ppppw">PPPoE Password</label>
+     <input class="form-control" id="basic-form-ppppw" type="password" placeholder="" name="Ppppassword" value="{{.Record.Ppppassword}}" maxlength="100" {{ if not .Record.Pppusername }}disabled{{ end }}/>
      <div class="form-text">Up to 100 characters. Any characters allowed.</div>
    </div>
    <div class="mb-3">
@@ -135,5 +139,17 @@
   </div>
  </div>
 </div>
+ <script>
+   // UI-only: the PPPoE fields are optional on the backend (blank is a
+   // valid, already-supported "non-PPPoE subscriber" value - see
+   // subs/model/subs.go's Bind), so disabling and clearing them here
+   // needs no server-side change. A disabled input isn't submitted with
+   // the form at all, so unchecking this simply posts empty values for
+   // both fields, same as leaving them blank.
+   function togglePppoeFields(checkbox) {
+     document.getElementById('basic-form-pppuname').disabled = !checkbox.checked;
+     document.getElementById('basic-form-ppppw').disabled = !checkbox.checked;
+   }
+ </script>
 {{end}}
 {{define "tail_script"}}{{end}}
