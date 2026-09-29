@@ -68,8 +68,10 @@
         <div class="form-text">
           Generated on save, not entered here. Saving provisions a dedicated
           API user ("{{ printf "captiveportal" }}") with read-only access to
-          the vouchers module, and writes its credential into API_AUTH in the
-          .env file. It is never shown in this UI or returned by the API - to
+          the vouchers and runtimes modules - vouchers for validating a code,
+          runtimes for the background job that reloads pf after one is
+          accepted - and writes its credential into API_AUTH in the .env
+          file. It is never shown in this UI or returned by the API - to
           replace it, delete that user in Administration &rarr; Users and save
           again.
         </div>
