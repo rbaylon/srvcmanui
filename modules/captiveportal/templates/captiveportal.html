@@ -2,32 +2,124 @@
 {{define "head_script"}}{{end}}
 {{define "content"}}
 <div class="card shadow-sm my-3">
-  <div class="card-header">
-    <span data-feather="server" class="me-1"></span>
-    Captive Portal
-  </div>
-  <div class="card-body">
-    {{ if .Error }}
-    <div class="alert alert-danger">{{.Error}}</div>
-    {{ else }}
-    <p>
-      Status:
-      {{ if .Running }}
+  <div class="card-header d-flex align-items-center justify-content-between flex-wrap gap-2">
+    <div class="d-flex align-items-center gap-2">
+      <h5 class="mb-0">Captive Portal</h5>
+      {{ if .Error }}
+      <span class="badge bg-secondary">Unknown</span>
+      {{ else if .Running }}
       <span class="badge bg-success">Running</span>
       {{ else }}
       <span class="badge bg-secondary">Stopped</span>
       {{ end }}
-    </p>
-    {{ end }}
-    <div class="d-flex gap-2 mb-3">
-      <a class="btn btn-success" href="/ui/captiveportal/start">Start</a>
-      <a class="btn btn-danger" href="/ui/captiveportal/stop">Stop</a>
-      <a class="btn btn-secondary" href="/ui/captiveportal/restart">Restart</a>
-      <a class="btn btn-outline-secondary" href="/ui/captiveportal">Refresh</a>
     </div>
-    {{ if .Output }}
-    <pre class="p-3 bg-light border rounded mb-0" style="white-space: pre-wrap;">{{.Output}}</pre>
-    {{ end }}
+    <div>
+      <a href="/ui/captiveportal/start" class="btn btn-outline-success btn-sm" title="Start"><span data-feather="play"></span></a>
+      <a href="/ui/captiveportal/stop" class="btn btn-outline-danger btn-sm" title="Stop"><span data-feather="square"></span></a>
+      <a href="/ui/captiveportal/restart" class="btn btn-outline-secondary btn-sm" title="Restart"><span data-feather="rotate-cw"></span></a>
+      <a href="/ui/captiveportal" class="btn btn-outline-secondary btn-sm" title="Refresh status"><span data-feather="refresh-cw"></span></a>
+      {{ with .Record }}
+      <a href="#" onclick="confirmDelete('/ui/captiveportal/delete/{{ .ID }}')" class="btn btn-outline-danger btn-sm" title="Delete config"><span data-feather="x-square"></span></a>
+      {{ end }}
+    </div>
+  </div>
+  {{ if .Error }}
+  <div class="alert alert-warning mb-0 rounded-0 py-2 small">Could not read captiveportal status: {{ .Error }}</div>
+  {{ else if .Output }}
+  <pre class="p-2 px-3 mb-0 bg-light border-bottom small" style="white-space: pre-wrap;">{{ .Output }}</pre>
+  {{ end }}
+  <div class="card-body p-4">
+    <form method="POST" action="/ui/captiveportal/addorupdate">
+      {{ with .Record }}
+      <input type="hidden" name="ID" value="{{ .ID }}" />
+      <input type="hidden" name="CreatedAt" value="{{ .CreatedAt.Format "2006-01-02T15:04:05" }}"/>
+      <input type="hidden" name="UpdatedAt" value="{{ .UpdatedAt.Format "2006-01-02T15:04:05" }}"/>
+      {{ end }}
+
+      <h6 class="text-muted">Portal listener</h6>
+      <div class="row">
+        <div class="col-md-8 mb-3">
+          <label class="form-label" for="cp-appip">APP_IP</label>
+          <input class="form-control" id="cp-appip" type="text" placeholder="127.0.0.1" name="AppIp"
+                 value="{{ with .Record }}{{ .AppIp }}{{ end }}"
+                 pattern="(\d{1,3}\.){3}\d{1,3}|[0-9a-fA-F:]+" required/>
+          <div class="form-text">Address the portal's own HTTP server binds to.</div>
+        </div>
+        <div class="col-md-4 mb-3">
+          <label class="form-label" for="cp-appport">APP_PORT</label>
+          <input class="form-control" id="cp-appport" type="number" min="1" max="65535" name="AppPort"
+                 value="{{ with .Record }}{{ .AppPort }}{{ end }}" required/>
+          <div class="form-text">Must match the pf redirect port.</div>
+        </div>
+      </div>
+
+      <h6 class="text-muted">This API</h6>
+      <div class="mb-3">
+        <label class="form-label" for="cp-apiurl">API_URL</label>
+        <input class="form-control" id="cp-apiurl" type="text" placeholder="http://127.0.0.1:44444/api/v1/" name="ApiUrl"
+               value="{{ with .Record }}{{ .ApiUrl }}{{ end }}" maxlength="253" required/>
+        <div class="form-text">Base URL of this API, with the trailing slash - the portal appends login, vouchers/value/... and runtime/... to it.</div>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">API_AUTH</label>
+        <div class="form-control-plaintext">
+          <span class="badge bg-secondary">managed automatically</span>
+        </div>
+        <div class="form-text">
+          Generated on save, not entered here. Saving provisions a dedicated
+          API user ("{{ printf "captiveportal" }}") with read-only access to
+          the vouchers module, and writes its credential into API_AUTH in the
+          .env file. It is never shown in this UI or returned by the API - to
+          replace it, delete that user in Administration &rarr; Users and save
+          again.
+        </div>
+      </div>
+
+      <h6 class="text-muted">Router identity</h6>
+      <div class="row">
+        <div class="col-md-8 mb-3">
+          <label class="form-label" for="cp-routerid">ROUTER_ID</label>
+          <input class="form-control" id="cp-routerid" type="text" placeholder="gw1" name="RouterId"
+                 value="{{ with .Record }}{{ .RouterId }}{{ end }}" maxlength="100" required/>
+        </div>
+        <div class="col-md-4 mb-3">
+          <label class="form-label" for="cp-routerindex">ROUTER_INDEX</label>
+          <input class="form-control" id="cp-routerindex" type="number" min="0" name="RouterIndex"
+                 value="{{ with .Record }}{{ .RouterIndex }}{{ else }}0{{ end }}" required/>
+          <div class="form-text">Worker id the portal polls runtime actions for.</div>
+        </div>
+      </div>
+
+      <h6 class="text-muted">Sockets</h6>
+      <div class="mb-3">
+        <label class="form-label" for="cp-unixsock">UNIX_SOCK</label>
+        <input class="form-control" id="cp-unixsock" type="text" placeholder="/var/run/captiveportal.sock" name="UnixSock"
+               value="{{ with .Record }}{{ .UnixSock }}{{ end }}" maxlength="253"/>
+      </div>
+      <div class="mb-3">
+        <label class="form-label" for="cp-arkgatesock">ARKGATE_SOCKET</label>
+        <input class="form-control" id="cp-arkgatesock" type="text" placeholder="/var/run/arkgated.sock" name="ArkgateSocket"
+               value="{{ with .Record }}{{ .ArkgateSocket }}{{ end }}" maxlength="253"/>
+        <div class="form-text">arkgated's local socket, used for the pf reload the portal requests after a voucher is accepted.</div>
+      </div>
+
+      <div class="mb-3 form-check">
+        <input class="form-check-input" id="cp-enabled" type="checkbox" name="Enabled" value="true"
+               {{ with .Record }}{{ if .Enabled }}checked{{ end }}{{ end }}/>
+        <label class="form-check-label" for="cp-enabled">ENABLED</label>
+      </div>
+
+      <div class="d-grid d-sm-flex justify-content-sm-end mt-4">
+        <button class="btn btn-primary" type="submit">Save</button>
+      </div>
+    </form>
+  </div>
+  <div class="card-footer">
+    <div class="form-text mb-0">
+      Saving writes {{ .EnvPath }} on the gateway (mode 0600 - it holds the
+      API credential). The portal reads that file at startup, so use Restart
+      above for a change to take effect.
+    </div>
   </div>
 </div>
 {{end}}

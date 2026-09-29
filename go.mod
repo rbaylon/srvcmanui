@@ -6,7 +6,7 @@ require (
 	github.com/go-chi/render v1.0.3
 	github.com/gorilla/sessions v1.4.0
 	github.com/rbaylon/arkgatecmd v1.1.8
-	github.com/rbaylon/srvcman v1.1.74
+	github.com/rbaylon/srvcman v1.1.75
 )
 
 require (
