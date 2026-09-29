@@ -20,16 +20,21 @@ import (
 
 	"github.com/go-chi/render"
 	captiveportalmodel "github.com/rbaylon/srvcman/modules/captiveportal/model"
+	pfconfigmodel "github.com/rbaylon/srvcman/modules/pfconfig/model"
 	"github.com/rbaylon/srvcmanui/client"
 	"github.com/rbaylon/srvcmanui/utils"
 )
 
 type viewdata struct {
 	Record  *captiveportalmodel.CaptivePortal
-	Running bool
-	Output  string
-	Error   string
-	EnvPath string
+	// Pfconfigs backs the Router select - ROUTER_ID and ROUTER_INDEX are
+	// both derived from whichever one is chosen (see the addorupdate
+	// handler), rather than entered separately.
+	Pfconfigs []pfconfigmodel.Pfconfig
+	Running   bool
+	Output    string
+	Error     string
+	EnvPath   string
 }
 
 func render500(w http.ResponseWriter, status int, err error) {
@@ -76,8 +81,13 @@ func New() *http.ServeMux {
 			render500(w, code, err)
 			return
 		}
+		pfconfigs := []pfconfigmodel.Pfconfig{}
+		if err, code := client.Rester("pfconfig", "GET", &pfconfigs, r); err != nil {
+			render500(w, code, err)
+			return
+		}
 		running, output, statusErr := status(r)
-		data := viewdata{Running: running, Output: output, Error: statusErr}
+		data := viewdata{Running: running, Output: output, Error: statusErr, Pfconfigs: pfconfigs}
 		if len(records) > 0 {
 			data.Record = &records[0]
 		}
@@ -90,6 +100,16 @@ func New() *http.ServeMux {
 			utils.RenderErrorPage(w, http.StatusBadRequest, err.Error())
 			return
 		}
+		// ROUTER_INDEX is never entered directly - it's the ID of the
+		// pfconfig the submitted ROUTER_ID (its Router name) resolves to,
+		// looked up fresh on every save rather than trusted from the form,
+		// so it can't drift from whatever that router's actual ID is.
+		var pfc pfconfigmodel.Pfconfig
+		if err, code := client.Rester("pfconfig/query/"+s.RouterId, "GET", &pfc, r); err != nil {
+			render500(w, code, fmt.Errorf("router %q not found: %w", s.RouterId, err))
+			return
+		}
+		s.RouterIndex = int(pfc.ID)
 		id := s.ID
 		if id > 0 {
 			err, code := client.Rester("captiveportal/"+strconv.FormatUint(uint64(id), 10), "PUT", s, r)

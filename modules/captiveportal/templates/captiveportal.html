@@ -80,24 +80,18 @@
       <h6 class="text-muted">Router identity</h6>
       <div class="row">
         <div class="col-md-8 mb-3">
-          <label class="form-label" for="cp-routerid">ROUTER_ID</label>
-          <input class="form-control" id="cp-routerid" type="text" placeholder="gw1" name="RouterId"
-                 value="{{ with .Record }}{{ .RouterId }}{{ end }}" maxlength="100" required/>
-        </div>
-        <div class="col-md-4 mb-3">
-          <label class="form-label" for="cp-routerindex">ROUTER_INDEX</label>
-          <input class="form-control" id="cp-routerindex" type="number" min="0" name="RouterIndex"
-                 value="{{ with .Record }}{{ .RouterIndex }}{{ else }}0{{ end }}" required/>
-          <div class="form-text">Worker id the portal polls runtime actions for.</div>
+          <label class="form-label" for="cp-routerid">Router</label>
+          <select class="form-select" id="cp-routerid" name="RouterId" required>
+            {{ $current := "" }}{{ if .Record }}{{ $current = .Record.RouterId }}{{ end }}
+            {{ range .Pfconfigs }}
+              <option value="{{ .Router }}" {{ if eq .Router $current }}selected{{ end }}>{{ .Router }}</option>
+            {{ end }}
+          </select>
+          <div class="form-text">ROUTER_ID and ROUTER_INDEX are both set from this router's own pfconfig entry.</div>
         </div>
       </div>
 
-      <h6 class="text-muted">Sockets</h6>
-      <div class="mb-3">
-        <label class="form-label" for="cp-unixsock">UNIX_SOCK</label>
-        <input class="form-control" id="cp-unixsock" type="text" placeholder="/var/run/captiveportal.sock" name="UnixSock"
-               value="{{ with .Record }}{{ .UnixSock }}{{ end }}" maxlength="253"/>
-      </div>
+      <h6 class="text-muted">Socket</h6>
       <div class="mb-3">
         <label class="form-label" for="cp-arkgatesock">ARKGATE_SOCKET</label>
         <input class="form-control" id="cp-arkgatesock" type="text" placeholder="/var/run/arkgated.sock" name="ArkgateSocket"
