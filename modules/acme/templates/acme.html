@@ -1,0 +1,124 @@
+{{define "title"}}SSL Certificate{{end}}
+{{define "head_script"}}{{end}}
+{{define "content"}}
+<div class="alert alert-warning my-3">
+  <h5 class="alert-heading"><span data-feather="alert-triangle" class="me-1"></span> A public DNS A record is required</h5>
+  <p class="mb-1">
+    Let's Encrypt proves you control this name by connecting back to this
+    gateway over the public internet. Before you enable this or request a
+    certificate, make sure an
+    <strong>A record for the FQDN below points at this gateway's public IP
+    address</strong>, and that inbound port 80 reaches it.
+  </p>
+  <p class="mb-0 small">
+    If that record is missing or points elsewhere, the request fails: the
+    challenge never completes, no certificate is issued, and the existing
+    one stays in place. Note that failed and repeated requests count against
+    Let's Encrypt's rate limits, so fix DNS first rather than retrying.
+  </p>
+</div>
+
+{{ if .ResultError }}
+<div class="card border-danger shadow-sm my-3">
+  <div class="card-header text-danger"><span data-feather="x-circle" class="me-1"></span> Certificate request failed</div>
+  <div class="card-body p-0">
+    <pre class="p-3 mb-0 small" style="white-space: pre-wrap;">{{ .ResultError }}</pre>
+  </div>
+</div>
+{{ else if .Result }}
+<div class="card border-success shadow-sm my-3">
+  <div class="card-header text-success"><span data-feather="check-circle" class="me-1"></span> Certificate request finished</div>
+  <div class="card-body p-0">
+    <pre class="p-3 mb-0 small" style="white-space: pre-wrap;">{{ .Result }}</pre>
+  </div>
+  <div class="card-footer small text-muted">
+    Read this through - the certificate can be issued while a later step
+    (updating or restarting nginx) still needs attention.
+  </div>
+</div>
+{{ end }}
+
+<div class="card shadow-sm my-3">
+  <div class="card-header d-flex align-items-center justify-content-between flex-wrap gap-2">
+    <div class="d-flex align-items-center gap-2">
+      <h5 class="mb-0">SSL Certificate</h5>
+      {{ with .Record }}
+      {{ if .Enabled }}
+      <span class="badge bg-success">Enabled</span>
+      {{ else }}
+      <span class="badge bg-secondary">Disabled</span>
+      {{ end }}
+      {{ end }}
+    </div>
+    <div>
+      {{ with .Record }}
+      {{ if .Enabled }}
+      <a href="/ui/acme/apply" class="btn btn-primary btn-sm"
+         onclick="return confirm('Request a Let\'s Encrypt certificate for {{ .Fqdn }}?\n\nThis contacts Let\'s Encrypt and restarts nginx. Make sure the DNS A record for {{ .Fqdn }} points at this gateway first.')">
+        <span data-feather="shield"></span> Request certificate
+      </a>
+      {{ end }}
+      <a href="#" onclick="confirmDelete('/ui/acme/delete/{{ .ID }}')" class="btn btn-outline-danger btn-sm" title="Delete"><span data-feather="x-square"></span></a>
+      {{ end }}
+    </div>
+  </div>
+  <div class="card-body p-4">
+    <form method="POST" action="/ui/acme/addorupdate">
+      {{ with .Record }}
+      <input type="hidden" name="ID" value="{{ .ID }}" />
+      <input type="hidden" name="CreatedAt" value="{{ .CreatedAt.Format "2006-01-02T15:04:05" }}"/>
+      <input type="hidden" name="UpdatedAt" value="{{ .UpdatedAt.Format "2006-01-02T15:04:05" }}"/>
+      {{ end }}
+      <div class="mb-3">
+        <label class="form-label" for="basic-form-fqdn">FQDN</label>
+        <input class="form-control" id="basic-form-fqdn" type="text" placeholder="gw.example.com" name="Fqdn"
+               value="{{ with .Record }}{{ .Fqdn }}{{ end }}"
+               pattern="[A-Za-z0-9]([A-Za-z0-9-]*[A-Za-z0-9])?(\.[A-Za-z0-9]([A-Za-z0-9-]*[A-Za-z0-9])?)+"
+               maxlength="253" required/>
+        <div class="form-text">
+          The name the certificate is issued for, e.g. gw.example.com. At
+          least two labels, letters/digits/hyphens only - it has to resolve
+          publicly to this gateway.
+        </div>
+      </div>
+      <div class="mb-3 form-check">
+        <input class="form-check-input" id="basic-form-enabled" type="checkbox" name="Enabled" value="true"
+               {{ with .Record }}{{ if .Enabled }}checked{{ end }}{{ end }}/>
+        <label class="form-check-label" for="basic-form-enabled">Enabled</label>
+        <div class="form-text">
+          While this is off, no certificate is requested and the web server
+          is left alone. Turning it off does not put the self-signed
+          certificate back - it only stops further requests.
+        </div>
+      </div>
+      <div class="d-grid d-sm-flex justify-content-sm-end mt-4">
+        <button class="btn btn-primary" type="submit">Save</button>
+      </div>
+    </form>
+  </div>
+  <div class="card-footer">
+    <div class="form-text mb-0">
+      Requesting a certificate installs /etc/acme-client.conf, runs
+      acme-client for the name above, repoints nginx.conf at the issued
+      certificate and key (keeping a timestamped backup of the original),
+      then restarts nginx.
+    </div>
+  </div>
+</div>
+
+{{ if .Conf }}
+<div class="card shadow-sm my-3">
+  <div class="card-header"><h6 class="mb-0">Generated acme-client.conf</h6></div>
+  <div class="card-body p-0">
+    <pre class="p-3 mb-0 small" style="white-space: pre-wrap;">{{ .Conf }}</pre>
+  </div>
+  <div class="card-footer small text-muted">
+    Rendered fresh from the record above. Installed at /etc/acme-client.conf
+    when a certificate is requested. The domain block only appears while the
+    record is enabled.
+  </div>
+</div>
+{{ end }}
+<script src="/ui/static/local/listutils.js"></script>
+{{end}}
+{{define "tail_script"}}{{end}}
