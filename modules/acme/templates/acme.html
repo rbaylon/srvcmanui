@@ -33,7 +33,7 @@
   </div>
   <div class="card-footer small text-muted">
     Read this through - the certificate can be issued while a later step
-    (updating or restarting nginx) still needs attention.
+    (updating or restarting relayd) still needs attention.
   </div>
 </div>
 {{ end }}
@@ -54,7 +54,7 @@
       {{ with .Record }}
       {{ if .Enabled }}
       <a href="/ui/acme/apply" class="btn btn-primary btn-sm"
-         onclick="return confirm('Request a Let\'s Encrypt certificate for {{ .Fqdn }}?\n\nThis contacts Let\'s Encrypt and restarts nginx. Make sure the DNS A record for {{ .Fqdn }} points at this gateway first.')">
+         onclick="return confirm('Request a Let\'s Encrypt certificate for {{ .Fqdn }}?\n\nThis contacts Let\'s Encrypt and restarts relayd. Make sure the DNS A record for {{ .Fqdn }} points at this gateway first.')">
         <span data-feather="shield"></span> Request certificate
       </a>
       {{ end }}
@@ -99,9 +99,16 @@
   <div class="card-footer">
     <div class="form-text mb-0">
       Requesting a certificate installs /etc/acme-client.conf, runs
-      acme-client for the name above, repoints nginx.conf at the issued
-      certificate and key (keeping a timestamped backup of the original),
-      then restarts nginx.
+      acme-client for the name above, sets relayd.conf's TLS keypair to
+      that name (keeping a timestamped backup of the original), then
+      restarts relayd. The certificate is written to
+      /etc/ssl/&lt;fqdn&gt;.crt and the key to
+      /etc/ssl/private/&lt;fqdn&gt;.key, which is where relayd looks for
+      the keypair it is told to use.
+      <br>
+      If relayd rejects the updated config, the previous one is restored
+      and relayd is left running untouched - it serves this page, so a
+      config it cannot load would lock you out.
     </div>
   </div>
 </div>
