@@ -11,6 +11,9 @@ jobs:
     steps:
       - name: Check out code
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          fetch-tags: true
 
       - name: copy env file
         run: cp /home/odracirb2/srvcmanuienv/.env .
@@ -22,7 +25,7 @@ jobs:
         run: docker compose down
 
       - name: Run care API in docker
-        run: docker compose up --build -d
+        run: VERSION=$(git describe --tags --always --dirty) docker compose up --build -d
 
       - name: Show container logs
         run: docker logs srvcmanui

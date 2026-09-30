@@ -1,4 +1,4 @@
-<title>Arkgate Handbook</title>
+<title>SpeczOS Handbook</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@400;500;600;700&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style>
   :root {
@@ -199,13 +199,13 @@
 
 <div class="shell">
   <aside class="side">
-    <div class="side-brand"><span class="mark">Arkgate</span><span class="ver">Handbook</span></div>
+    <div class="side-brand"><span class="mark">SpeczOS</span><span class="ver">Handbook</span></div>
     <div class="side-tag">Open-source ISP operations</div>
     <nav>
       <div>
         <div class="side-group-label">Getting started</div>
         <ul>
-          <li><a href="#overview">What Arkgate is</a></li>
+          <li><a href="#overview">What SpeczOS is</a></li>
           <li><a href="#signing-in">Signing in</a></li>
           <li><a href="#conventions">How every form works</a></li>
           <li><a href="#applying">Saving vs. applying</a></li>
@@ -260,11 +260,11 @@
 
       <div class="masthead" id="overview">
         <div class="eyebrow">Handbook · for people who run the network</div>
-        <h1>Running an ISP with Arkgate</h1>
-        <p class="lede">Arkgate is an open-source control panel for small and mid-size Internet Service Providers — the kind of operator running their own OpenBSD router with <code class="inline">pf</code>, handing out DHCP leases, billing subscribers by the month, and needing one screen where all of that is a form instead of a config file.</p>
+        <h1>Running an ISP with SpeczOS</h1>
+        <p class="lede">SpeczOS is an open-source control panel for small and mid-size Internet Service Providers — the kind of operator running their own OpenBSD router with <code class="inline">pf</code>, handing out DHCP leases, billing subscribers by the month, and needing one screen where all of that is a form instead of a config file.</p>
       </div>
 
-      <p>Everything in Arkgate revolves around one idea: a <strong>Router</strong> record (internally called a <em>Pfconfig</em>) stands for one physical or virtual OpenBSD box you operate. Nearly every form you'll meet in this handbook — interfaces, firewall rules, subscribers, DHCP scopes — asks which Router it belongs to, because Arkgate can manage more than one node from a single dashboard. Throughout this handbook we'll follow one example deployment so the screens have something real to show:</p>
+      <p>Everything in SpeczOS revolves around one idea: a <strong>Router</strong> record (internally called a <em>Pfconfig</em>) stands for one physical or virtual OpenBSD box you operate. Nearly every form you'll meet in this handbook — interfaces, firewall rules, subscribers, DHCP scopes — asks which Router it belongs to, because SpeczOS can manage more than one node from a single dashboard. Throughout this handbook we'll follow one example deployment so the screens have something real to show:</p>
 
       <div class="callout tip">
         <strong>Running example</strong>
@@ -272,22 +272,22 @@
       </div>
 
       <h2 id="signing-in" style="margin-top:2.4rem;">Signing in</h2>
-      <p class="intro" style="margin-top:.4rem;">Arkgate has no public sign-up — an administrator creates your account (see <a href="#users">Users</a>) and hands you a username and password. Open the site, enter both, and you land on the <strong>Dashboard</strong>: system info, subscriber-to-plan and subscriber-to-gateway charts, live per-interface traffic, and gateway health.</p>
+      <p class="intro" style="margin-top:.4rem;">SpeczOS has no public sign-up — an administrator creates your account (see <a href="#users">Users</a>) and hands you a username and password. Open the site, enter both, and you land on the <strong>Dashboard</strong>: system info, subscriber-to-plan and subscriber-to-gateway charts, live per-interface traffic, and gateway health.</p>
 
       <h2 id="conventions" style="margin-top:2.4rem;">How every form works</h2>
-      <p>Arkgate's forms are plain and consistent on purpose — once you've filled in one, you've basically learned all of them. A few patterns repeat everywhere:</p>
+      <p>SpeczOS's forms are plain and consistent on purpose — once you've filled in one, you've basically learned all of them. A few patterns repeat everywhere:</p>
       <ul>
-        <li><strong>Router</strong> — a drop-down naming which of your OpenBSD nodes this record belongs to. Skip it and Arkgate has nowhere to file the record.</li>
+        <li><strong>Router</strong> — a drop-down naming which of your OpenBSD nodes this record belongs to. Skip it and SpeczOS has nowhere to file the record.</li>
         <li><strong>Letters/numbers-only fields</strong> — names, codes, and device identifiers reject spaces and punctuation on purpose; these values often end up written into a generated config file, where stray characters would break parsing.</li>
         <li><strong>IP address fields</strong> — accept a plain IPv4 or IPv6 address; leave them blank where a field's helper text says that's allowed.</li>
         <li><strong>Interface pickers</strong> — most Network and Services forms ask for an interface (<code class="inline">em0</code>, <code class="inline">vlan10</code> …). That list is read live from whatever you've configured under <a href="#pfifaces">Network Interfaces</a>, so set those up first.</li>
       </ul>
 
       <h2 id="applying" style="margin-top:2.4rem;">Saving vs. applying</h2>
-      <p>This is the one behavior that trips people up, so it gets its own diagram: clicking <strong>Submit</strong> on any form saves your change to Arkgate immediately, but it does <em>not</em> touch the router yet. Every save is queued as a pending change. A banner reading <span class="pill down dot">changes pending</span> appears at the top of every page until you press <strong>Apply Changes</strong> there — that's the moment Arkgate actually regenerates <code class="inline">pf.conf</code>, <code class="inline">dhcpd.conf</code>, <code class="inline">unbound.conf</code>, and reloads the affected services on the router.</p>
+      <p>This is the one behavior that trips people up, so it gets its own diagram: clicking <strong>Submit</strong> on any form saves your change to SpeczOS immediately, but it does <em>not</em> touch the router yet. Every save is queued as a pending change. A banner reading <span class="pill down dot">changes pending</span> appears at the top of every page until you press <strong>Apply Changes</strong> there — that's the moment SpeczOS actually regenerates <code class="inline">pf.conf</code>, <code class="inline">dhcpd.conf</code>, <code class="inline">unbound.conf</code>, and reloads the affected services on the router.</p>
 
       <figure class="diagram">
-        <svg viewBox="0 0 980 260" role="img" aria-label="A form submit is saved as a pending change in Arkgate; nothing on the router changes until you click Apply Changes, which writes the config files and reloads pf, dhcpd and unbound on Node1.">
+        <svg viewBox="0 0 980 260" role="img" aria-label="A form submit is saved as a pending change in SpeczOS; nothing on the router changes until you click Apply Changes, which writes the config files and reloads pf, dhcpd and unbound on Node1.">
           <defs>
             <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
               <path d="M0,0 L10,5 L0,10 z" fill="currentColor"/>
@@ -312,7 +312,7 @@
           <text class="lbl-sub" x="85" y="132" text-anchor="middle">fill in a form</text>
 
           <rect class="box" x="245" y="90" width="150" height="60" rx="8"/>
-          <text class="lbl" x="320" y="115" text-anchor="middle">Arkgate UI</text>
+          <text class="lbl" x="320" y="115" text-anchor="middle">SpeczOS UI</text>
           <text class="lbl-sub" x="320" y="132" text-anchor="middle">renders the page</text>
 
           <rect class="box" x="480" y="90" width="150" height="60" rx="8"/>
@@ -355,7 +355,7 @@
       <section class="module" id="subs">
         <div class="module-eyebrow">Internet Provider</div>
         <h2>Subscribers <span class="path">/ui/subs</span></h2>
-        <p class="intro">One row per paying customer: their identity, service address, bandwidth plan, which router interface they ride on, and whether their account is active. This is the record the billing side of Arkgate (and pf itself, once applied) reads to decide who gets how much bandwidth.</p>
+        <p class="intro">One row per paying customer: their identity, service address, bandwidth plan, which router interface they ride on, and whether their account is active. This is the record the billing side of SpeczOS (and pf itself, once applied) reads to decide who gets how much bandwidth.</p>
 
         <h3 class="sub">Fields</h3>
         <div class="table-scroll">
@@ -496,7 +496,7 @@
       <section class="module" id="firewall">
         <div class="module-eyebrow">Security</div>
         <h2>Firewall <span class="path">/ui/firewall</span></h2>
-        <p class="intro">One row per <code class="inline">pf</code> rule. Arkgate renders these directly into <code class="inline">pf.conf</code> in the order you'd expect from pf itself, so the same mental model applies: rules are evaluated top-to-bottom, last match wins, unless a rule is marked <strong>Quick</strong>.</p>
+        <p class="intro">One row per <code class="inline">pf</code> rule. SpeczOS renders these directly into <code class="inline">pf.conf</code> in the order you'd expect from pf itself, so the same mental model applies: rules are evaluated top-to-bottom, last match wins, unless a rule is marked <strong>Quick</strong>.</p>
 
         <h3 class="sub">Fields</h3>
         <div class="table-scroll">
@@ -544,7 +544,7 @@
       <section class="module" id="policies">
         <div class="module-eyebrow">Security</div>
         <h2>Access Policy <span class="path">/ui/policies</span></h2>
-        <p class="intro">Arkgate's own permission system — not pf's. A Policy grants one or more <a href="#groups">Groups</a> either read-only or read-write access to one API resource. This is what decides what a non-admin <a href="#users">User</a> can see and touch inside Arkgate itself.</p>
+        <p class="intro">SpeczOS's own permission system — not pf's. A Policy grants one or more <a href="#groups">Groups</a> either read-only or read-write access to one API resource. This is what decides what a non-admin <a href="#users">User</a> can see and touch inside SpeczOS itself.</p>
 
         <h3 class="sub">Fields</h3>
         <div class="table-scroll">
@@ -552,7 +552,7 @@
           <thead><tr><th>Field</th><th>What it means</th><th>Example</th></tr></thead>
           <tbody>
             <tr><td class="field-name">Policy Name<span class="req">required</span></td><td>Unique, internal, letters/numbers only.</td><td class="example">SupportViewSubs</td></tr>
-            <tr><td class="field-name">Module</td><td>Which Arkgate module this policy governs.</td><td class="example">subs</td></tr>
+            <tr><td class="field-name">Module</td><td>Which SpeczOS module this policy governs.</td><td class="example">subs</td></tr>
             <tr><td class="field-name">Resource</td><td><em>any</em>, or one exact API path this policy covers.</td><td class="example">any</td></tr>
             <tr><td class="field-name">Permission</td><td><strong>RO</strong> read-only, or <strong>RW</strong> read-write.</td><td class="example">RO</td></tr>
             <tr><td class="field-name">Groups</td><td>Which groups this policy applies to — check every group that should get this access.</td><td class="example">support</td></tr>
@@ -664,7 +664,7 @@
       <section class="module" id="gatewaymonitor">
         <div class="module-eyebrow">Network</div>
         <h2>Gateway Monitor <span class="path">/ui/gatewaymonitor</span></h2>
-        <p class="intro">Arkgate pings a chosen address on a loop and shows the result as a status pill — <span class="pill up dot">up</span> or <span class="pill down dot">down</span> — right on the Dashboard, so an upstream outage shows up before a subscriber calls in about it.</p>
+        <p class="intro">SpeczOS pings a chosen address on a loop and shows the result as a status pill — <span class="pill up dot">up</span> or <span class="pill down dot">down</span> — right on the Dashboard, so an upstream outage shows up before a subscriber calls in about it.</p>
 
         <h3 class="sub">Fields</h3>
         <div class="table-scroll">
@@ -683,7 +683,7 @@
       <section class="module" id="staticroutes">
         <div class="module-eyebrow">Network</div>
         <h2>Static Routes <span class="path">/ui/staticroutes</span></h2>
-        <p class="intro">A manually-pinned route for traffic that shouldn't follow the default gateway — the same job as running <code class="inline">route add</code> by hand, kept in Arkgate so it survives a rebuild.</p>
+        <p class="intro">A manually-pinned route for traffic that shouldn't follow the default gateway — the same job as running <code class="inline">route add</code> by hand, kept in SpeczOS so it survives a rebuild.</p>
 
         <h3 class="sub">Fields</h3>
         <div class="table-scroll">
@@ -762,13 +762,13 @@
           </div>
           <div class="caption">Example — leasing 10.0.0.100–200 on the LAN.</div>
         </div>
-        <div class="callout tip"><strong>Tip</strong> The <strong>Generated dhcpd.conf</strong> view (linked from the list page) renders the exact file Arkgate will write on your next Apply Changes — a good place to sanity-check a scope before it goes live.</div>
+        <div class="callout tip"><strong>Tip</strong> The <strong>Generated dhcpd.conf</strong> view (linked from the list page) renders the exact file SpeczOS will write on your next Apply Changes — a good place to sanity-check a scope before it goes live.</div>
       </section>
 
       <section class="module" id="unbounddns">
         <div class="module-eyebrow">Services</div>
         <h2>Unbound DNS <span class="path">/ui/unbounddns</span></h2>
-        <p class="intro">A recursive/forwarding DNS resolver for your LAN, including DNS-over-TLS upstreams, access control, and a handful of local overrides — the most involved form in Arkgate, because unbound.conf itself has a lot of knobs.</p>
+        <p class="intro">A recursive/forwarding DNS resolver for your LAN, including DNS-over-TLS upstreams, access control, and a handful of local overrides — the most involved form in SpeczOS, because unbound.conf itself has a lot of knobs.</p>
 
         <h3 class="sub">Fields</h3>
         <div class="table-scroll">
@@ -795,7 +795,7 @@
       <section class="module" id="users">
         <div class="module-eyebrow">Administration</div>
         <h2>Users &amp; your profile <span class="path">/ui/users</span></h2>
-        <p class="intro">Everyone who can log into Arkgate is a User, placed in one or more <a href="#groups">Groups</a> that (via <a href="#policies">Access Policy</a>) decide what they can see. Creating a user here is the only way anyone gets in — there's no self-registration.</p>
+        <p class="intro">Everyone who can log into SpeczOS is a User, placed in one or more <a href="#groups">Groups</a> that (via <a href="#policies">Access Policy</a>) decide what they can see. Creating a user here is the only way anyone gets in — there's no self-registration.</p>
 
         <h3 class="sub">Creating a user</h3>
         <div class="table-scroll">
@@ -846,7 +846,7 @@
       <section class="module" id="groups">
         <div class="module-eyebrow">Administration</div>
         <h2>Groups <span class="path">/ui/groups</span></h2>
-        <p class="intro">The simplest form in Arkgate on purpose: a Group is just a name. Its only job is to be something both a <a href="#users">User</a> and an <a href="#policies">Access Policy</a> can point at — the two combine to decide what that user can actually do.</p>
+        <p class="intro">The simplest form in SpeczOS on purpose: a Group is just a name. Its only job is to be something both a <a href="#users">User</a> and an <a href="#policies">Access Policy</a> can point at — the two combine to decide what that user can actually do.</p>
 
         <h3 class="sub">Fields</h3>
         <div class="table-scroll">
@@ -861,7 +861,7 @@
       </section>
 
       <div style="margin-top:3.5rem; padding-top:1.5rem; border-top:1px solid var(--line); font-size:.8rem; color:var(--muted);">
-        Arkgate is open source. This handbook describes the forms as they exist in the UI you're running — if a screen looks different from what's shown here, your deployment may be on a different version.
+        SpeczOS is open source. This handbook describes the forms as they exist in the UI you're running — if a screen looks different from what's shown here, your deployment may be on a different version.
       </div>
 
     </div>

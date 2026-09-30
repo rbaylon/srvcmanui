@@ -3,6 +3,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      args:
+        VERSION: ${VERSION:-dev}
     container_name: srvcmanui
     ports:
       - "8084:8000" # Maps port 8080 on your host to port 80 on the container

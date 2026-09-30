@@ -38,6 +38,7 @@
   </head>
   <body class="text-center">
     {{template "content" .}}
+    <script>fetch("/ui/static/version.txt").then(function(r){return r.text()}).then(function(v){var e=document.getElementById("appver");if(e)e.textContent=v.trim()}).catch(function(){})</script>
   </body>
 </html>
 {{ end }}

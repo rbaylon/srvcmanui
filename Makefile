@@ -1,9 +1,10 @@
 app=srvcmanui
+version=$(shell git describe --tags --always --dirty 2>/dev/null || echo dev)
 distdir=/usr/local/arkgate/${app}
 
 build:
 	go mod tidy
-	go build -o ${app}
+	go build -ldflags "-X github.com/rbaylon/srvcmanui/version.Version=${version}" -o ${app}
 
 rc:
 	install -m 755 rc.${app} /etc/rc.d/${app}

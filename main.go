@@ -33,9 +33,11 @@ import (
 	userrouter "github.com/rbaylon/srvcmanui/modules/users/routes"
 	vlanrouter "github.com/rbaylon/srvcmanui/modules/vlans/routes"
 	voucherrouter "github.com/rbaylon/srvcmanui/modules/vouchers/routes"
+	"github.com/rbaylon/srvcmanui/version"
 )
 
 func main() {
+	log.Println("SpeczOS UI version", version.Version)
 	port := database.GetEnvVariable("APP_PORT")
 	acmesrouter := acmerouter.New()
 	captiveportalsrouter := captiveportalrouter.New()
@@ -66,6 +68,11 @@ func main() {
 
 	mainrouter := http.NewServeMux()
 	fs := http.FileServer(http.Dir("./static"))
+	mainrouter.HandleFunc("GET /ui/static/version.txt", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "text/plain; charset=utf-8")
+		w.Header().Set("Cache-Control", "no-cache")
+		w.Write([]byte(version.Version))
+	})
 	mainrouter.Handle("GET /ui/static/", http.StripPrefix("/ui/static/", fs))
 	mainrouter.Handle("/ui/subs/", http.StripPrefix("/ui/subs", subsrouter))
 	mainrouter.Handle("/ui/users/", http.StripPrefix("/ui/users", usersrouter))

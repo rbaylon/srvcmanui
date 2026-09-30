@@ -21,7 +21,8 @@ RUN go mod download
 COPY . .
 
 # Build the application
-RUN go build -o srvcmanui
+ARG VERSION=dev
+RUN go build -ldflags "-X github.com/rbaylon/srvcmanui/version.Version=${VERSION}" -o srvcmanui
 RUN rm -rf /root/.ssh
 # Document the port that may need to be published
 EXPOSE 8000
