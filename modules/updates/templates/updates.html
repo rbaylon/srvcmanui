@@ -1,0 +1,84 @@
+{{define "title"}}Software Update{{end}}
+{{define "head_script"}}{{end}}
+{{define "content"}}
+{{ if .Saved }}
+<div class="alert alert-success my-3" role="alert">Update server saved.</div>
+{{ end }}
+
+<div class="card shadow-sm my-3">
+  <div class="card-header"><h5 class="mb-0">Update Server</h5></div>
+  <div class="card-body p-4">
+    <form method="POST" action="/ui/updates/save">
+      <div class="mb-3">
+        <label class="form-label" for="basic-form-update-server">Update Server</label>
+        <input class="form-control" id="basic-form-update-server" type="url" placeholder="https://updates.example.com" name="UpdateServer"
+               value="{{ .UpdateServer }}" maxlength="2048"/>
+        <div class="form-text">
+          The address of your update server, starting with http:// or https://.
+          Leave blank if you don't have one.
+        </div>
+      </div>
+      <div class="d-grid d-sm-flex justify-content-sm-end mt-4">
+        <button class="btn btn-primary" type="submit">Save</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+{{ if eq .Check.State "failed" }}
+<div class="card border-danger shadow-sm my-3">
+  <div class="card-header text-danger"><span data-feather="x-circle" class="me-1"></span> Update check failed</div>
+  <div class="card-body p-0">
+    <pre class="p-3 mb-0 small" style="white-space: pre-wrap;">{{ .Check.Error }}</pre>
+  </div>
+  {{ with .Check.FinishedAt }}<div class="card-footer small text-muted">Finished {{ .Local.Format "2006-01-02 15:04:05" }}</div>{{ end }}
+</div>
+{{ else if eq .Check.State "done" }}
+{{ if .Check.Available }}
+<div class="card border-warning shadow-sm my-3">
+  <div class="card-header"><span data-feather="alert-circle" class="me-1"></span> {{ len .Check.Available }} operating system update{{ if gt (len .Check.Available) 1 }}s{{ end }} available</div>
+  <ul class="list-group list-group-flush">
+    {{ range .Check.Available }}<li class="list-group-item font-monospace small">{{ . }}</li>{{ end }}
+  </ul>
+  {{ with .Check.FinishedAt }}<div class="card-footer small text-muted">Checked {{ .Local.Format "2006-01-02 15:04:05" }}</div>{{ end }}
+</div>
+{{ else }}
+<div class="card border-success shadow-sm my-3">
+  <div class="card-header text-success"><span data-feather="check-circle" class="me-1"></span> The operating system is up to date</div>
+  {{ with .Check.FinishedAt }}<div class="card-footer small text-muted">Checked {{ .Local.Format "2006-01-02 15:04:05" }}</div>{{ end }}
+</div>
+{{ end }}
+{{ end }}
+
+<div class="card shadow-sm my-3">
+  <div class="card-header d-flex align-items-center justify-content-between">
+    <h5 class="mb-0">Operating System Updates</h5>
+    {{ if eq .Check.State "running" }}
+    <span class="btn btn-primary btn-sm disabled" aria-disabled="true">
+      <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span> Checking...
+    </span>
+    {{ else }}
+    <a href="/ui/updates/check" class="btn btn-primary btn-sm" id="check-updates">
+      <span data-feather="refresh-cw"></span> Check for updates
+    </a>
+    {{ end }}
+  </div>
+  <div class="card-body">
+    {{ if eq .Check.State "running" }}
+    <div class="mb-2">
+      Checking for updates{{ with .Check.StartedAt }} (started {{ .Local.Format "15:04:05" }}){{ end }}. This can take a few
+      minutes and runs in the background - you can leave this page and come back.
+      This page refreshes by itself.
+    </div>
+    {{ end }}
+    <div class="form-text mb-0">
+      Looks for available operating system patches. Checking only lists
+      what is available - nothing is installed.
+    </div>
+  </div>
+</div>
+{{ if eq .Check.State "running" }}
+<script>setTimeout(function () { window.location.reload(); }, 5000);</script>
+{{ end }}
+{{end}}
+{{define "tail_script"}}{{end}}

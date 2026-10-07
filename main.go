@@ -31,6 +31,7 @@ import (
 	subrouter "github.com/rbaylon/srvcmanui/modules/subs/routes"
 	tunnelrouter "github.com/rbaylon/srvcmanui/modules/tunnels/routes"
 	unbounddnsrouter "github.com/rbaylon/srvcmanui/modules/unbounddns/routes"
+	updatesrouter "github.com/rbaylon/srvcmanui/modules/updates/routes"
 	userrouter "github.com/rbaylon/srvcmanui/modules/users/routes"
 	vlanrouter "github.com/rbaylon/srvcmanui/modules/vlans/routes"
 	voucherrouter "github.com/rbaylon/srvcmanui/modules/vouchers/routes"
@@ -55,6 +56,7 @@ func main() {
 	dhcpserversrouter := dhcpserverrouter.New()
 	unbounddnssrouter := unbounddnsrouter.New()
 	vouchersrouter := voucherrouter.New()
+	updatessrouter := updatesrouter.New()
 	plansrouter := planrouter.New()
 	fwsrouter := fwrouter.New()
 	gatewaymonitorsrouter := gatewaymonitorrouter.New()
@@ -81,6 +83,7 @@ func main() {
 	mainrouter.Handle("/ui/collections/", http.StripPrefix("/ui/collections", collsrouter))
 	mainrouter.Handle("/ui/dhcpserver/", http.StripPrefix("/ui/dhcpserver", dhcpserversrouter))
 	mainrouter.Handle("/ui/unbounddns/", http.StripPrefix("/ui/unbounddns", unbounddnssrouter))
+	mainrouter.Handle("/ui/updates/", http.StripPrefix("/ui/updates", updatessrouter))
 	mainrouter.Handle("/ui/vouchers/", http.StripPrefix("/ui/vouchers", vouchersrouter))
 	mainrouter.Handle("/ui/plans/", http.StripPrefix("/ui/plans", plansrouter))
 	mainrouter.Handle("/ui/firewall/", http.StripPrefix("/ui/firewall", fwsrouter))
