@@ -52,7 +52,7 @@
             <td>{{ .ID }}</td>
             <td>{{ .Name }}</td>
             <td>{{ .Type }}</td>
-            <td>{{ .RemoteUser }}@{{ .RemoteIp }}:{{ .RemotePort }}</td>
+            <td>{{ .RemoteUser }}@{{ if .SshHost }}{{ .SshHost }}{{ else }}{{ .RemoteIp }}{{ end }}{{ if and .SshHost (ne .SshHost .RemoteIp) }} <span class="text-muted">(fwd {{ .RemoteIp }}:{{ .RemotePort }})</span>{{ else }}:{{ .RemotePort }}{{ end }}</td>
             <td>{{ .LocalIp }}:{{ .LocalPort }}</td>
             <td>{{ .PfconfigID }}</td>
             <td>
