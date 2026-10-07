@@ -4,7 +4,7 @@ distdir=/usr/local/arkgate/${app}
 
 build:
 	go mod tidy
-	go build -ldflags "-X github.com/rbaylon/srvcmanui/version.Version=${version}" -o ${app}
+	go build -ldflags "-s -w -X github.com/rbaylon/srvcmanui/version.Version=${version}" -o ${app}
 
 rc:
 	install -m 755 rc.${app} /etc/rc.d/${app}
