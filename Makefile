@@ -24,8 +24,8 @@ dist:
 	make build
 	make install
 	cp rc.${app} ${distdir}/
-	tar -C /usr/local/arkgate/ -czvf /usr/local/arkgate/${app}.tar.gz ${app}
-	ls -l /usr/local/arkgate/${app}.tar.gz
+	tar -C /usr/local/arkgate/ -czvf /usr/local/arkgate/${app}-${version}.tar.gz ${app}
+	ls -l /usr/local/arkgate/${app}-${version}.tar.gz
 
 clean:
 	rm -rf ${distdir}
