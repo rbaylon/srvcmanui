@@ -8,6 +8,7 @@ import (
 	accesslogger "github.com/rbaylon/srvcmanui/middlewares/access/logger"
 	accessvalidator "github.com/rbaylon/srvcmanui/middlewares/access/validator"
 	acmerouter "github.com/rbaylon/srvcmanui/modules/acme/routes"
+	billingrouter "github.com/rbaylon/srvcmanui/modules/billing/routes"
 	billportalrouter "github.com/rbaylon/srvcmanui/modules/billportal/routes"
 	captiveportalrouter "github.com/rbaylon/srvcmanui/modules/captiveportal/routes"
 	changesrouter "github.com/rbaylon/srvcmanui/modules/changes/routes"
@@ -42,6 +43,7 @@ func main() {
 	acmesrouter := acmerouter.New()
 	captiveportalsrouter := captiveportalrouter.New()
 	billportalsrouter := billportalrouter.New()
+	billingsrouter := billingrouter.New()
 	changessrouter := changesrouter.New()
 	tunnelsrouter := tunnelrouter.New()
 	fdmonitorsrouter := fdmonitorrouter.New()
@@ -94,6 +96,7 @@ func main() {
 	mainrouter.Handle("/ui/policies/", http.StripPrefix("/ui/policies", policyrouter))
 	mainrouter.Handle("/ui/acme/", http.StripPrefix("/ui/acme", acmesrouter))
 	mainrouter.Handle("/ui/captiveportal/", http.StripPrefix("/ui/captiveportal", captiveportalsrouter))
+	mainrouter.Handle("/ui/billing/", http.StripPrefix("/ui/billing", billingsrouter))
 	mainrouter.Handle("/ui/billportal/", http.StripPrefix("/ui/billportal", billportalsrouter))
 	mainrouter.Handle("/ui/tunnels/", http.StripPrefix("/ui/tunnels", tunnelsrouter))
 	mainrouter.Handle("/ui/fdmonitor/", http.StripPrefix("/ui/fdmonitor", fdmonitorsrouter))
