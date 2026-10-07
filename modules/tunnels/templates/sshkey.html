@@ -1,0 +1,44 @@
+{{define "title"}}Tunnel SSH Public Key{{end}}
+{{define "head_script"}}{{end}}
+{{define "content"}}
+<br>
+ <div class="row justify-content-center">
+  <div class="col-12 col-xl-8">
+   <div class="card shadow-sm my-4">
+    <div class="card-header d-flex align-items-center justify-content-between">
+     <h5 class="mb-0">Tunnel SSH Public Key</h5>
+     <a href="/ui/tunnels" class="btn btn-outline-secondary btn-sm">Back</a>
+    </div>
+    <div class="card-body p-4">
+     {{ if .Generated }}
+     <div class="alert alert-success">No key existed on the gateway, so a new one was generated.</div>
+     {{ end }}
+     <p>Tunnels log in to their remote endpoint with this key. Add it to the remote user's <code>~/.ssh/authorized_keys</code> to enroll this gateway.</p>
+     <div class="mb-3">
+       <label class="form-label" for="ssh-public-key">Public key</label>
+       <textarea class="form-control font-monospace" id="ssh-public-key" rows="4" readonly onclick="this.select()">{{ .PublicKey }}</textarea>
+     </div>
+     <div class="d-grid d-sm-flex justify-content-sm-end">
+       <button class="btn btn-primary" type="button" id="copy-key" onclick="copyKey()">Copy</button>
+     </div>
+     <div class="form-text mt-3">On the remote endpoint, as the tunnel's remote user: <code>echo '&lt;key above&gt;' &gt;&gt; ~/.ssh/authorized_keys</code></div>
+    </div>
+   </div>
+  </div>
+ </div>
+ <script>
+   function copyKey() {
+     var ta = document.getElementById('ssh-public-key');
+     var btn = document.getElementById('copy-key');
+     ta.select();
+     var done = function () { btn.textContent = 'Copied'; setTimeout(function () { btn.textContent = 'Copy'; }, 2000); };
+     if (navigator.clipboard && window.isSecureContext) {
+       navigator.clipboard.writeText(ta.value).then(done);
+     } else {
+       document.execCommand('copy');
+       done();
+     }
+   }
+ </script>
+{{end}}
+{{define "tail_script"}}{{end}}

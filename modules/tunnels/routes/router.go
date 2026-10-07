@@ -75,6 +75,31 @@ func New() *http.ServeMux {
 		http.Redirect(w, r, "/ui/tunnels", http.StatusSeeOther)
 	})
 
+	// The gateway's tunnel public key, for enrolling on remote endpoints.
+	// srvcman generates the pair on first use, so this is a PUT upstream
+	// even though it is a plain viewable page here.
+	Router.HandleFunc("GET /sshkey", func(w http.ResponseWriter, r *http.Request) {
+		var key struct {
+			PublicKey string `json:"public_key"`
+			Generated bool   `json:"generated"`
+		}
+		err, status := client.Rester("tunnels/sshkey", "PUT", &key, r)
+		if err != nil {
+			fmt.Println(err)
+			utils.RenderErrorPage(w, status, err.Error())
+			return
+		}
+		pwd, _ := os.Getwd()
+		files := []string{
+			pwd + "/layouts/newbase.html",
+			pwd + "/modules/tunnels/templates/sshkey.html",
+		}
+		tmpl := template.Must(template.ParseFiles(files...))
+		if err := tmpl.ExecuteTemplate(w, "htmx", key); err != nil {
+			log.Println(err)
+		}
+	})
+
 	action := func(name string) http.HandlerFunc {
 		return func(w http.ResponseWriter, r *http.Request) {
 			var result tunnelmodel.Tunnel
