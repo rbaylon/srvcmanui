@@ -31,3 +31,8 @@ clean:
 	rm -rf ${distdir}
 	rm -f ${app}
 	rm -f /etc/rc.d/${app}
+
+# Regenerate static/THIRD_PARTY_NOTICES.txt after any dependency change in
+# this repo or the sibling srvcman, arkgated, subsportal and billportal repos.
+notices:
+	go run ./tools/notices
