@@ -47,17 +47,17 @@
      <div class="form-text">A valid IPv4 netmask, e.g. 255.255.255.0. Leave blank if none.</div>
    </div>
    <div class="mb-3">
-     <label class="form-label" for="basic-form-gw">Gateway</label>
-     <input class="form-control" id="basic-form-gw" type="text" placeholder="" name="Gateway" {{ if .Record }} value="{{.Record.Gateway}}" {{end}} pattern="(\d{1,3}\.){3}\d{1,3}|[0-9a-fA-F:]+">
-     <div class="form-text">A valid IPv4 or IPv6 address, e.g. 192.0.2.1. Leave blank if none.</div>
-   </div>
-   <div class="mb-3">
      <label class="form-label" for="basic-form-type">Type</label>
-     <select class="form-select" id="basic-form-type" aria-label="Select Type" name="Type" onchange="toggleLbPercentage(this)"/>
+     <select class="form-select" id="basic-form-type" aria-label="Select Type" name="Type" onchange="toggleTypeFields(this)"/>
        {{ if .Record }} <option selected="selected" value="{{.Record.Type}}">{{.Record.Type}}</option> {{end}}
        <option value="internal">internal</option>
        <option value="external">external</option>
      </select>
+   </div>
+   <div class="mb-3">
+     <label class="form-label" for="basic-form-gw">Gateway</label>
+     <input class="form-control" id="basic-form-gw" type="text" placeholder="" name="Gateway" {{ if .Record }} value="{{.Record.Gateway}}" {{end}} pattern="(\d{1,3}\.){3}\d{1,3}|[0-9a-fA-F:]+">
+     <div class="form-text">A valid IPv4 or IPv6 address, e.g. 192.0.2.1. Leave blank if none.</div>
    </div>
    <div class="mb-3">
      <label class="form-label" for="basic-form-lb">Load Balance Percentage</label>
@@ -95,8 +95,11 @@
    // accepts the zero value a disabled, unsubmitted field decodes to -
    // see pfifacemodel.Pfiface.Bind), so disabling it here needs no
    // server-side change.
-   function toggleLbPercentage(select) {
-     document.getElementById('basic-form-lb').disabled = (select.value === 'internal');
+   // The Gateway field is likewise only meaningful for external interfaces.
+   function toggleTypeFields(select) {
+     var internal = (select.value === 'internal');
+     document.getElementById('basic-form-lb').disabled = internal;
+     document.getElementById('basic-form-gw').disabled = internal;
    }
    // Points the "open router settings" link at whichever router (pfconfig)
    // is currently selected, so it always leads to the LoadBalance checkbox
@@ -109,7 +112,7 @@
      }
    }
    document.addEventListener('DOMContentLoaded', function () {
-     toggleLbPercentage(document.getElementById('basic-form-type'));
+     toggleTypeFields(document.getElementById('basic-form-type'));
      updateLbRouterLink();
    });
  </script>
