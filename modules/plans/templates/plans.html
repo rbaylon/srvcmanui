@@ -17,7 +17,6 @@
           <th class="sort align-middle" data-sort="upspeed">Upspeed</th>
           <th class="sort align-middle" data-sort="stdown">SpeedTestDown</th>
           <th class="sort align-middle" data-sort="stup">SpeedTestUp</th>
-          <th class="sort align-middle" data-sort="pfconfigid">PfconfigID</th>
           <th class="sort text-end align-middle pe-0" scope="col">ACTION</th>
         </tr>
       </thead>
@@ -30,7 +29,6 @@
           <td class="align-middle upspeed">{{.Upspeed}}</td>
           <td class="align-middle stdown">{{.SpeedTestDown}}</td>
           <td class="align-middle stup">{{.SpeedTestUp}}</td>
-          <td class="align-middle pfconfigid">{{.PfconfigID}}</td>
           <td class="text-end">
             <a href="{{.ID}}" class="btn btn-sm btn-outline-secondary" title="Edit"><span data-feather="edit"></span></a>
             <a href="#" onclick="confirmDelete('/ui/plans/delete/{{.ID}}')" class="btn btn-sm btn-outline-danger" title="Delete"><span data-feather="x-square"></span></a>

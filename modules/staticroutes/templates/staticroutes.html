@@ -16,7 +16,6 @@
             <th scope="col">Type</th>
             <th scope="col">Destination</th>
             <th scope="col">Gateway</th>
-            <th scope="col">Router</th>
             <th scope="col" class="text-end">Action</th>
           </tr>
         </thead>
@@ -28,7 +27,6 @@
             <td>{{ .Type }}</td>
             <td>{{ .Destination }}</td>
             <td>{{ .Gateway }}</td>
-            <td>{{ .PfconfigID }}</td>
             <td class="text-end">
               <a href="{{.ID}}" class="btn btn-sm btn-outline-secondary" title="Edit"><span data-feather="edit"></span></a>
               <a href="#" onclick="confirmDelete('/ui/staticroutes/delete/{{.ID}}')" class="btn btn-sm btn-outline-danger" title="Delete"><span data-feather="x-square"></span></a>

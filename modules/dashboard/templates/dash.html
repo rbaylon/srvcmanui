@@ -5,29 +5,11 @@
 <div class="container-fluid px-1">
     <div class="d-flex align-items-center justify-content-between mt-4 mb-2 flex-wrap gap-2">
         <h1 class="mb-0">Dashboard</h1>
-        {{ if or .Pfconfigs .HasUnassigned }}
-        <div class="dropdown">
-            <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="pfconfigDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                <span data-feather="server" class="me-1"></span>
-                {{ if .Group.Unassigned }}Unassigned{{ else }}{{ .Group.Pfconfig.Router }}{{ end }}
-            </button>
-            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="pfconfigDropdown">
-                {{ $selected := .SelectedID }}
-                {{ range .Pfconfigs }}
-                <li><a class="dropdown-item{{ if eq .ID $selected }} active{{ end }}" href="/ui/dashboard?pfconfig_id={{.ID}}">{{ .Router }}</a></li>
-                {{ end }}
-                {{ if .HasUnassigned }}
-                <li><a class="dropdown-item{{ if $.Group.Unassigned }} active{{ end }}" href="/ui/dashboard?pfconfig_id=0">Unassigned</a></li>
-                {{ end }}
-            </ul>
-        </div>
-        {{ end }}
     </div>
     <div class="router-group" data-pfconfig-id="{{.Group.Pfconfig.ID}}">
         <div class="d-flex align-items-center mt-3 mb-2">
             <span data-feather="server" class="me-2"></span>
             <h4 class="mb-0">{{ if .Group.Unassigned }}Unassigned{{ else }}{{ .Group.Pfconfig.Router }}{{ end }}</h4>
-            {{ if not .Group.Unassigned }}<span class="badge bg-secondary ms-2">pfconfig #{{ .Group.Pfconfig.ID }}</span>{{ end }}
         </div>
         {{ with .Group }}
         {{ if .SysInfo }}

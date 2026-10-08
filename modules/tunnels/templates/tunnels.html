@@ -40,7 +40,6 @@
             <th scope="col">Type</th>
             <th scope="col">Remote</th>
             <th scope="col">Local</th>
-            <th scope="col">Router</th>
             <th scope="col">Status</th>
             <th scope="col">Age</th>
             <th scope="col">PID</th>
@@ -55,7 +54,6 @@
             <td>{{ .Type }}</td>
             <td>{{ .RemoteUser }}@{{ if .SshHost }}{{ .SshHost }}{{ else }}{{ .RemoteIp }}{{ end }}{{ if and .SshHost (ne .SshHost .RemoteIp) }} <span class="text-muted">(fwd {{ .RemoteIp }}:{{ .RemotePort }})</span>{{ else }}:{{ .RemotePort }}{{ end }}</td>
             <td>{{ .LocalIp }}:{{ .LocalPort }}</td>
-            <td>{{ .PfconfigID }}</td>
             <td>
               {{ if eq .Status "active" }}
               <span class="badge bg-success">Active</span>

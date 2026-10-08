@@ -37,7 +37,6 @@
             <th scope="col">Interface</th>
             <th scope="col">Forward Zone</th>
             <th scope="col">Forward Addr</th>
-            <th scope="col">Router</th>
             <th scope="col" class="text-end">Action</th>
           </tr>
         </thead>
@@ -49,7 +48,6 @@
             <td>{{ .Interface }}</td>
             <td>{{ .ForwardZoneName }}</td>
             <td>{{ .ForwardAddr }}</td>
-            <td>{{ .PfconfigID }}</td>
             <td class="text-end">
               <a href="{{.ID}}" class="btn btn-sm btn-outline-secondary" title="Edit"><span data-feather="edit"></span></a>
               <a href="#" onclick="confirmDelete('/ui/unbounddns/delete/{{.ID}}')" class="btn btn-sm btn-outline-danger" title="Delete"><span data-feather="x-square"></span></a>

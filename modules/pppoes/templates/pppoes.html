@@ -40,7 +40,7 @@
           {{ range .Records}}
           <tr>
             <td>{{ .ID }}</td>
-            <td>{{ .Name }} PF config ID {{ .PfconfigID }} IP {{ .Ip }} on {{ .Device }} range {{ .PoolAddress }}</td>
+            <td>{{ .Name }} IP {{ .Ip }} on {{ .Device }} range {{ .PoolAddress }}</td>
             <td class="text-end">
               <a href="{{.ID}}" class="btn btn-sm btn-outline-secondary" title="Edit"><span data-feather="edit"></span></a>
               <a href="#" onclick="confirmDelete('/ui/pppoes/delete/{{.ID}}')" class="btn btn-sm btn-outline-danger" title="Delete"><span data-feather="x-square"></span></a>

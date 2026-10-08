@@ -40,7 +40,6 @@
             <th scope="col">Range</th>
             <th scope="col">Routers</th>
             <th scope="col">DNS Servers</th>
-            <th scope="col">Router</th>
             <th scope="col" class="text-end">Action</th>
           </tr>
         </thead>
@@ -55,7 +54,6 @@
             <td>{{ .RangeStart }} - {{ .RangeEnd }}</td>
             <td>{{ .Routers }}</td>
             <td>{{ .DomainNameServers }}</td>
-            <td>{{ .PfconfigID }}</td>
             <td class="text-end">
               <a href="{{.ID}}" class="btn btn-sm btn-outline-secondary" title="Edit"><span data-feather="edit"></span></a>
               <a href="#" onclick="confirmDelete('/ui/dhcpserver/delete/{{.ID}}')" class="btn btn-sm btn-outline-danger" title="Delete"><span data-feather="x-square"></span></a>

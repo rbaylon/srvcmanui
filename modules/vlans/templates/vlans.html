@@ -17,7 +17,6 @@
             <th scope="col">Vlan Tag</th>
             <th scope="col">Rx Prio</th>
             <th scope="col">Tx Prio</th>
-            <th scope="col">Instance ID</th>
             <th scope="col" class="text-end">Action</th>
           </tr>
         </thead>
@@ -30,7 +29,6 @@
             <td>{{ .VlanTag }}</td>
             <td>{{ .RxPrio }}</td>
             <td>{{ .TxPrio }}</td>
-            <td>{{ .PfconfigID }}</td>
             <td class="text-end">
               <a href="{{.ID}}" class="btn btn-sm btn-outline-secondary" title="Edit"><span data-feather="edit"></span></a>
               <a href="#" onclick="confirmDelete('/ui/firewall/delete/{{.ID}}')" class="btn btn-sm btn-outline-danger" title="Delete"><span data-feather="x-square"></span></a>

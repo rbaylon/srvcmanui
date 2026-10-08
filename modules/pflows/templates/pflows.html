@@ -20,7 +20,6 @@
             <th scope="col">Flow Source</th>
             <th scope="col">Flow Destination</th>
             <th scope="col">Proto</th>
-            <th scope="col">Router</th>
             <th scope="col" class="text-end">Action</th>
           </tr>
         </thead>
@@ -32,7 +31,6 @@
             <td>{{ .Src }}</td>
             <td>{{ .Dst }}</td>
             <td>{{ .Proto }}</td>
-            <td>{{ .PfconfigID }}</td>
             <td class="text-end">
               <a href="/ui/pflows/{{.ID}}" class="btn btn-sm btn-outline-secondary" title="Edit"><span data-feather="edit"></span></a>
               <a href="#" onclick="confirmDelete('/ui/pflows/delete/{{.ID}}')" class="btn btn-sm btn-outline-danger" title="Delete"><span data-feather="x-square"></span></a>
