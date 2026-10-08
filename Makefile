@@ -1,5 +1,5 @@
 app=srvcmanui
-version=$(git describe --tags --always 2>/dev/null || echo dev)
+version!=git describe --tags --always
 distdir=/usr/local/arkgate/${app}
 
 build:
