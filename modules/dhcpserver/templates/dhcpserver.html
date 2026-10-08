@@ -88,7 +88,7 @@
      <input class="form-control" id="basic-form-filename" type="text" placeholder="boot/pxeboot" name="Filename" value="{{.Record.Filename}}" pattern="[A-Za-z0-9./:_,\* -]*" maxlength="100"/>
      <div class="form-text">Optional. The boot file path for PXE network boot.</div>
    </div>
-   <div class="mb-3">
+   <div class="mb-3 d-none">
      <label class="form-label" for="basic-form-pfconfig">Router</label>
      <select class="form-select" id="basic-form-pfconfig" aria-label="Select Router" name="PfconfigID"/>
      {{ range .Pfconfigs }}

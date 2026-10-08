@@ -40,7 +40,7 @@
      <input class="form-control" id="basic-form-plan" type="text" placeholder="Plan799" name="Plan" {{ if .Record }} value="{{.Record.Plan}}" {{end}} pattern="[A-Za-z0-9]*" maxlength="100"/>
      <div class="form-text">Letters and numbers only, no spaces, up to 100 characters.</div>
    </div>
-   <div class="mb-3">
+   <div class="mb-3 d-none">
      <label class="form-label" for="basic-form-pfconfig_id">Router</label>
      <select class="form-select" id="basic-form-pfconfig_id" aria-label="Select Router" name="PfconfigID">
      {{ range .Pfconfigs }}

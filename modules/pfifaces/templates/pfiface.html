@@ -73,7 +73,7 @@
      <input class="form-check-input" id="basic-form-physical" type="checkbox" name="Physical" value="true" {{ if .Record }} {{ if .Record.Physical }}checked{{ end }} {{ else }}checked{{ end }}/>
      <label class="form-check-label" for="basic-form-physical">Physical Interface</label>
    </div>
-   <div class="mb-3">
+   <div class="mb-3 d-none">
      <label class="form-label" for="basic-form-pfconfig">Router</label>
      <select class="form-select" id="basic-form-pfconfig" aria-label="Select Type" name="PfconfigID" onchange="updateLbRouterLink()"/>
      {{ range .Pfconfigs }}

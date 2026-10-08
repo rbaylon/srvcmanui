@@ -1,3 +1,10 @@
+// Package instancerouter - srvcmanui UI for the pfconfig (router) module.
+//
+// There is exactly one router record per gateway, so this is one form
+// rather than a list/edit pair: the page shows the record when there is one
+// and an empty form to create it when there is not. srvcman refuses a second
+// record, and the router select is hidden on every other form because it
+// can only ever have one choice.
 package instancerouter
 
 import (
@@ -15,7 +22,7 @@ import (
 )
 
 func New() *http.ServeMux {
-	Router := http.NewServeMux() // 3
+	Router := http.NewServeMux()
 
 	Router.HandleFunc("GET /", func(w http.ResponseWriter, r *http.Request) {
 		var records []pfconfigmodel.Pfconfig
@@ -25,22 +32,11 @@ func New() *http.ServeMux {
 			utils.RenderErrorPage(w, status, err.Error())
 			return
 		}
-		pwd, _ := os.Getwd()
-		files := []string{
-			pwd + "/layouts/newbase.html",
-			pwd + "/modules/instances/templates/instances.html",
-		}
-		tmpl := template.Must(template.ParseFiles(files...))
-		tmpl.ExecuteTemplate(w, "htmx", records)
-	})
-
-	Router.HandleFunc("GET /{id}", func(w http.ResponseWriter, r *http.Request) {
+		// An empty record (ID 0) makes the form post as a create. If
+		// older data left more than one, the first is shown.
 		var record pfconfigmodel.Pfconfig
-		err, status := client.Rester("pfconfig/"+r.PathValue("id"), "GET", &record, r)
-		if err != nil {
-			fmt.Println(err)
-			utils.RenderErrorPage(w, status, err.Error())
-			return
+		if len(records) > 0 {
+			record = records[0]
 		}
 		pwd, _ := os.Getwd()
 		files := []string{
@@ -48,23 +44,17 @@ func New() *http.ServeMux {
 			pwd + "/modules/instances/templates/instance.html",
 		}
 		tmpl := template.Must(template.ParseFiles(files...))
-		err = tmpl.ExecuteTemplate(w, "htmx", record)
-		if err != nil {
+		if err := tmpl.ExecuteTemplate(w, "htmx", record); err != nil {
 			log.Println(err)
 		}
 	})
 
+	// Old list/edit/new links all lead to the single page.
 	Router.HandleFunc("GET /create", func(w http.ResponseWriter, r *http.Request) {
-		pwd, _ := os.Getwd()
-		files := []string{
-			pwd + "/layouts/newbase.html",
-			pwd + "/modules/instances/templates/instance.html",
-		}
-		tmpl := template.Must(template.ParseFiles(files...))
-		err := tmpl.ExecuteTemplate(w, "htmx", nil)
-		if err != nil {
-			log.Println(err)
-		}
+		http.Redirect(w, r, "/ui/instances", http.StatusSeeOther)
+	})
+	Router.HandleFunc("GET /{id}", func(w http.ResponseWriter, r *http.Request) {
+		http.Redirect(w, r, "/ui/instances", http.StatusSeeOther)
 	})
 
 	Router.HandleFunc("POST /addorupdate", func(w http.ResponseWriter, r *http.Request) {

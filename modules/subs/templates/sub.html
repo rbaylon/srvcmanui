@@ -17,7 +17,7 @@
    <div class="mb-3">
      <input class="form-control" id="basic-form-updated" type="hidden"  name="UpdatedAt" value="{{.Record.UpdatedAt.Format "2006-01-02T15:04:05"}}"/>
    </div>
-   <div class="mb-3">
+   <div class="mb-3 d-none">
      <label class="form-label" for="basic-form-pfconfig">Router</label>
      <select class="form-select" id="basic-form-pfconfig" aria-label="Select Type" name="PfconfigID"/>
         <option value="{{ .Pfconfig.ID }}" selected="selected">{{ .Pfconfig.Router }}</option>

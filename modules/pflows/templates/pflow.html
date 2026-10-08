@@ -33,7 +33,7 @@
      <input class="form-control" id="basic-form-proto" type="number" min="0" max="255" name="Proto" value="{{.Record.Proto}}" required/>
      <div class="form-text">pflowproto version - 5 for NetFlow v5, 10 for IPFIX. Check pflow(4) on your OpenBSD release for what it accepts.</div>
    </div>
-   <div class="mb-3">
+   <div class="mb-3 d-none">
      <label class="form-label" for="basic-form-pfconfig">Router</label>
      <select class="form-select" id="basic-form-pfconfig" aria-label="Select Router" name="PfconfigID"/>
      {{ range .Pfconfigs }}

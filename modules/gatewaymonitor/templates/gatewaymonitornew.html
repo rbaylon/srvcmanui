@@ -27,7 +27,7 @@
      <input class="form-control" id="basic-form-monitorip" type="text" placeholder="" name="MonitorIp" pattern="(\d{1,3}\.){3}\d{1,3}|[0-9a-fA-F:]+"/>
      <div class="form-text">A valid IPv4 or IPv6 address to ping for link-health monitoring, e.g. 8.8.8.8.</div>
    </div>
-   <div class="mb-3">
+   <div class="mb-3 d-none">
      <label class="form-label" for="basic-form-pfconfig">Router</label>
      <select class="form-select" id="basic-form-pfconfig" aria-label="Select Router" name="PfconfigID"/>
      {{ range .Pfconfigs }}

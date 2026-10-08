@@ -68,7 +68,7 @@
      <textarea class="form-control" id="basic-form-forwardaddr" name="ForwardAddr" maxlength="300" rows="2" placeholder="1.1.1.1@853, 1.0.0.1@853, 8.8.8.8"></textarea>
      <div class="form-text">One or more upstream resolvers, comma separated. Append "@853" for DNS-over-TLS, e.g. "1.1.1.1@853, 8.8.8.8".</div>
    </div>
-   <div class="mb-3">
+   <div class="mb-3 d-none">
      <label class="form-label" for="basic-form-pfconfig">Router</label>
      <select class="form-select" id="basic-form-pfconfig" aria-label="Select Router" name="PfconfigID"/>
      {{ range .Pfconfigs }}

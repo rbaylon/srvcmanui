@@ -1,9 +1,15 @@
-{{define "title"}}Instance Form{{end}}
+{{define "title"}}Node Instance{{end}}
 {{define "head_script"}}{{end}}
 {{define "content"}}
  <div class="row justify-content-center">
   <div class="col-12 col-xl-8">
    <div class="card shadow-sm my-4">
+    <div class="card-header d-flex align-items-center justify-content-between">
+     <h5 class="mb-0">Node Instance</h5>
+     {{ if .ID }}
+     <a href="#" onclick="confirmDelete('/ui/instances/delete/{{.ID}}')" class="btn btn-outline-danger btn-sm" title="Delete"><span data-feather="x-square"></span></a>
+     {{ end }}
+    </div>
     <div class="card-body p-4">
      <form method="POST" action="/ui/instances/addorupdate">
    <div class="mb-3">
@@ -40,12 +46,12 @@
    </div>
    <div class="mb-3">
      <label class="form-label" for="basic-form-captiveportal">Captive Portal Port</label>
-     <input class="form-control" id="basic-form-captiveportal" type="number" placeholder="captive portal port" name="CaptivePortalPort" value="{{ .CaptivePortalPort }}" min="0" max="65535"/>
+     <input class="form-control" id="basic-form-captiveportal" type="number" placeholder="captive portal port" name="CaptivePortalPort" value="{{ if .CaptivePortalPort }}{{ .CaptivePortalPort }}{{ end }}" min="0" max="65535"/>
      <div class="form-text">A whole number between 0 and 65535.</div>
    </div>
    <div class="mb-3">
      <label class="form-label" for="basic-form-subsportal">Subscribers Portal Port</label>
-     <input class="form-control" id="basic-form-subsportal" type="number" placeholder="subscribers portal port" name="SubsPortalPort" value="{{ .SubsPortalPort }}" min="0" max="65535"/>
+     <input class="form-control" id="basic-form-subsportal" type="number" placeholder="subscribers portal port" name="SubsPortalPort" value="{{ if .SubsPortalPort }}{{ .SubsPortalPort }}{{ end }}" min="0" max="65535"/>
      <div class="form-text">A whole number between 0 and 65535.</div>
    </div>
    <div class="mb-3 form-check">
@@ -60,5 +66,6 @@
   </div>
  </div>
 </div>
+<script src="/ui/static/local/listutils.js"></script>
 {{end}}
 {{define "tail_script"}}{{end}}
