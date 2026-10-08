@@ -1,0 +1,25 @@
+{{define "title"}}Speedtest Netblock{{end}}
+{{define "head_script"}}{{end}}
+{{define "content"}}
+<br>
+ <div class="row justify-content-center">
+  <div class="col-12 col-xl-8">
+   <div class="card shadow-sm my-4">
+    <div class="card-body p-4">
+     <form method="POST" action="/ui/netblocks/addorupdate">
+   <input type="hidden" name="ID" value="{{ .ID }}" />
+   <div class="mb-3">
+     <label class="form-label" for="basic-form-cidr">Network</label>
+     <input class="form-control" id="basic-form-cidr" type="text" placeholder="192.168.1.0/24" name="Cidr" value="{{ .Cidr }}" pattern="[0-9a-fA-F:.]+/[0-9]{1,3}" maxlength="100" required/>
+     <div class="form-text">A network in CIDR notation, e.g. 192.168.1.0/24.</div>
+   </div>
+     <div class="d-grid d-sm-flex justify-content-sm-end mt-4">
+       <button class="btn btn-primary" type="submit">Submit</button>
+     </div>
+    </form>
+   </div>
+  </div>
+ </div>
+</div>
+{{end}}
+{{define "tail_script"}}{{end}}
