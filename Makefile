@@ -3,6 +3,7 @@ version=$(shell git describe --tags --always --dirty 2>/dev/null || echo dev)
 distdir=/usr/local/arkgate/${app}
 
 build:
+	git pull
 	go mod tidy
 	go build -ldflags "-s -w -X github.com/rbaylon/srvcmanui/version.Version=${version}" -o ${app}
 
