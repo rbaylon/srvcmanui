@@ -41,7 +41,7 @@ import (
 )
 
 func main() {
-	log.Println("SpeczOS UI version", version.Version)
+	log.Println("Specz ISP UI version", version.Version)
 	port := database.GetEnvVariable("APP_PORT")
 	acmesrouter := acmerouter.New()
 	captiveportalsrouter := captiveportalrouter.New()
