@@ -1,0 +1,71 @@
+{{define "title"}}System Power{{end}}
+{{define "head_script"}}{{end}}
+{{define "content"}}
+<div class="card shadow-sm my-3">
+  <div class="card-header"><h5 class="mb-0">System Power</h5></div>
+  <div class="list-group list-group-flush">
+    <div class="list-group-item d-flex flex-wrap align-items-center justify-content-between gap-2 p-4">
+      <div>
+        <h6 class="mb-1">Restart</h6>
+        <div class="form-text mb-0">Restarts the whole system. Every service stops and comes back up, so this interface and all connections through the gateway are down for a minute or two.</div>
+      </div>
+      <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#restartModal">
+        <span data-feather="refresh-cw"></span> Restart
+      </button>
+    </div>
+    <div class="list-group-item d-flex flex-wrap align-items-center justify-content-between gap-2 p-4">
+      <div>
+        <h6 class="mb-1">Shut down</h6>
+        <div class="form-text mb-0">Powers the system off. It stays off until someone starts it again at the machine itself, so only do this if you can.</div>
+      </div>
+      <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#shutdownModal">
+        <span data-feather="power"></span> Shut down
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="restartModal" tabindex="-1" aria-labelledby="restartModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <form class="modal-content" method="POST" action="/ui/power/restart" onsubmit="var b = this.querySelector('button[type=submit]'); b.disabled = true; b.textContent = 'Please wait...';">
+      <input type="hidden" name="csrf" value="{{ .Token }}"/>
+      <div class="modal-header">
+        <h5 class="modal-title" id="restartModalLabel">Restart the system?</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cancel"></button>
+      </div>
+      <div class="modal-body">
+        <p>The system will restart in a few seconds. This interface and every connection through the gateway will be unavailable for a minute or two.</p>
+        <p class="mb-0 text-muted small">Tunnels and services start again by themselves when it is back.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="submit" class="btn btn-warning">Restart now</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="modal fade" id="shutdownModal" tabindex="-1" aria-labelledby="shutdownModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <form class="modal-content" method="POST" action="/ui/power/shutdown" onsubmit="var b = this.querySelector('button[type=submit]'); b.disabled = true; b.textContent = 'Please wait...';">
+      <input type="hidden" name="csrf" value="{{ .Token }}"/>
+      <div class="modal-header">
+        <h5 class="modal-title" id="shutdownModalLabel">Shut down the system?</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cancel"></button>
+      </div>
+      <div class="modal-body">
+        <div class="alert alert-danger">
+          The system will power off in a few seconds and <strong>will not come back by itself</strong>. Nothing can start it from here - someone has to power it on at the machine.
+        </div>
+        <label class="form-label" for="shutdown-confirm">Type <strong>SHUTDOWN</strong> to confirm</label>
+        <input class="form-control" id="shutdown-confirm" type="text" autocomplete="off" spellcheck="false" oninput="document.getElementById('shutdown-go').disabled = (this.value.trim() !== 'SHUTDOWN')"/>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="submit" id="shutdown-go" class="btn btn-danger" disabled>Shut down now</button>
+      </div>
+    </form>
+  </div>
+</div>
+{{end}}
+{{define "tail_script"}}{{end}}

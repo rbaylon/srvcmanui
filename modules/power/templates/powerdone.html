@@ -1,0 +1,43 @@
+{{define "title"}}System Power{{end}}
+{{define "head_script"}}{{end}}
+{{define "content"}}
+<div class="card shadow-sm my-4">
+  <div class="card-body p-4 text-center">
+    {{ if eq .Action "restart" }}
+    <div class="spinner-border text-warning mb-3" role="status" id="spinner"><span class="visually-hidden">Restarting</span></div>
+    <h4 id="headline">Restarting...</h4>
+    <p class="text-muted mb-0" id="detail">The system is restarting. This page goes to the dashboard by itself as soon as it is back, usually within a minute or two.</p>
+    {{ else }}
+    <h4>Shutting down</h4>
+    <p class="text-muted mb-0">The system is powering off now. It will stay off until someone starts it at the machine. You can close this page.</p>
+    {{ end }}
+  </div>
+</div>
+{{ if eq .Action "restart" }}
+<script>
+  // Waits for the server to go away and then to answer again, and only then
+  // moves on: leaving at once would just land on an error page while it is
+  // still up for its last few seconds.
+  (function () {
+    var wentDown = false;
+    var started = Date.now();
+    function check() {
+      fetch('/ui/static/version.txt', { cache: 'no-store' })
+        .then(function (r) {
+          if (r.ok && wentDown) { window.location = '/ui/dashboard'; }
+          else if (!r.ok) { wentDown = true; }
+        })
+        .catch(function () { wentDown = true; });
+      if (Date.now() - started > 5 * 60 * 1000) {
+        document.getElementById('spinner').style.display = 'none';
+        document.getElementById('headline').textContent = 'Taking longer than expected';
+        document.getElementById('detail').textContent = 'The system has not come back after five minutes. Check the machine, or reload this page to try again.';
+        clearInterval(timer);
+      }
+    }
+    var timer = setInterval(check, 3000);
+  })();
+</script>
+{{ end }}
+{{end}}
+{{define "tail_script"}}{{end}}
