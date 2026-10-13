@@ -88,5 +88,15 @@ func Rester(module_uri string, method string, data any, r *http.Request) (error,
 		}
 		return nil, res.StatusCode
 	}
+	// A refusal carries its reason ({"status":..., "error":...}); show it
+	// instead of just the HTTP status.
+	if res.StatusCode == 400 {
+		var apierr struct {
+			Error string `json:"error"`
+		}
+		if b, ioerr := io.ReadAll(io.LimitReader(res.Body, 4096)); ioerr == nil && json.Unmarshal(b, &apierr) == nil && apierr.Error != "" {
+			return fmt.Errorf("%s", apierr.Error), res.StatusCode
+		}
+	}
 	return fmt.Errorf("API error: %s", res.Status), res.StatusCode
 }

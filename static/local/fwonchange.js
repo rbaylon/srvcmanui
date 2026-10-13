@@ -4,24 +4,18 @@ function getPfconfig(id){
     .then(response => response.json())
     .then(data => {
       const ifaceSelect = document.getElementById('basic-form-interface');
-      if (pathname != "/ui/subs/create") {
+      // The subscriber form's interface list depends on "Enable PPPoE" and is
+      // owned by subpppoe.js.
+      const subForm = pathname == "/ui/subs/create";
+      if (!subForm) {
         ifaceSelect.innerHTML = '<option value="any">any</option>'; // Clear previous options
-      } else {
-        ifaceSelect.innerHTML = '<option value="x">Choose One</option>'; // Clear previous options
       }
 
       const gwSelect = document.getElementById('basic-form-gateway');
       gwSelect.innerHTML = '<option value="">Default</option>'; // Clear previous options
 
       data.ifaces.forEach(iface => {
-        if (pathname == "/ui/subs/create") {
-          if (iface.type == "internal"){
-            const option = document.createElement('option');
-            option.value = iface.name;
-            option.textContent = iface.name;
-            ifaceSelect.appendChild(option);
-          }
-        } else {
+        if (!subForm) {
           const option = document.createElement('option');
           option.value = iface.device;
           option.textContent = iface.name;

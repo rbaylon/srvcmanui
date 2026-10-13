@@ -40,8 +40,12 @@
           <td class="align-middle stup">{{.Default}}</td>
           <td class="align-middle stup">{{.Physical}}</td>
           <td class="text-end">
+            {{ if eq (printf "%.5s" .Device) "pppac" }}
+            <span class="text-muted small">Managed by PPPoE</span>
+            {{ else }}
             <a href="{{.ID}}" class="btn btn-sm btn-outline-secondary" title="Edit"><span data-feather="edit"></span></a>
             <a href="#" onclick="confirmDelete('/ui/pfifaces/delete/{{.ID}}')" class="btn btn-sm btn-outline-danger" title="Delete"><span data-feather="x-square"></span></a>
+            {{ end }}
           </td>
         </tr>
         {{end}}

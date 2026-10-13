@@ -142,7 +142,9 @@
    function togglePppoeFields(checkbox) {
      document.getElementById('basic-form-pppuname').disabled = !checkbox.checked;
      document.getElementById('basic-form-ppppw').disabled = !checkbox.checked;
+     if (window.pppoeInterfaces) window.pppoeInterfaces();
    }
  </script>
+ <script src="/ui/static/local/subpppoe.js"></script>
 {{end}}
 {{define "tail_script"}}{{end}}

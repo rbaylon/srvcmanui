@@ -122,6 +122,30 @@ func New() *http.ServeMux {
 			utils.RenderErrorPage(w, http.StatusBadRequest, err.Error())
 			return
 		}
+		if s.Pppusername != "" {
+			// A PPPoE subscriber lives on the pppacN interface of a PPPoE
+			// server; the form enforces it, this covers a crafted post.
+			ifs := []pfifacemodel.Pfiface{}
+			if err, status := client.Rester("pfiface", "GET", &ifs, r); err != nil {
+				utils.RenderErrorPage(w, status, err.Error())
+				return
+			}
+			onServer, anyServer := false, false
+			for _, i := range ifs {
+				if strings.HasPrefix(i.Device, "pppac") {
+					anyServer = true
+					onServer = onServer || i.Name == s.Type
+				}
+			}
+			if !anyServer {
+				utils.RenderErrorPage(w, http.StatusBadRequest, "There is no PPPoE server on record. Add one under PPPoE first.")
+				return
+			}
+			if !onServer {
+				utils.RenderErrorPage(w, http.StatusBadRequest, "A PPPoE subscriber must use the interface of a PPPoE server (pppacN).")
+				return
+			}
+		}
 		id := s.ID
 		if id > 0 {
 			s.ID = uint(id)

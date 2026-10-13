@@ -84,7 +84,7 @@
    </div>
    <div class="mb-3">
      <label class="form-label" for="basic-form-interface">Interface</label>
-     <select class="form-select" id="basic-form-interface" aria-label="Select Type" name="Type"/>
+     <select class="form-select" id="basic-form-interface" aria-label="Select Type" name="Type" data-current="{{.Record.Type}}"/>
         {{ range .Pfconfig.Ifaces}}
           {{ if eq .Type "internal" }}
           <option value="{{ .Name }}" {{ if eq $.Record.Type .Name }}selected="selected"{{ end }}>{{ .Name }}</option>
@@ -154,7 +154,9 @@
    function togglePppoeFields(checkbox) {
      document.getElementById('basic-form-pppuname').disabled = !checkbox.checked;
      document.getElementById('basic-form-ppppw').disabled = !checkbox.checked;
+     if (window.pppoeInterfaces) window.pppoeInterfaces();
    }
  </script>
+ <script src="/ui/static/local/subpppoe.js"></script>
 {{end}}
 {{define "tail_script"}}{{end}}
