@@ -2,21 +2,145 @@
 {{define "head_script"}}{{end}}
 {{define "content"}}
 {{ if .Saved }}
-<div class="alert alert-success my-3" role="alert">Update server saved.</div>
+<div class="alert alert-success my-3" role="alert">Settings saved.</div>
+{{ end }}
+
+{{ if .LegacyServer }}
+<div class="alert alert-warning my-3" role="alert">
+  The system service on this gateway does not support software updates yet. Update it first, then come back to this page.
+</div>
+{{ else }}
+
+{{ if eq .Job.State "running" }}
+<div class="card border-primary shadow-sm my-3">
+  <div class="card-header d-flex align-items-center">
+    <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+    <h5 class="mb-0">Installing update {{ .Job.Version }}</h5>
+  </div>
+  <ul class="list-group list-group-flush">
+    {{ range .Steps }}
+    <li class="list-group-item d-flex align-items-center {{ if eq .Status "todo" }}text-muted{{ end }}">
+      {{ if eq .Status "done" }}<span data-feather="check-circle" class="text-success me-2"></span>
+      {{ else if eq .Status "current" }}<span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>
+      {{ else }}<span data-feather="circle" class="me-2"></span>{{ end }}
+      <span {{ if eq .Status "current" }}class="fw-bold"{{ end }}>{{ .Label }}</span>
+    </li>
+    {{ end }}
+  </ul>
+  <div class="card-footer small text-muted">
+    This takes a few minutes{{ with .Job.StartedAt }} (started {{ when . }}){{ end }}. You can leave this page and come back. The system may be unavailable for a moment at the end while its services restart.
+    This page refreshes by itself.
+  </div>
+</div>
+{{ else }}
+
+{{ if .Notice }}<div class="alert alert-info my-3" role="alert">{{ .Notice }}</div>{{ end }}
+
+{{ if and .ShowResult (eq .Job.State "failed") }}
+<div class="card border-danger shadow-sm my-3">
+  <div class="card-header text-danger"><span data-feather="x-circle" class="me-1"></span> The update did not complete</div>
+  <div class="card-body">
+    <p class="mb-2">{{ if .Job.Message }}{{ .Job.Message }}{{ else }}The update stopped before it finished.{{ end }}
+      Nothing needs to be cleaned up: you can press Update again to retry.</p>
+    {{ if .Job.Log }}
+    <details>
+      <summary class="small">Technical details</summary>
+      <pre class="p-3 mt-2 mb-0 small bg-light" style="white-space: pre-wrap;">{{ .Job.Log }}</pre>
+    </details>
+    {{ end }}
+  </div>
+  {{ with .Job.FinishedAt }}<div class="card-footer small text-muted">Stopped {{ when . }}</div>{{ end }}
+</div>
+{{ end }}
+
+{{ if and .ShowResult (eq .Job.State "success") }}
+<div class="card border-success shadow-sm my-3">
+  <div class="card-header text-success"><span data-feather="check-circle" class="me-1"></span> Update {{ .Job.Version }} was installed</div>
+  {{ if .Job.RebootPending }}
+  <div class="card-body small text-muted">
+    Some changes take full effect after the next restart. You can restart from
+    <a href="/ui/power/">System Power</a> whenever it suits you; nothing else is needed.
+  </div>
+  {{ end }}
+  {{ with .Job.FinishedAt }}<div class="card-footer small text-muted">Finished {{ when . }}</div>{{ end }}
+</div>
+{{ end }}
+
+{{ if not .Software.Configured }}
+<div class="card shadow-sm my-3">
+  <div class="card-header"><span data-feather="info" class="me-1"></span> Updates are not set up yet</div>
+  <div class="card-body">
+    To receive updates, enter the update server address and your API token below. You create the
+    token on the Specz website, in your account under <em>API tokens</em>.
+  </div>
+</div>
+{{ else if .Software.Error }}
+<div class="card border-danger shadow-sm my-3">
+  <div class="card-header text-danger"><span data-feather="x-circle" class="me-1"></span> Could not check for updates</div>
+  <div class="card-body">{{ .Software.Error }}</div>
+  <div class="card-footer"><a href="/ui/updates" class="btn btn-sm btn-primary"><span data-feather="refresh-cw"></span> Try again</a></div>
+</div>
+{{ else if .Software.UpdateAvailable }}
+<div class="card border-warning shadow-sm my-3">
+  <div class="card-header d-flex align-items-center justify-content-between">
+    <span><span data-feather="alert-circle" class="me-1"></span> Update {{ .Software.Latest.Version }} is available</span>
+    <span class="small text-muted">{{ if .Software.Installed }}You have {{ .Software.Installed }}{{ else }}No update installed yet{{ end }}</span>
+  </div>
+  <div class="card-body">
+    {{ if .Software.Latest.Notes }}<p style="white-space: pre-wrap;">{{ .Software.Latest.Notes }}</p>{{ end }}
+    {{ if .Software.Latest.Files }}
+    <p class="small text-muted mb-3">{{ len .Software.Latest.Files }} file{{ if gt (len .Software.Latest.Files) 1 }}s{{ end }},
+      {{ range $i, $f := .Software.Latest.Files }}{{ if $i }}, {{ end }}{{ size $f.Size }}{{ end }}.</p>
+    {{ end }}
+    <form method="POST" action="/ui/updates/install" id="install-form">
+      <input type="hidden" name="csrf" value="{{ .Token }}"/>
+      <button class="btn btn-primary" type="submit" id="install-update">Update now</button>
+      <div class="form-text mt-2">
+        The system downloads and installs the update. It takes a few minutes, and its services
+        restart briefly at the end.
+      </div>
+    </form>
+  </div>
+</div>
+{{ else }}
+<div class="card border-success shadow-sm my-3">
+  <div class="card-header text-success"><span data-feather="check-circle" class="me-1"></span> The software is up to date</div>
+  <div class="card-body small text-muted">
+    {{ if .Software.Installed }}Installed update: {{ .Software.Installed }}.{{ else }}No update has been needed so far.{{ end }}
+    {{ with .Software.Scheduled }}<br/>The next update, {{ .Version }}, is scheduled for your plan from {{ .AvailableFrom }}.{{ end }}
+  </div>
+</div>
+{{ end }}
+{{ end }}
 {{ end }}
 
 <div class="card shadow-sm my-3">
-  <div class="card-header"><h5 class="mb-0">Update Server</h5></div>
+  <div class="card-header"><h5 class="mb-0">Update Settings</h5></div>
   <div class="card-body p-4">
-    <form method="POST" action="/ui/updates/save">
+    <form method="POST" action="/ui/updates/save" autocomplete="off">
+      <input type="hidden" name="csrf" value="{{ .Token }}"/>
       <div class="mb-3">
         <label class="form-label" for="basic-form-update-server">Update Server</label>
-        <input class="form-control" id="basic-form-update-server" type="url" placeholder="https://updates.example.com" name="UpdateServer"
-               value="{{ .UpdateServer }}" maxlength="2048"/>
+        <input class="form-control" id="basic-form-update-server" type="url" placeholder="https://www.specz.net" name="UpdateServer"
+               value="{{ .Settings.UpdateServer }}" maxlength="2048"/>
         <div class="form-text">
           The address of your update server, starting with http:// or https://.
-          Leave blank if you don't have one.
+          Leave blank to turn updates off.
         </div>
+      </div>
+      <div class="mb-3">
+        <label class="form-label" for="basic-form-api-token">API Token</label>
+        <input class="form-control font-monospace" id="basic-form-api-token" type="password" name="ApiToken" autocomplete="new-password"
+               placeholder="{{ if .Settings.TokenSet }}A token is saved. Enter a new one to replace it.{{ else }}spz_...{{ end }}" maxlength="128"/>
+        <div class="form-text">
+          Create it on the Specz website in your account under <em>API tokens</em>. It is kept on this gateway and never shown again.
+        </div>
+        {{ if .Settings.TokenSet }}
+        <div class="form-check mt-2">
+          <input class="form-check-input" type="checkbox" id="clear-token" name="ClearToken" value="1"/>
+          <label class="form-check-label" for="clear-token">Remove the saved token</label>
+        </div>
+        {{ end }}
       </div>
       <div class="d-grid d-sm-flex justify-content-sm-end mt-4">
         <button class="btn btn-primary" type="submit">Save</button>
@@ -24,61 +148,17 @@
     </form>
   </div>
 </div>
-
-{{ if eq .Check.State "failed" }}
-<div class="card border-danger shadow-sm my-3">
-  <div class="card-header text-danger"><span data-feather="x-circle" class="me-1"></span> Update check failed</div>
-  <div class="card-body p-0">
-    <pre class="p-3 mb-0 small" style="white-space: pre-wrap;">{{ .Check.Error }}</pre>
-  </div>
-  {{ with .Check.FinishedAt }}<div class="card-footer small text-muted">Finished {{ .Local.Format "2006-01-02 15:04:05" }}</div>{{ end }}
-</div>
-{{ else if eq .Check.State "done" }}
-{{ if .Check.Available }}
-<div class="card border-warning shadow-sm my-3">
-  <div class="card-header"><span data-feather="alert-circle" class="me-1"></span> {{ len .Check.Available }} operating system update{{ if gt (len .Check.Available) 1 }}s{{ end }} available</div>
-  <ul class="list-group list-group-flush">
-    {{ range .Check.Available }}<li class="list-group-item font-monospace small">{{ . }}</li>{{ end }}
-  </ul>
-  {{ with .Check.FinishedAt }}<div class="card-footer small text-muted">Checked {{ .Local.Format "2006-01-02 15:04:05" }}</div>{{ end }}
-</div>
-{{ else }}
-<div class="card border-success shadow-sm my-3">
-  <div class="card-header text-success"><span data-feather="check-circle" class="me-1"></span> The operating system is up to date</div>
-  {{ with .Check.FinishedAt }}<div class="card-footer small text-muted">Checked {{ .Local.Format "2006-01-02 15:04:05" }}</div>{{ end }}
-</div>
+{{ if eq .Job.State "running" }}
+<script>setTimeout(function () { window.location.reload(); }, 3000);</script>
 {{ end }}
-{{ end }}
-
-<div class="card shadow-sm my-3">
-  <div class="card-header d-flex align-items-center justify-content-between">
-    <h5 class="mb-0">Operating System Updates</h5>
-    {{ if eq .Check.State "running" }}
-    <span class="btn btn-primary btn-sm disabled" aria-disabled="true">
-      <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span> Checking...
-    </span>
-    {{ else }}
-    <a href="/ui/updates/check" class="btn btn-primary btn-sm" id="check-updates">
-      <span data-feather="refresh-cw"></span> Check for updates
-    </a>
-    {{ end }}
-  </div>
-  <div class="card-body">
-    {{ if eq .Check.State "running" }}
-    <div class="mb-2">
-      Checking for updates{{ with .Check.StartedAt }} (started {{ .Local.Format "15:04:05" }}){{ end }}. This can take a few
-      minutes and runs in the background - you can leave this page and come back.
-      This page refreshes by itself.
-    </div>
-    {{ end }}
-    <div class="form-text mb-0">
-      Looks for available operating system patches. Checking only lists
-      what is available - nothing is installed.
-    </div>
-  </div>
-</div>
-{{ if eq .Check.State "running" }}
-<script>setTimeout(function () { window.location.reload(); }, 5000);</script>
+{{ if .Software.UpdateAvailable }}
+<script>
+  document.getElementById('install-form').addEventListener('submit', function (e) {
+    if (!window.confirm('Install update {{ .Software.Latest.Version }} now? The gateway keeps running, and its services restart briefly at the end.')) {
+      e.preventDefault();
+    }
+  });
+</script>
 {{ end }}
 {{end}}
 {{define "tail_script"}}{{end}}
