@@ -81,6 +81,18 @@ func New() *http.ServeMux {
 		utils.ServeXLSX(w, "vouchers-"+time.Now().Format("2006-01-02")+".xlsx", data)
 	})
 
+	Router.HandleFunc("GET /delete/{id}", func(w http.ResponseWriter, r *http.Request) {
+		err, status := client.Rester("vouchers/"+r.PathValue("id"), "DELETE", nil, r)
+		if err != nil {
+			fmt.Println(err)
+			utils.RenderErrorPage(w, status, err.Error())
+			return
+		}
+		http.Redirect(w, r, "/ui/vouchers", http.StatusSeeOther)
+	})
+
+	// One voucher. New ones come from the bulk form below; this edits a single
+	// existing voucher.
 	Router.HandleFunc("GET /{id}", func(w http.ResponseWriter, r *http.Request) {
 		var record vouchermodel.Voucher
 		err, status := client.Rester("vouchers/"+r.PathValue("id"), "GET", &record, r)
@@ -89,16 +101,101 @@ func New() *http.ServeMux {
 			utils.RenderErrorPage(w, status, err.Error())
 			return
 		}
+		plans := []planmodel.Plan{}
+		err, status = client.Rester("plans", "GET", &plans, r)
+		if err != nil {
+			fmt.Println(err)
+			utils.RenderErrorPage(w, status, err.Error())
+			return
+		}
+		// The states a voucher moves through, plus whatever it has now.
+		statuses := []string{"available", "active", "used"}
+		known := false
+		for _, st := range statuses {
+			known = known || st == record.Status
+		}
+		if !known && record.Status != "" {
+			statuses = append(statuses, record.Status)
+		}
 		pwd, _ := os.Getwd()
 		files := []string{
 			pwd + "/layouts/newbase.html",
 			pwd + "/modules/vouchers/templates/voucher.html",
 		}
 		tmpl := template.Must(template.ParseFiles(files...))
-		err = tmpl.ExecuteTemplate(w, "htmx", record)
+		err = tmpl.ExecuteTemplate(w, "htmx", struct {
+			Record   vouchermodel.Voucher
+			Plans    []planmodel.Plan
+			Statuses []string
+		}{record, plans, statuses})
 		if err != nil {
 			log.Println(err)
 		}
+	})
+
+	// Saves one voucher. Only what the form offers is taken from it; the rest of
+	// the stored record (code, router, dates, address) is sent back unchanged.
+	Router.HandleFunc("POST /update", func(w http.ResponseWriter, r *http.Request) {
+		id := r.FormValue("ID")
+		var v vouchermodel.Voucher
+		err, status := client.Rester("vouchers/"+id, "GET", &v, r)
+		if err != nil {
+			fmt.Println(err)
+			utils.RenderErrorPage(w, status, err.Error())
+			return
+		}
+		hours, err := strconv.Atoi(r.FormValue("hours"))
+		if err != nil {
+			utils.RenderErrorPage(w, http.StatusBadRequest, "hours must be a number")
+			return
+		}
+		if err := validate.Int("hours", hours); err != nil {
+			utils.RenderErrorPage(w, http.StatusBadRequest, err.Error())
+			return
+		}
+		storetype := r.FormValue("storetype")
+		if err := validate.Alnum("type", storetype, 100); err != nil {
+			utils.RenderErrorPage(w, http.StatusBadRequest, err.Error())
+			return
+		}
+		st := r.FormValue("status")
+		if err := validate.Alnum("status", st, 100); err != nil || st == "" {
+			utils.RenderErrorPage(w, http.StatusBadRequest, "a status must be selected")
+			return
+		}
+		if planName := r.FormValue("Plan"); planName != "" {
+			if err := validate.Alnum("plan", planName, 100); err != nil {
+				utils.RenderErrorPage(w, http.StatusBadRequest, err.Error())
+				return
+			}
+			plans := []planmodel.Plan{}
+			err, status := client.Rester("plans", "GET", &plans, r)
+			if err != nil {
+				fmt.Println(err)
+				utils.RenderErrorPage(w, status, err.Error())
+				return
+			}
+			found := false
+			for _, p := range plans {
+				if p.Plan == planName {
+					v.Downspeed, v.Upspeed, v.Burstspeed = p.Downspeed, p.Upspeed, p.Downspeed*2
+					found = true
+					break
+				}
+			}
+			if !found {
+				utils.RenderErrorPage(w, http.StatusBadRequest, "unknown plan: "+planName)
+				return
+			}
+		}
+		v.Hours, v.Type, v.Status = hours, storetype, st
+		err, status = client.Rester("vouchers/"+id, "PUT", &v, r)
+		if err != nil {
+			fmt.Println(err)
+			utils.RenderErrorPage(w, status, err.Error())
+			return
+		}
+		http.Redirect(w, r, "/ui/vouchers", http.StatusSeeOther)
 	})
 
 	Router.HandleFunc("GET /create", func(w http.ResponseWriter, r *http.Request) {

@@ -1,36 +1,51 @@
-{{define "title"}}Subscriber Form{{end}}
+{{define "title"}}Voucher{{end}}
 {{define "head_script"}}{{end}}
 {{define "content"}}
  <div class="row justify-content-center">
   <div class="col-12 col-xl-8">
    <div class="card shadow-sm my-4">
     <div class="card-body p-4">
-     <form method="POST" action="/ui/vouchers/addorupdate">
+     <form method="POST" action="/ui/vouchers/update">
+     <input type="hidden" name="ID" value="{{.Record.ID}}" />
    <div class="mb-3">
-     <label class="form-label" for="basic-form-created">Date Created</label>
-     <input class="form-control" id="basic-form-created" type="datetime-local" name="CreatedAt" value="{{.CreatedAt.Format "2006-01-02T15:04:05"}}"/>
-     <input type="hidden" name="ID" value="{{.ID}}" />
-   </div>
-   <div class="mb-3">
-     <label class="form-label" for="basic-form-updated">Date updated</label>
-     <input class="form-control" id="basic-form-updated" type="datetime-local"  name="UpdatedAt" value="{{.UpdatedAt.Format "2006-01-02T15:04:05"}}"/>
-   </div>
-   <div class="mb-3">
-     <label class="form-label" for="basic-form-count">Count</label>
-     <input class="form-control" id="basic-form-count" type="number" placeholder="100" name="count" required min="1" max="1000"/>
-     <div class="form-text">Required. A whole number between 1 and 1000.</div>
-   </div>
-   <div class="mb-3">
-     <label class="form-label" for="basic-form-hours">Hours</label>
-     <input class="form-control" id="basic-form-hours" type="number" placeholder="24" name="hours" required/>
-     <div class="form-text">Required. A whole number.</div>
+     <label class="form-label" for="basic-form-value">Code</label>
+     <input class="form-control" id="basic-form-value" type="text" value="{{.Record.Value}}" readonly/>
+     <div class="form-text">The code is generated and cannot be changed.</div>
    </div>
    <div class="mb-3">
      <label class="form-label" for="basic-form-storetype">Store</label>
-     <input class="form-control" id="basic-form-storetype" type="text" placeholder="SarisariStore" name="storetype" pattern="[A-Za-z0-9]*" maxlength="100"/>
+     <input class="form-control" id="basic-form-storetype" type="text" placeholder="SarisariStore" name="storetype" value="{{.Record.Type}}" pattern="[A-Za-z0-9]*" maxlength="100"/>
      <div class="form-text">Letters and numbers only, no spaces, up to 100 characters.</div>
    </div>
+   <div class="mb-3">
+     <label class="form-label" for="basic-form-hours">Hours</label>
+     <input class="form-control" id="basic-form-hours" type="number" name="hours" value="{{.Record.Hours}}" required/>
+     <div class="form-text">Required. A whole number.</div>
+   </div>
+   <div class="mb-3">
+     <label class="form-label" for="basic-form-status">Status</label>
+     <select class="form-select" id="basic-form-status" name="status">
+      {{ range .Statuses }}
+        <option value="{{ . }}" {{ if eq . $.Record.Status }}selected="selected"{{ end }}>{{ . }}</option>
+      {{ end }}
+     </select>
+   </div>
+   <div class="mb-3">
+     <label class="form-label" for="basic-form-plan">Plan</label>
+     <select class="form-select" id="basic-form-plan" name="Plan">
+      <option value="">Keep current ({{.Record.Downspeed}} down / {{.Record.Upspeed}} up)</option>
+      {{ range .Plans }}
+        <option value="{{ .Plan }}">{{ .Plan }}</option>
+      {{ end }}
+     </select>
+     <div class="form-text">Picking a plan replaces the voucher's speeds with the plan's.</div>
+   </div>
+   <div class="mb-3">
+     <label class="form-label">Used by</label>
+     <p class="mb-0">{{ if .Record.Ip }}{{.Record.Ip}}{{ else }}-{{ end }}</p>
+   </div>
      <div class="d-grid d-sm-flex justify-content-sm-end mt-4">
+       <a href="/ui/vouchers/" class="btn btn-outline-secondary me-sm-2">Cancel</a>
        <button class="btn btn-primary" type="submit">Submit</button>
      </div>
     </form>
