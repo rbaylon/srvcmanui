@@ -148,6 +148,32 @@
     </form>
   </div>
 </div>
+{{ if .HasMirror }}
+<div class="card shadow-sm my-3">
+  <div class="card-header"><h5 class="mb-0">System Download Mirror</h5></div>
+  <div class="card-body p-4">
+    <form method="POST" action="/ui/updates/mirror" autocomplete="off" id="mirror-form">
+      <input type="hidden" name="csrf" value="{{ .Token }}"/>
+      <div class="mb-3">
+        <label class="form-label" for="basic-form-mirror">Mirror</label>
+        <input class="form-control" id="basic-form-mirror" type="url" list="mirror-choices" name="Mirror" required
+               placeholder="{{ .Mirror.Default }}" value="{{ .Mirror.Mirror }}" maxlength="255"/>
+        <datalist id="mirror-choices">
+          {{ range .Choices }}<option value="{{ .URL }}">{{ .Where }}</option>{{ end }}
+        </datalist>
+        <div class="form-text">
+          Where this gateway downloads operating system updates from. A mirror close to you makes them much faster.
+          Pick one from the list or type the address of another OpenBSD mirror. The address is tested before it is
+          saved, so a mirror that does not answer is refused and the current one stays.
+        </div>
+      </div>
+      <div class="d-grid d-sm-flex justify-content-sm-end mt-4">
+        <button class="btn btn-primary" type="submit">Test and save</button>
+      </div>
+    </form>
+  </div>
+</div>
+{{ end }}
 {{ if eq .Job.State "running" }}
 <script>setTimeout(function () { window.location.reload(); }, 3000);</script>
 {{ end }}

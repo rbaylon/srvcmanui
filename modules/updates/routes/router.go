@@ -54,6 +54,24 @@ type settings struct {
 	TokenSet     bool   `json:"token_set"`
 }
 
+// mirror is the OpenBSD mirror the gateway downloads system updates from.
+type mirror struct {
+	Mirror  string `json:"mirror"`
+	Default string `json:"default"`
+}
+
+// mirrorChoices are well-known OpenBSD mirrors offered as suggestions; any
+// other address can be typed. The first is OpenBSD's own default.
+var mirrorChoices = []struct{ URL, Where string }{
+	{"https://cdn.openbsd.org/pub/OpenBSD", "OpenBSD CDN (default, picks a nearby server)"},
+	{"https://ftp.jaist.ac.jp/pub/OpenBSD", "Japan - JAIST"},
+	{"https://mirror.freedif.org/OpenBSD", "Singapore / Indonesia - FreeDif"},
+	{"https://mirror.aarnet.edu.au/pub/OpenBSD", "Australia - AARNet"},
+	{"https://ftp.nluug.nl/pub/OpenBSD", "Netherlands - NLUUG"},
+	{"https://ftp.hostserver.de/pub/OpenBSD", "Germany - hostserver.de"},
+	{"https://mirrors.mit.edu/pub/OpenBSD", "United States - MIT"},
+}
+
 // settingsIn is what is sent to change them. ApiToken is a pointer so that
 // leaving it out keeps the saved token.
 type settingsIn struct {
@@ -118,9 +136,13 @@ type viewdata struct {
 	Software software
 	Job      job
 	Token    string // the page's CSRF token
-	Saved    bool
-	Notice   string // a refusal to show above the page (e.g. nothing to install)
-	Steps    []step
+	Mirror   mirror
+	// HasMirror is false when srvcman does not have the mirror call (older).
+	HasMirror bool
+	Choices   []struct{ URL, Where string }
+	Saved     bool
+	Notice    string // a refusal to show above the page (e.g. nothing to install)
+	Steps     []step
 	// LegacyServer is true when srvcman does not know the software update calls
 	// yet (an older srvcman): the page then explains instead of failing.
 	LegacyServer bool
@@ -301,6 +323,10 @@ func New() *http.ServeMux {
 			}
 		}
 		v := viewOf(s, sw, j, token, time.Now())
+		if err, _ := rester("updates/mirror", "GET", &v.Mirror, r); err == nil {
+			v.HasMirror = true
+			v.Choices = mirrorChoices
+		}
 		v.LegacyServer = legacy
 		v.Saved = r.URL.Query().Get("saved") == "1"
 		page(w, v)
@@ -320,6 +346,25 @@ func New() *http.ServeMux {
 		var out settings
 		if err, status := rester("updates", "PUT", &in, r); err != nil {
 			log.Println("updates: save failed:", err)
+			utils.RenderErrorPage(w, status, err.Error())
+			return
+		}
+		_ = out
+		http.Redirect(w, r, "/ui/updates?saved=1", http.StatusSeeOther)
+	})
+
+	// Changes the OpenBSD mirror. srvcman tests the mirror before it replaces the
+	// old one, so a wrong address comes back as an error and nothing changes.
+	Router.HandleFunc("POST /mirror", func(w http.ResponseWriter, r *http.Request) {
+		if !validToken(sessionKey(), currentUser(r), r.PostFormValue("csrf"), time.Now()) {
+			utils.RenderErrorPage(w, http.StatusForbidden,
+				"This page has expired or was not opened from the Software Update page. Open it again and repeat the change.")
+			return
+		}
+		in := mirror{Mirror: strings.TrimSpace(r.FormValue("Mirror"))}
+		var out mirror
+		if err, status := rester("updates/mirror", "PUT", &in, r); err != nil {
+			log.Println("updates: mirror not changed:", err)
 			utils.RenderErrorPage(w, status, err.Error())
 			return
 		}
