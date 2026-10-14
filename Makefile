@@ -3,7 +3,6 @@ version!=git describe --tags --always
 distdir=/usr/local/arkgate/${app}
 
 build:
-	git pull
 	go mod tidy
 	go build -ldflags "-s -w -X github.com/rbaylon/srvcmanui/version.Version=${version}" -o ${app}
 
