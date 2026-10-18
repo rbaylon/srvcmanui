@@ -292,7 +292,15 @@ func New() *http.ServeMux {
 			store = sessions.NewCookieStore(key)
 		)
 		session, _ := store.Get(r, database.GetEnvVariable("APP_NAME"))
-		err, status := client.Rester("users/username/"+session.Values["whoami"].(string), "GET", &record, r)
+		whoami, _ := session.Values["whoami"].(string)
+		if admin := database.GetEnvVariable("APP_ADMIN"); admin != "" && whoami == admin {
+			// The built-in administrator is configured in .env, not stored as a
+			// user, so there is no record to show or edit.
+			utils.RenderErrorPage(w, http.StatusNotFound,
+				"The built-in administrator account has no profile. Its name and password are set in the server's configuration.")
+			return
+		}
+		err, status := client.Rester("users/username/"+whoami, "GET", &record, r)
 		if err != nil {
 			fmt.Println(err)
 			utils.RenderErrorPage(w, status, err.Error())

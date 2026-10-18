@@ -27,13 +27,13 @@
    </div>
    <div class="mb-3">
      <label class="form-label" for="basic-form-stdown">SpeedTestDownload</label>
-     <input class="form-control" id="basic-form-stdown" type="number" placeholder="55" name="SpeedTestDown" {{ if .Record }} value="{{.Record.SpeedTestDown}}" {{end}}/>
-     <div class="form-text">A whole number.</div>
+     <input class="form-control" id="basic-form-stdown" type="number" placeholder="55" name="SpeedTestDown" min="5" max="100000" required {{ if .Record }} value="{{.Record.SpeedTestDown}}" {{end}}/>
+     <div class="form-text">Required. A whole number from 5 to 100000 (the queue bandwidth in Mbps).</div>
    </div>
    <div class="mb-3">
      <label class="form-label" for="basic-form-stup">SpeedTestUpload</label>
-     <input class="form-control" id="basic-form-stup" type="number" placeholder="30" name="SpeedTestUp" {{ if .Record }} value="{{.Record.SpeedTestUp}}" {{end}}/>
-     <div class="form-text">A whole number.</div>
+     <input class="form-control" id="basic-form-stup" type="number" placeholder="30" name="SpeedTestUp" min="5" max="100000" required {{ if .Record }} value="{{.Record.SpeedTestUp}}" {{end}}/>
+     <div class="form-text">Required. A whole number from 5 to 100000 (the queue bandwidth in Mbps).</div>
    </div>
    <div class="mb-3">
      <label class="form-label" for="basic-form-plan">Plan</label>
